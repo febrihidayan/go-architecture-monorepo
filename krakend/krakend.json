@@ -1,0 +1,96 @@
+{
+    "version": 3,
+    "timeout": "60000ms",
+    "cache_ttl": "300s",
+    "host": [
+        "http://fake_api:8080"
+    ],
+    "$schema": "http://www.krakend.io/schema/v3.json",
+    "extra_config": {
+        "security/cors": {
+            "allow_origins": ["*"],
+            "allow_methods": [
+                "POST",
+                "GET",
+                "PUT",
+                "DELETE",
+                "PATCH"
+            ],
+            "allow_headers": [
+                "Accept",
+                "Origin",
+                "Authorization",
+                "Content-Length",
+                "Content-Type"
+            ],
+            "max_age": "12h"
+        },
+        "auth/revoker": {
+            "N": 10000000,
+            "P": 0.0000001,
+            "hash_name": "optimal",
+            "TTL": 172800,
+            "port": 8180,
+            "token_keys": ["jti", "sub"]
+        },
+        "error_bad_request": {
+            "http_status_code": 400
+        },
+        "error_internal_server_error": {
+            "http_status_code": 500
+        },
+        "router": {
+            "return_error_msg": true
+        }
+    },
+    "sequential_start": true,
+    "endpoints": [
+        {
+            "endpoint": "/v1/auth/login",
+            "method": "POST",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/login",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_details": "bad_request"
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/signer": {
+                    "alg": "HS256",
+                    "kid": "sim2",
+                    "keys_to_sign": [
+                        "access_token",
+                        "refresh_token"
+                    ],
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
+            "endpoint": "/v1/auth/register",
+            "method": "POST",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/register",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        }
+    ]
+}

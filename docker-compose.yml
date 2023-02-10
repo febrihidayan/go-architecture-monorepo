@@ -1,0 +1,55 @@
+version: "3.7"
+
+services:
+  krakend_ce:
+    image: devopsfaith/krakend:2.1
+    volumes:
+      - ./krakend:/etc/krakend
+    ports:
+      - "8080:8080"
+    command: ["run", "-d", "-c", "/etc/krakend/krakend.json"]
+    depends_on:
+      - fake_api
+
+  fake_api:
+    image: jaxgeller/lwan
+    volumes:
+      - ./data:/lwan/wwwroot
+    ports:
+      - "8000:8080"
+
+  auth-go:
+    container_name: arch_auth_go
+    image: febrihidayan/go-architecture-monorepo/auth
+    build:
+      context: .
+      dockerfile: docker/auth/Dockerfile
+    environment:
+      HTTP_PORT: ':8083'
+      RPC_PORT: ':9083'
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_NAME: arch_auth
+      MONGODB_HOST: 'localhost'
+      MONGODB_PORT: '27017'
+    ports:
+      - '8083:8083'
+      - '9083:9083'
+
+  user-go:
+    container_name: arch_user_go
+    image: febrihidayan/go-architecture-monorepo/user
+    build:
+      context: .
+      dockerfile: docker/user/Dockerfile
+    environment:
+      HTTP_PORT: ':8084'
+      RPC_PORT: ':9084'
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_NAME: arch_user
+      MONGODB_HOST: 'localhost'
+      MONGODB_PORT: '27017'
+    ports:
+      - '8084:8084'
+      - '9084:9084'

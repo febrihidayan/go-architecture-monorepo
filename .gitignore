@@ -1,0 +1,6 @@
+*.env
+/.vscode
+tmp
+.idea
+temp-assets/*
+vendor/*
