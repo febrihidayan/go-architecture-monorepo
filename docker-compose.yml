@@ -27,6 +27,7 @@ services:
     environment:
       HTTP_PORT: ':8083'
       RPC_PORT: ':9083'
+      USER_PORT: ':9084'
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: root
       MONGODB_NAME: arch_auth
@@ -45,6 +46,7 @@ services:
     environment:
       HTTP_PORT: ':8084'
       RPC_PORT: ':9084'
+      AUTH_PORT: ':9083'
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: root
       MONGODB_NAME: arch_user
