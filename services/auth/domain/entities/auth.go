@@ -62,3 +62,8 @@ func (x *Auth) Validate() (err *multierror.Error) {
 
 	return
 }
+
+func (x *Auth) SetPasswordHash(hashedPwd string) {
+	pwd, _ := utils.HashPassword(hashedPwd)
+	x.Password = pwd
+}

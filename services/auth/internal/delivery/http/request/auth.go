@@ -1,8 +1,13 @@
 package request
 
-type AuthRequest struct {
-	Name            string `json:"name"`
-	Email           string `json:"email"`
-	Password        string `json:"password"`
-	ConfirmPassword string `json:"confirm_password"`
+type AuthLoginRequest struct {
+	Email    string `json:"email" validate:"required|min:3|email"`
+	Password string `json:"password" validate:"required|min:6"`
+}
+
+type AuthRegisterRequest struct {
+	Name            string `json:"name" validate:"required|min:3"`
+	Email           string `json:"email" validate:"required|min:3|email"`
+	Password        string `json:"password" validate:"required|min:6"`
+	ConfirmPassword string `json:"confirm_password" validate:"required|min:6|same:password"`
 }

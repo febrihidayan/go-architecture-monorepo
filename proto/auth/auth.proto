@@ -2,4 +2,30 @@ syntax = "proto3";
 
 package auth;
 
-service AuthServices {}
+import "google/protobuf/timestamp.proto";
+
+service AuthServices {
+    rpc UpdateAuthByUserId(UpdateAuthByUserIdRequest) returns (UpdateAuthByUserIdResponse);
+}
+
+message RequestResponse {
+    int32 status = 1;
+    string message = 2;
+}
+
+message Auth {
+    string id = 1;
+    string user_id = 2;
+    string email = 3;
+    string role = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
+}
+
+message UpdateAuthByUserIdRequest {
+    Auth data = 1;
+}
+
+message UpdateAuthByUserIdResponse {
+    RequestResponse response = 1;
+}

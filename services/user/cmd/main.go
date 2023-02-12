@@ -4,15 +4,18 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
+	grpc_server "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_server"
 	user_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/user"
 	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/mongo"
 	"github.com/gorilla/mux"
+	"google.golang.org/grpc"
 )
 
 var (
@@ -26,6 +29,10 @@ func main() {
 	defer func() {
 		db.Client().Disconnect(ctx)
 	}()
+
+	// run Grpc Server
+	go RunGrpcServer()
+	// end run Grpc Server
 
 	router := mux.NewRouter()
 	initHandler(router, cfg)
@@ -48,6 +55,22 @@ func main() {
 	}
 
 	log.Println("Server Exited Properly")
+}
+
+func RunGrpcServer() {
+
+	grpcServer := grpc.NewServer()
+	grpc_server.HandlerUserServices(grpcServer, db, *cfg)
+
+	lis, err := net.Listen("tcp", cfg.RpcPort)
+	if err != nil {
+		log.Fatalln("Failed to listen:", err)
+	}
+
+	go func() {
+		log.Println(fmt.Sprintf("Grpc Server listen to: %v", cfg.RpcPort))
+		log.Fatal(grpcServer.Serve(lis))
+	}()
 }
 
 func initHandler(

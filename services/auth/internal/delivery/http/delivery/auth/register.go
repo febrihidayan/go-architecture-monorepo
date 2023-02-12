@@ -7,6 +7,7 @@ import (
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/validator"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/request"
 )
@@ -14,7 +15,7 @@ import (
 func (x *authHttpHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
-		payload request.AuthRequest
+		payload request.AuthRegisterRequest
 	)
 
 	decoder := json.NewDecoder(r.Body)
@@ -23,9 +24,16 @@ func (x *authHttpHandler) Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := entities.AuthDto{
-		Email:    payload.Email,
-		Password: payload.Password,
+	if err := validator.Make(payload); err != nil {
+		validator.ErrorJson(w, http.StatusUnprocessableEntity, err)
+		return
+	}
+
+	data := entities.RegisterDto{
+		Name:            payload.Name,
+		Email:           payload.Email,
+		Password:        payload.Password,
+		ConfirmPassword: payload.ConfirmPassword,
 	}
 
 	_, err := x.authUsecase.Register(ctx, data)
