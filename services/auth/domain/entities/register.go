@@ -1,8 +1,7 @@
 package entities
 
 import (
-	"errors"
-
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/lang"
 	"github.com/hashicorp/go-multierror"
 )
 
@@ -31,19 +30,19 @@ func NewRegister(x RegisterDto) *Register {
 
 func (x *Register) Validate() (err *multierror.Error) {
 	if x.Name == "" {
-		err = multierror.Append(err, errors.New("Name is required"))
+		err = multierror.Append(err, lang.ErrNameRequired)
 	}
 	if x.Email == "" {
-		err = multierror.Append(err, errors.New("Email is required"))
+		err = multierror.Append(err, lang.ErrEmailRequired)
 	}
 	if x.Password == "" {
-		err = multierror.Append(err, errors.New("Password is required"))
+		err = multierror.Append(err, lang.ErrPasswordRequired)
 	}
 	if x.ConfirmPassword == "" {
-		err = multierror.Append(err, errors.New("ConfirmPassword is required"))
+		err = multierror.Append(err, lang.ErrConfirmPasswordRequired)
 	}
-	if x.ConfirmPassword == x.Password {
-		err = multierror.Append(err, errors.New("Password confirmation does not match"))
+	if x.ConfirmPassword != x.Password {
+		err = multierror.Append(err, lang.ErrConfitmPasswordNotSame)
 	}
 
 	return

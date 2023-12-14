@@ -1,10 +1,10 @@
 package entities
 
 import (
-	"errors"
 	"time"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/lang"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
 
 	"github.com/hashicorp/go-multierror"
@@ -48,16 +48,16 @@ func NewAuth(x AuthDto) *Auth {
 
 func (x *Auth) Validate() (err *multierror.Error) {
 	if x.UserId == "" {
-		err = multierror.Append(err, errors.New("UserId is required"))
+		err = multierror.Append(err, lang.ErrUserIdRequired)
 	}
 	if x.Email == "" {
-		err = multierror.Append(err, errors.New("Email is required"))
+		err = multierror.Append(err, lang.ErrEmailRequired)
 	}
 	if x.Password == "" {
-		err = multierror.Append(err, errors.New("Password is required"))
+		err = multierror.Append(err, lang.ErrPasswordRequired)
 	}
 	if x.Role == "" {
-		err = multierror.Append(err, errors.New("Role is required"))
+		err = multierror.Append(err, lang.ErrRoleRequired)
 	}
 
 	return
