@@ -2,6 +2,7 @@ version: "3.7"
 
 services:
   krakend_ce:
+    container_name: arch_krakend_ce
     image: devopsfaith/krakend:2.1
     volumes:
       - ./krakend:/etc/krakend
@@ -12,6 +13,7 @@ services:
       - fake_api
 
   fake_api:
+    container_name: arch_fake_api
     image: jaxgeller/lwan
     volumes:
       - ./data:/lwan/wwwroot
