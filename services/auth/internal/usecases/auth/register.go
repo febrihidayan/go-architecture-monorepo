@@ -20,7 +20,7 @@ func (x *authInteractor) Register(ctx context.Context, payload entities.Register
 	if find != nil {
 		multilerr = multierror.Append(multilerr, errors.New("The email is already registered."))
 		return nil, &exceptions.CustomError{
-			Status: exceptions.ERRBUSSINESS,
+			Status: exceptions.ERRREPOSITORY,
 			Errors: multilerr,
 		}
 	}

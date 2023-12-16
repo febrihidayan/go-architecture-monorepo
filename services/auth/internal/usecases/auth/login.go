@@ -2,10 +2,10 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"log"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/lang"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 
@@ -18,16 +18,16 @@ func (x *authInteractor) Login(ctx context.Context, payload entities.AuthDto) (*
 	log.Println("start check email already")
 	auth, err := x.authRepo.FindByEmail(ctx, payload.Email)
 	if err != nil {
-		multilerr = multierror.Append(multilerr, errors.New("The email has not been registered."))
+		multilerr = multierror.Append(multilerr, lang.ErrEmailNotFound)
 		return nil, &exceptions.CustomError{
-			Status: exceptions.ERRDOMAIN,
+			Status: exceptions.ERRREPOSITORY,
 			Errors: multilerr,
 		}
 	}
 
 	log.Println("start check same password hash")
 	if !utils.CheckPasswordHash(payload.Password, auth.Password) {
-		multilerr = multierror.Append(multilerr, errors.New("The password you entered is incorrect."))
+		multilerr = multierror.Append(multilerr, lang.ErrPasswordIsIncorrent)
 		return nil, &exceptions.CustomError{
 			Status: exceptions.ERRDOMAIN,
 			Errors: multilerr,
