@@ -91,6 +91,24 @@
                     }
                 }
             ]
+        },
+        {
+            "endpoint": "/v1/user/profile",
+            "method": "GET",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/user/profile",
+                    "host": [
+                        "http://fake_api:8084"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
         }
     ]
 }
