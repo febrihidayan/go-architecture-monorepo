@@ -93,6 +93,42 @@
             ]
         },
         {
+            "endpoint": "/v1/auth/role",
+            "method": "POST",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/role",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/v1/auth/permission",
+            "method": "POST",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/permission",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
             "endpoint": "/v1/user/profile",
             "method": "GET",
             "output_encoding": "no-op",

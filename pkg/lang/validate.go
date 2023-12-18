@@ -1,6 +1,10 @@
 package lang
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	"strings"
+)
 
 var (
 	ErrNameRequired            = errors.New("name is required.")
@@ -12,4 +16,22 @@ var (
 	ErrRoleRequired            = errors.New("Role is required.")
 	ErrEmailNotFound           = errors.New("The email has not been registered.")
 	ErrPasswordIsIncorrent     = errors.New("The password you entered is incorrect.")
+	ErrRoleAlready             = errors.New("The name role is already.")
+	ErrPermissionAlready       = errors.New("The name permission is already.")
+
+	Locales = map[string]string{
+		"filled": "The :attribute field is required.",
+	}
 )
+
+func Trans(field string, attributes ...interface{}) error {
+	var err string
+
+	if str, ok := Locales[field]; ok {
+		err = strings.ReplaceAll(str, ":attribute", fmt.Sprintf("%v", attributes))
+	} else {
+		err = "not found message."
+	}
+
+	return errors.New(err)
+}
