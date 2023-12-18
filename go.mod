@@ -3,6 +3,7 @@ module github.com/febrihidayan/go-architecture-monorepo
 go 1.18
 
 require (
+	bou.ke/monkey v1.0.2
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
 	github.com/hashicorp/go-multierror v1.1.1

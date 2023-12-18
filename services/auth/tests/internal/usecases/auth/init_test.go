@@ -2,7 +2,9 @@ package auth
 
 import (
 	"testing"
+	"time"
 
+	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/auth"
@@ -26,6 +28,11 @@ func (x *AuthUsecaseSuite) SetupTest() {
 	x.userRepo = new(grpc_repositories.UserRepositoryMock)
 
 	x.authUsecase = auth.NewAuthInteractor(x.cfg, x.authRepo, x.userRepo)
+
+	// fake time now for testing
+	monkey.Patch(time.Now, func() time.Time {
+		return time.Date(2020, 1, 1, 1, 1, 1, 1, time.UTC)
+	})
 }
 
 func TestAuthUsecase(t *testing.T) {

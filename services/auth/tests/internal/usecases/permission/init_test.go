@@ -2,7 +2,9 @@ package permission
 
 import (
 	"testing"
+	"time"
 
+	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/permission"
@@ -22,6 +24,11 @@ func (x *PermissionUsecaseSuite) SetupTest() {
 
 	x.permissionRepo = new(mongo_repositories.PermissionRepositoryMock)
 	x.permissionUsecase = permission.NewPermissionInteractor(x.cfg, x.permissionRepo)
+
+	// fake time now for testing
+	monkey.Patch(time.Now, func() time.Time {
+		return time.Date(2020, 1, 1, 1, 1, 1, 1, time.UTC)
+	})
 }
 
 func TestPermissionUsecase(t *testing.T) {

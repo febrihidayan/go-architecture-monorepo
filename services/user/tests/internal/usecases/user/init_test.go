@@ -2,7 +2,9 @@ package user
 
 import (
 	"testing"
+	"time"
 
+	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/user"
@@ -23,6 +25,11 @@ func (x *UserUsecaseSuite) SetupTest() {
 	x.userRepo = new(mongo_repositories.UserRepositoryMock)
 
 	x.userUsecase = user.NewUserInteractor(x.cfg, x.userRepo)
+
+	// fake time now for testing
+	monkey.Patch(time.Now, func() time.Time {
+		return time.Date(2020, 1, 1, 1, 1, 1, 1, time.UTC)
+	})
 }
 
 func TestUserUsecase(t *testing.T) {
