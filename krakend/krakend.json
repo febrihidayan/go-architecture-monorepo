@@ -130,6 +130,42 @@
             ]
         },
         {
+            "endpoint": "/v1/auth/role/{id}",
+            "method": "GET",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/role/{id}",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/v1/auth/role/{id}",
+            "method": "PUT",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/role/{id}",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
             "endpoint": "/v1/auth/permissions",
             "method": "GET",
             "input_query_strings": ["*"],
@@ -155,6 +191,42 @@
             "backend": [
                 {
                     "url_pattern": "/v1/auth/permission",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/v1/auth/permission/{id}",
+            "method": "GET",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/permission/{id}",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/v1/auth/permission/{id}",
+            "method": "PUT",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/permission/{id}",
                     "host": [
                         "http://fake_api:8083"
                     ],

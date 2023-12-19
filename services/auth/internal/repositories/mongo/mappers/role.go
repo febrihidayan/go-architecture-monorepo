@@ -1,13 +1,14 @@
 package mappers
 
 import (
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/models"
 )
 
 func ToModelRole(x *entities.Role) *models.Role {
 	return &models.Role{
-		ID:          x.ID,
+		ID:          x.ID.String(),
 		Name:        x.Name,
 		DisplayName: x.DisplayName,
 		Description: x.Description,
@@ -17,8 +18,9 @@ func ToModelRole(x *entities.Role) *models.Role {
 }
 
 func ToDomainRole(x *models.Role) *entities.Role {
+	id, _ := common.StringToID(x.ID)
 	return &entities.Role{
-		ID:          x.ID,
+		ID:          id,
 		Name:        x.Name,
 		DisplayName: x.DisplayName,
 		Description: x.Description,

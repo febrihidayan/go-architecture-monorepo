@@ -13,7 +13,7 @@ type PermissionListResponse struct {
 	DisplayName string    `json:"display_name"`
 	Description string    `json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAtAt time.Time `json:"updated_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func MapPermissionListResponse(x *entities.Permission) PermissionListResponse {
@@ -23,6 +23,7 @@ func MapPermissionListResponse(x *entities.Permission) PermissionListResponse {
 		DisplayName: x.DisplayName,
 		Description: x.Description,
 		CreatedAt:   x.CreatedAt,
+		UpdatedAt:   x.UpdatedAt,
 	}
 }
 

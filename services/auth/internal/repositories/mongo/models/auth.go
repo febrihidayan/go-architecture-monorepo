@@ -2,12 +2,10 @@ package models
 
 import (
 	"time"
-
-	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 )
 
 type Auth struct {
-	ID        common.ID `bson:"_id"`
+	ID        string    `bson:"_id"`
 	UserId    string    `bson:"user_id"`
 	Email     string    `bson:"email"`
 	Password  string    `bson:"password"`

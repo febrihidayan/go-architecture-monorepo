@@ -13,7 +13,7 @@ type RoleListResponse struct {
 	DisplayName string    `json:"display_name"`
 	Description string    `json:"description"`
 	CreatedAt   time.Time `json:"created_at"`
-	UpdatedAtAt time.Time `json:"updated_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 func MapRoleListResponse(x *entities.Role) RoleListResponse {
@@ -23,6 +23,7 @@ func MapRoleListResponse(x *entities.Role) RoleListResponse {
 		DisplayName: x.DisplayName,
 		Description: x.Description,
 		CreatedAt:   x.CreatedAt,
+		UpdatedAt:   x.UpdatedAt,
 	}
 }
 

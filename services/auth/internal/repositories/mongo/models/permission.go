@@ -2,12 +2,10 @@ package models
 
 import (
 	"time"
-
-	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 )
 
 type Permission struct {
-	ID          common.ID `bson:"_id"`
+	ID          string    `bson:"_id"`
 	Name        string    `bson:"name"`
 	DisplayName string    `bson:"display_name"`
 	Description string    `bson:"description"`

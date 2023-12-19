@@ -36,21 +36,25 @@ type RoleMeta struct {
 	Total int
 }
 
-func NewRole(x RoleDto) *Role {
-	id := common.NewID()
-
-	if x.ID != nil {
-		id = *x.ID
-	}
-
-	return &Role{
-		ID:          id,
+func NewRole(x RoleDto, finds ...*Role) *Role {
+	role := Role{
+		ID:          common.NewID(),
 		Name:        x.Name,
 		DisplayName: x.DisplayName,
 		Description: x.Description,
 		CreatedAt:   utils.TimeUTC(),
 		UpdatedAt:   utils.TimeUTC(),
 	}
+
+	if x.ID != nil {
+		role.ID = *x.ID
+	}
+
+	for _, item := range finds {
+		role.CreatedAt = item.CreatedAt
+	}
+
+	return &role
 }
 
 func (x *Role) Validate() (err *multierror.Error) {

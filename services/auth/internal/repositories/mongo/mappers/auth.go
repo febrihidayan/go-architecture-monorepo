@@ -1,13 +1,14 @@
 package mappers
 
 import (
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/models"
 )
 
 func ToModelAuth(x *entities.Auth) *models.Auth {
 	return &models.Auth{
-		ID:        x.ID,
+		ID:        x.ID.String(),
 		UserId:    x.UserId,
 		Email:     x.Email,
 		Password:  x.Password,
@@ -18,8 +19,9 @@ func ToModelAuth(x *entities.Auth) *models.Auth {
 }
 
 func ToDomainAuth(x *models.Auth) *entities.Auth {
+	id, _ := common.StringToID(x.ID)
 	return &entities.Auth{
-		ID:        x.ID,
+		ID:        id,
 		UserId:    x.UserId,
 		Email:     x.Email,
 		Password:  x.Password,

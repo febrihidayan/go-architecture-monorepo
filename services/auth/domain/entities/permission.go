@@ -36,21 +36,25 @@ type PermissionMeta struct {
 	Total int
 }
 
-func NewPermission(x PermissionDto) *Permission {
-	id := common.NewID()
-
-	if x.ID != nil {
-		id = *x.ID
-	}
-
-	return &Permission{
-		ID:          id,
+func NewPermission(x PermissionDto, finds ...*Permission) *Permission {
+	permission := Permission{
+		ID:          common.NewID(),
 		Name:        x.Name,
 		DisplayName: x.DisplayName,
 		Description: x.Description,
 		CreatedAt:   utils.TimeUTC(),
 		UpdatedAt:   utils.TimeUTC(),
 	}
+
+	if x.ID != nil {
+		permission.ID = *x.ID
+	}
+
+	for _, item := range finds {
+		permission.CreatedAt = item.CreatedAt
+	}
+
+	return &permission
 }
 
 func (x *Permission) Validate() (err *multierror.Error) {
