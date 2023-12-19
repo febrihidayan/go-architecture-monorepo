@@ -25,6 +25,17 @@ type RoleDto struct {
 	Description string
 }
 
+type RoleQueryParams struct {
+	Search  string
+	Page    int
+	PerPage int
+}
+
+type RoleMeta struct {
+	Data  []*Role
+	Total int
+}
+
 func NewRole(x RoleDto) *Role {
 	id := common.NewID()
 

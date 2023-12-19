@@ -25,6 +25,17 @@ type PermissionDto struct {
 	Description string
 }
 
+type PermissionQueryParams struct {
+	Search  string
+	Page    int
+	PerPage int
+}
+
+type PermissionMeta struct {
+	Data  []*Permission
+	Total int
+}
+
 func NewPermission(x PermissionDto) *Permission {
 	id := common.NewID()
 

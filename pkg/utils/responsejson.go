@@ -18,6 +18,12 @@ type jsonErrorResponse struct {
 	Errors  []string `json:"errors"`
 }
 
+type MetaResponse struct {
+	Total   int `json:"total"`
+	Page    int `json:"page"`
+	PerPage int `json:"per_page"`
+}
+
 func RespondWithError(w http.ResponseWriter, code int, errors []error) {
 	var errStr []string
 	for _, err := range errors {

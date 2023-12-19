@@ -27,5 +27,6 @@ func PermissionHttpHandler(
 		),
 	}
 
+	r.HandleFunc("/v1/auth/permissions", handler.GetAll).Methods("GET")
 	r.HandleFunc("/v1/auth/permission", handler.Create).Methods("POST")
 }

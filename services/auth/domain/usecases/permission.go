@@ -10,4 +10,5 @@ import (
 type PermissionUsecase interface {
 	Create(ctx context.Context, payload entities.PermissionDto) (*entities.Permission, *exceptions.CustomError)
 	Find(ctx context.Context, id string) (*entities.Permission, *exceptions.CustomError)
+	GetAll(ctx context.Context, params entities.PermissionQueryParams) (*entities.PermissionMeta, *exceptions.CustomError)
 }

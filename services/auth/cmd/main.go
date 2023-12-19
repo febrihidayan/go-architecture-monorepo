@@ -11,6 +11,8 @@ import (
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
 	auth_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/auth"
+	permision_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/permission"
+	role_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/role"
 	repository_grpc "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/grpc"
 	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo"
 	"github.com/gorilla/mux"
@@ -18,10 +20,12 @@ import (
 )
 
 var (
-	cfg         = config.Auth()
-	ctx, cancel = context.WithCancel(context.Background())
-	db          = config.InitDatabaseMongodb()
-	authRepo    = repository_mongo.NewAuthRepository(db)
+	cfg            = config.Auth()
+	ctx, cancel    = context.WithCancel(context.Background())
+	db             = config.InitDatabaseMongodb()
+	authRepo       = repository_mongo.NewAuthRepository(db)
+	permissionRepo = repository_mongo.NewPermissionRepository(db)
+	roleRepo       = repository_mongo.NewRoleRepository(db)
 )
 
 func main() {
@@ -68,4 +72,6 @@ func initHandler(
 	userRepo := repository_grpc.NewUserRepository(grpcConnUser)
 
 	auth_handler.AuthHttpHandler(router, cfg, authRepo, userRepo)
+	permision_handler.PermissionHttpHandler(router, cfg, permissionRepo)
+	role_handler.RoleHttpHandler(router, cfg, roleRepo)
 }

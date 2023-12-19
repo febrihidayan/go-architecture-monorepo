@@ -27,5 +27,6 @@ func RoleHttpHandler(
 		),
 	}
 
+	r.HandleFunc("/v1/auth/roles", handler.GetAll).Methods("GET")
 	r.HandleFunc("/v1/auth/role", handler.Create).Methods("POST")
 }

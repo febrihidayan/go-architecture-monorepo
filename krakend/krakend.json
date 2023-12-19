@@ -93,12 +93,50 @@
             ]
         },
         {
+            "endpoint": "/v1/auth/roles",
+            "method": "GET",
+            "input_query_strings": ["*"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/roles",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
             "endpoint": "/v1/auth/role",
             "method": "POST",
             "output_encoding": "no-op",
             "backend": [
                 {
                     "url_pattern": "/v1/auth/role",
+                    "host": [
+                        "http://fake_api:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/v1/auth/permissions",
+            "method": "GET",
+            "input_query_strings": ["*"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/permissions",
                     "host": [
                         "http://fake_api:8083"
                     ],
