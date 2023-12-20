@@ -3,7 +3,7 @@ version: "3.7"
 services:
   krakend_ce:
     container_name: arch_krakend_ce
-    image: devopsfaith/krakend:2.1
+    image: devopsfaith/krakend:watch
     volumes:
       - ./krakend:/etc/krakend
     ports:
@@ -14,9 +14,9 @@ services:
 
   fake_api:
     container_name: arch_fake_api
-    image: jaxgeller/lwan
+    image: ghcr.io/lpereira/lwan:latest
     volumes:
-      - ./data:/lwan/wwwroot
+      - ./data:/wwwroot
     ports:
       - "8000:8080"
 
@@ -41,7 +41,7 @@ services:
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: root
       MONGODB_NAME: arch_auth
-      MONGODB_HOST: '127.0.0.1'
+      MONGODB_HOST: 'mongo'
       MONGODB_PORT: '27017'
     ports:
       - '8083:8083'
@@ -60,7 +60,7 @@ services:
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: root
       MONGODB_NAME: arch_user
-      MONGODB_HOST: '127.0.0.1'
+      MONGODB_HOST: 'mongo'
       MONGODB_PORT: '27017'
     ports:
       - '8084:8084'

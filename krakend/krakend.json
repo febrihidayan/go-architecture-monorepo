@@ -52,7 +52,7 @@
                 {
                     "url_pattern": "/v1/auth/login",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -82,7 +82,7 @@
                 {
                     "url_pattern": "/v1/auth/register",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -101,7 +101,7 @@
                 {
                     "url_pattern": "/v1/auth/roles",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -119,7 +119,7 @@
                 {
                     "url_pattern": "/v1/auth/role",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -137,7 +137,7 @@
                 {
                     "url_pattern": "/v1/auth/role/{id}",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -155,7 +155,7 @@
                 {
                     "url_pattern": "/v1/auth/role/{id}",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -174,7 +174,7 @@
                 {
                     "url_pattern": "/v1/auth/permissions",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -192,7 +192,7 @@
                 {
                     "url_pattern": "/v1/auth/permission",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -210,7 +210,7 @@
                 {
                     "url_pattern": "/v1/auth/permission/{id}",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -228,7 +228,7 @@
                 {
                     "url_pattern": "/v1/auth/permission/{id}",
                     "host": [
-                        "http://fake_api:8083"
+                        "http://auth-go:8083"
                     ],
                     "extra_config": {
                         "backend/http": {
@@ -246,7 +246,7 @@
                 {
                     "url_pattern": "/v1/user/profile",
                     "host": [
-                        "http://fake_api:8084"
+                        "http://user-go:8084"
                     ],
                     "extra_config": {
                         "backend/http": {
