@@ -29,7 +29,6 @@ func (u *UserRepository) CreateUser(ctx context.Context, payload entities.User) 
 		Data: &userPb.User{
 			Name:  payload.Name,
 			Email: payload.Email,
-			Role:  payload.Role,
 		},
 	})
 	if err != nil {
@@ -43,7 +42,6 @@ func (u *UserRepository) CreateUser(ctx context.Context, payload entities.User) 
 		ID:        userId,
 		Name:      user.Data.GetName(),
 		Email:     user.Data.GetEmail(),
-		Role:      user.Data.GetRole(),
 		CreatedAt: user.Data.GetCreatedAt().AsTime(),
 		UpdatedAt: user.Data.GetUpdatedAt().AsTime(),
 	}, nil

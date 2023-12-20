@@ -12,6 +12,14 @@ func ToModelPermissionUser(x *entities.PermissionUser) *models.PermissionUser {
 	}
 }
 
+func ToListModelPermissionUser(items []*entities.PermissionUser) []interface{} {
+	data := make([]interface{}, 0)
+	for _, item := range items {
+		data = append(data, ToModelPermissionUser(item))
+	}
+	return data
+}
+
 func ToDomainPermissionUser(x *models.PermissionUser) *entities.PermissionUser {
 	return &entities.PermissionUser{
 		PermissionId: x.PermissionId,

@@ -20,14 +20,12 @@ func (x *UserUsecaseSuite) TestCreate() {
 		ID:    &id,
 		Name:  "Admin",
 		Email: "admin@app.com",
-		Role:  "admin",
 	}
 
 	user = &entities.User{
 		ID:        id,
 		Name:      "Admin",
 		Email:     "admin@app.com",
-		Role:      "admin",
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}

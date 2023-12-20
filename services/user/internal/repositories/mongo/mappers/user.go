@@ -11,7 +11,6 @@ func ToModelUser(x *entities.User) *models.User {
 		ID:        x.ID.String(),
 		Name:      x.Name,
 		Email:     x.Email,
-		Role:      x.Role,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}
@@ -23,7 +22,6 @@ func ToDomainUser(x *models.User) *entities.User {
 		ID:        id,
 		Name:      x.Name,
 		Email:     x.Email,
-		Role:      x.Role,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}

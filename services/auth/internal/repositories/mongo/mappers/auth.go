@@ -12,7 +12,6 @@ func ToModelAuth(x *entities.Auth) *models.Auth {
 		UserId:    x.UserId,
 		Email:     x.Email,
 		Password:  x.Password,
-		Role:      x.Role,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}
@@ -25,7 +24,6 @@ func ToDomainAuth(x *models.Auth) *entities.Auth {
 		UserId:    x.UserId,
 		Email:     x.Email,
 		Password:  x.Password,
-		Role:      x.Role,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}

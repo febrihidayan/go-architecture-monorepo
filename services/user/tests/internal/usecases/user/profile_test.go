@@ -20,7 +20,6 @@ func (x *UserUsecaseSuite) TestProfile() {
 		ID:        id,
 		Name:      "Admin",
 		Email:     "admin@app.com",
-		Role:      "admin",
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}

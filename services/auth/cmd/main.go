@@ -26,6 +26,7 @@ var (
 	authRepo       = repository_mongo.NewAuthRepository(db)
 	permissionRepo = repository_mongo.NewPermissionRepository(db)
 	roleRepo       = repository_mongo.NewRoleRepository(db)
+	roleUserRepo   = repository_mongo.NewRoleUserRepository(db)
 )
 
 func main() {
@@ -71,7 +72,7 @@ func initHandler(
 	grpcConnUser *grpc.ClientConn) {
 	userRepo := repository_grpc.NewUserRepository(grpcConnUser)
 
-	auth_handler.AuthHttpHandler(router, cfg, authRepo, userRepo)
+	auth_handler.AuthHttpHandler(router, cfg, authRepo, userRepo, roleUserRepo, roleRepo)
 	permision_handler.PermissionHttpHandler(router, cfg, permissionRepo)
 	role_handler.RoleHttpHandler(router, cfg, roleRepo)
 }

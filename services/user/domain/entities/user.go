@@ -14,7 +14,6 @@ type User struct {
 	ID        common.ID
 	Name      string
 	Email     string
-	Role      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -23,7 +22,6 @@ type UserDto struct {
 	ID    *common.ID
 	Name  string
 	Email string
-	Role  string
 }
 
 func NewUser(x UserDto) *User {
@@ -37,7 +35,6 @@ func NewUser(x UserDto) *User {
 		ID:        id,
 		Name:      x.Name,
 		Email:     x.Email,
-		Role:      x.Role,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
@@ -49,9 +46,6 @@ func (x *User) Validate() (err *multierror.Error) {
 	}
 	if x.Email == "" {
 		err = multierror.Append(err, lang.ErrEmailRequired)
-	}
-	if x.Role == "" {
-		err = multierror.Append(err, lang.ErrRoleRequired)
 	}
 
 	return

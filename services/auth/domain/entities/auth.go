@@ -16,7 +16,6 @@ type Auth struct {
 	UserId    string
 	Email     string
 	Password  string
-	Role      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -26,7 +25,11 @@ type AuthDto struct {
 	UserId   string
 	Email    string
 	Password string
-	Role     string
+}
+
+type AuthMeta struct {
+	Auth  *Auth
+	Roles []string
 }
 
 type AuthToken struct {
@@ -54,26 +57,25 @@ func NewAuth(x AuthDto) *Auth {
 		UserId:    x.UserId,
 		Email:     x.Email,
 		Password:  x.Password,
-		Role:      x.Role,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
 }
 
-func NewAuthLogin(x *Auth) *AuthTokenMeta {
+func NewAuthLogin(x *AuthMeta) *AuthTokenMeta {
 	duration := config.Auth().JwtExpired
 	tokenJTI := config.Auth().JwtTokenJti
 
 	exp := time.Now().Add(time.Second * time.Duration(duration) * 60 * 24).Unix() // 1 day
 	return &AuthTokenMeta{
 		AccessToken: AuthToken{
-			Sub:   x.UserId,
+			Sub:   x.Auth.UserId,
 			JTI:   tokenJTI,
 			Exp:   int(exp),
-			Roles: []string{x.Role},
+			Roles: x.Roles,
 		},
 		RefreshToken: AuthToken{
-			Sub: x.UserId,
+			Sub: x.Auth.UserId,
 			JTI: tokenJTI,
 			Exp: int(exp),
 		},
@@ -90,9 +92,6 @@ func (x *Auth) Validate() (err *multierror.Error) {
 	}
 	if x.Password == "" {
 		err = multierror.Append(err, lang.ErrPasswordRequired)
-	}
-	if x.Role == "" {
-		err = multierror.Append(err, lang.ErrRoleRequired)
 	}
 
 	return

@@ -6,20 +6,26 @@ import (
 )
 
 type authInteractor struct {
-	cfg      *config.AuthConfig
-	authRepo repositories.AuthRepository
-	userRepo repositories.UserRepository
+	cfg          *config.AuthConfig
+	authRepo     repositories.AuthRepository
+	userRepo     repositories.UserRepository
+	roleUserRepo repositories.RoleUserRepository
+	roleRepo     repositories.RoleRepository
 }
 
 func NewAuthInteractor(
 	config *config.AuthConfig,
 	authRepo repositories.AuthRepository,
 	userRepo repositories.UserRepository,
+	roleUserRepo repositories.RoleUserRepository,
+	roleRepo repositories.RoleRepository,
 ) *authInteractor {
 
 	return &authInteractor{
-		cfg:      config,
-		authRepo: authRepo,
-		userRepo: userRepo,
+		cfg:          config,
+		authRepo:     authRepo,
+		userRepo:     userRepo,
+		roleUserRepo: roleUserRepo,
+		roleRepo:     roleRepo,
 	}
 }

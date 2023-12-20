@@ -20,6 +20,8 @@ func AuthHttpHandler(
 	config *config.AuthConfig,
 	authRepo repository_mongo.AuthRepository,
 	userRepo repository_grpc.UserRepository,
+	roleUserRepo repository_mongo.RoleUserRepository,
+	roleRepo repository_mongo.RoleRepository,
 ) {
 	handler := &authHttpHandler{
 		cfg: config,
@@ -27,6 +29,8 @@ func AuthHttpHandler(
 			config,
 			&authRepo,
 			&userRepo,
+			&roleUserRepo,
+			&roleRepo,
 		),
 	}
 

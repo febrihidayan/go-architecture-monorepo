@@ -15,10 +15,12 @@ import (
 
 type AuthUsecaseSuite struct {
 	suite.Suite
-	cfg         *config.AuthConfig
-	authRepo    *mongo_repositories.AuthRepositoryMock
-	userRepo    *grpc_repositories.UserRepositoryMock
-	authUsecase usecases.AuthUsecase
+	cfg          *config.AuthConfig
+	authRepo     *mongo_repositories.AuthRepositoryMock
+	userRepo     *grpc_repositories.UserRepositoryMock
+	roleUserRepo *mongo_repositories.RoleUserRepositoryMock
+	roleRepo     *mongo_repositories.RoleRepositoryMock
+	authUsecase  usecases.AuthUsecase
 }
 
 func (x *AuthUsecaseSuite) SetupTest() {
@@ -26,8 +28,10 @@ func (x *AuthUsecaseSuite) SetupTest() {
 
 	x.authRepo = new(mongo_repositories.AuthRepositoryMock)
 	x.userRepo = new(grpc_repositories.UserRepositoryMock)
+	x.roleUserRepo = new(mongo_repositories.RoleUserRepositoryMock)
+	x.roleRepo = new(mongo_repositories.RoleRepositoryMock)
 
-	x.authUsecase = auth.NewAuthInteractor(x.cfg, x.authRepo, x.userRepo)
+	x.authUsecase = auth.NewAuthInteractor(x.cfg, x.authRepo, x.userRepo, x.roleUserRepo, x.roleRepo)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

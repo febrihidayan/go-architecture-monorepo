@@ -13,7 +13,11 @@ import (
 )
 
 func (x *authInteractor) Login(ctx context.Context, payload entities.AuthDto) (*entities.AuthTokenMeta, *exceptions.CustomError) {
-	var multilerr *multierror.Error
+	var (
+		multilerr *multierror.Error
+		authMeta  *entities.AuthMeta
+		roles     []string
+	)
 
 	log.Println("start check email already")
 	auth, err := x.authRepo.FindByEmail(ctx, payload.Email)
@@ -34,7 +38,20 @@ func (x *authInteractor) Login(ctx context.Context, payload entities.AuthDto) (*
 		}
 	}
 
+	allRoles, _ := x.roleUserRepo.AllByUserId(ctx, auth.UserId)
+	for _, item := range allRoles {
+		role, _ := x.roleRepo.Find(ctx, item.RoleId)
+		if role.Name != "" {
+			roles = append(roles, role.Name)
+		}
+	}
+
+	authMeta = &entities.AuthMeta{
+		Auth:  auth,
+		Roles: roles,
+	}
+
 	log.Println("success login")
 
-	return entities.NewAuthLogin(auth), nil
+	return entities.NewAuthLogin(authMeta), nil
 }

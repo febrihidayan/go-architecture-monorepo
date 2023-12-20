@@ -16,7 +16,6 @@ func (x *server) CreateUser(ctx context.Context, req *userPb.CreateUserRequest) 
 	user, err := x.userUsecase.Create(ctx, entities.UserDto{
 		Name:  req.Data.GetName(),
 		Email: req.Data.GetEmail(),
-		Role:  req.Data.GetRole(),
 	})
 	if err != nil {
 		return nil, status.Error(codes.Canceled, errors.New(err.Errors.GoString()).Error())
@@ -26,7 +25,6 @@ func (x *server) CreateUser(ctx context.Context, req *userPb.CreateUserRequest) 
 		Data: &userPb.User{
 			Id:        user.ID.String(),
 			Name:      user.Name,
-			Role:      user.Role,
 			CreatedAt: timestamppb.New(user.CreatedAt),
 			UpdatedAt: timestamppb.New(user.UpdatedAt),
 		},

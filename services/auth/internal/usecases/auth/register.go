@@ -6,7 +6,6 @@ import (
 	"log"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
-	"github.com/febrihidayan/go-architecture-monorepo/pkg/middleware"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 
 	"github.com/hashicorp/go-multierror"
@@ -29,7 +28,6 @@ func (x *authInteractor) Register(ctx context.Context, payload entities.Register
 	user, err := x.userRepo.CreateUser(ctx, entities.User{
 		Name:  payload.Name,
 		Email: payload.Email,
-		Role:  middleware.ROLE_MEMBER,
 	})
 	if err != nil {
 		multilerr = multierror.Append(multilerr, err)
@@ -43,7 +41,6 @@ func (x *authInteractor) Register(ctx context.Context, payload entities.Register
 	auth := entities.NewAuth(entities.AuthDto{
 		UserId:   user.ID.String(),
 		Email:    payload.Email,
-		Role:     middleware.ROLE_MEMBER,
 		Password: payload.Password,
 	})
 	log.Println("start validation auth")

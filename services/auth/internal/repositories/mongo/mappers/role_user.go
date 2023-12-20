@@ -12,6 +12,14 @@ func ToModelRoleUser(x *entities.RoleUser) *models.RoleUser {
 	}
 }
 
+func ToListModelRoleUser(items []*entities.RoleUser) []interface{} {
+	data := make([]interface{}, 0)
+	for _, item := range items {
+		data = append(data, ToModelRoleUser(item))
+	}
+	return data
+}
+
 func ToDomainRoleUser(x *models.RoleUser) *entities.RoleUser {
 	return &entities.RoleUser{
 		UserId: x.UserId,
