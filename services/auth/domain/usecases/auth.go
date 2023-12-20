@@ -8,6 +8,6 @@ import (
 )
 
 type AuthUsecase interface {
-	Login(ctx context.Context, payload entities.AuthDto) (*entities.Auth, *exceptions.CustomError)
+	Login(ctx context.Context, payload entities.AuthDto) (*entities.AuthTokenMeta, *exceptions.CustomError)
 	Register(ctx context.Context, payload entities.RegisterDto) (*entities.Auth, *exceptions.CustomError)
 }

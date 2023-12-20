@@ -32,6 +32,8 @@ func (x *AuthUsecaseSuite) TestLogin() {
 		UpdatedAt: utils.TimeUTC(),
 	}
 
+	authMeta := entities.NewAuthLogin(auth)
+
 	args := []struct {
 		name  string
 		args  Any
@@ -44,7 +46,7 @@ func (x *AuthUsecaseSuite) TestLogin() {
 
 				result, err := x.authUsecase.Login(context.Background(), payloadDto)
 				x.Nil(err)
-				x.Equal(result, auth)
+				x.Equal(result, authMeta)
 			},
 		},
 		{

@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
-func (x *authInteractor) Login(ctx context.Context, payload entities.AuthDto) (*entities.Auth, *exceptions.CustomError) {
+func (x *authInteractor) Login(ctx context.Context, payload entities.AuthDto) (*entities.AuthTokenMeta, *exceptions.CustomError) {
 	var multilerr *multierror.Error
 
 	log.Println("start check email already")
@@ -36,5 +36,5 @@ func (x *authInteractor) Login(ctx context.Context, payload entities.AuthDto) (*
 
 	log.Println("success login")
 
-	return auth, nil
+	return entities.NewAuthLogin(auth), nil
 }

@@ -35,11 +35,15 @@ func (x *authHttpHandler) Login(w http.ResponseWriter, r *http.Request) {
 		Password: payload.Password,
 	}
 
-	user, err := x.authUsecase.Login(ctx, data)
+	login, err := x.authUsecase.Login(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
 	}
 
-	utils.RespondWithJSON(w, http.StatusOK, response.MapLoginResponse(user))
+	response, _ := json.Marshal(response.MapLoginResponse(login))
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	w.Write(response)
 }

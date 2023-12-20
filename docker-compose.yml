@@ -43,6 +43,8 @@ services:
       MONGODB_NAME: arch_auth
       MONGODB_HOST: 'mongo'
       MONGODB_PORT: '27017'
+      JWT_TOKEN_JTI: mnb23vcsrt756yuiomnbvcx98ertyuiop
+      JWT_EXPIRED: 60
     ports:
       - '8083:8083'
       - '9083:9083'

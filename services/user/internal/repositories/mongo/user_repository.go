@@ -31,15 +31,15 @@ func (x *UserRepository) Create(ctx context.Context, payload *entities.User) err
 }
 
 func (x *UserRepository) Find(ctx context.Context, id string) (*entities.User, error) {
-	var auth models.User
+	var item models.User
 
-	err := x.db.Collection(models.User{}.TableName()).FindOne(ctx, bson.M{"_id": id}).Decode(&auth)
+	err := x.db.Collection(models.User{}.TableName()).FindOne(ctx, bson.M{"_id": id}).Decode(&item)
 
 	if err != nil {
 		return nil, errors.New("user not found")
 	}
 
-	return mappers.ToDomainUser(&auth), nil
+	return mappers.ToDomainUser(&item), nil
 }
 
 func (x *UserRepository) Update(ctx context.Context, payload *entities.User) error {

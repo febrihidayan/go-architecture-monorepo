@@ -1,27 +1,35 @@
 package response
 
 import (
-	"time"
-
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 )
 
-type LoginResponse struct {
-	ID        string    `json:"id"`
-	UserId    string    `json:"user_id"`
-	Email     string    `json:"email"`
-	Role      string    `json:"role"`
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+type LoginToken struct {
+	Sub   string   `json:"sub"`
+	JTI   string   `json:"jti"`
+	Roles []string `json:"roles,omitempty"`
+	Exp   int      `json:"exp"`
 }
 
-func MapLoginResponse(x *entities.Auth) LoginResponse {
+type LoginResponse struct {
+	AccessToken  LoginToken `json:"access_token"`
+	RefreshToken LoginToken `json:"refresh_token"`
+	Exp          int        `json:"exp"`
+}
+
+func MapLoginResponse(x *entities.AuthTokenMeta) LoginResponse {
 	return LoginResponse{
-		ID:        x.ID.String(),
-		UserId:    x.UserId,
-		Email:     x.Email,
-		Role:      x.Role,
-		CreatedAt: x.CreatedAt,
-		UpdatedAt: x.UpdatedAt,
+		AccessToken: LoginToken{
+			Sub:   x.AccessToken.Sub,
+			JTI:   x.AccessToken.JTI,
+			Roles: x.AccessToken.Roles,
+			Exp:   x.AccessToken.Exp,
+		},
+		RefreshToken: LoginToken{
+			Sub: x.AccessToken.Sub,
+			JTI: x.AccessToken.JTI,
+			Exp: x.AccessToken.Exp,
+		},
+		Exp: x.Exp,
 	}
 }

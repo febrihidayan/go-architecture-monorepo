@@ -6,6 +6,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/lang"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
 
 	"github.com/hashicorp/go-multierror"
 )
@@ -28,6 +29,19 @@ type AuthDto struct {
 	Role     string
 }
 
+type AuthToken struct {
+	Sub   string
+	JTI   string
+	Roles []string
+	Exp   int
+}
+
+type AuthTokenMeta struct {
+	AccessToken  AuthToken
+	RefreshToken AuthToken
+	Exp          int
+}
+
 func NewAuth(x AuthDto) *Auth {
 	id := common.NewID()
 
@@ -43,6 +57,27 @@ func NewAuth(x AuthDto) *Auth {
 		Role:      x.Role,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
+	}
+}
+
+func NewAuthLogin(x *Auth) *AuthTokenMeta {
+	duration := config.Auth().JwtExpired
+	tokenJTI := config.Auth().JwtTokenJti
+
+	exp := time.Now().Add(time.Second * time.Duration(duration) * 60 * 24).Unix() // 1 day
+	return &AuthTokenMeta{
+		AccessToken: AuthToken{
+			Sub:   x.UserId,
+			JTI:   tokenJTI,
+			Exp:   int(exp),
+			Roles: []string{x.Role},
+		},
+		RefreshToken: AuthToken{
+			Sub: x.UserId,
+			JTI: tokenJTI,
+			Exp: int(exp),
+		},
+		Exp: int(exp),
 	}
 }
 
