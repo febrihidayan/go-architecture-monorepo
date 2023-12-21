@@ -4,25 +4,24 @@ import (
 	"context"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
-	"github.com/febrihidayan/go-architecture-monorepo/pkg/lang"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/entities"
 
 	"github.com/hashicorp/go-multierror"
 )
 
-func (x *userInteractor) Create(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError) {
+func (x *userInteractor) Update(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError) {
 	var multilerr *multierror.Error
 
-	find, _ := x.userRepo.FindByEmail(ctx, payload.Email)
-	if find != nil {
-		multilerr = multierror.Append(multilerr, lang.ErrEmailAlready)
+	find, err := x.userRepo.Find(ctx, payload.ID.String())
+	if err != nil {
+		multilerr = multierror.Append(multilerr, err)
 		return nil, &exceptions.CustomError{
 			Status: exceptions.ERRREPOSITORY,
 			Errors: multilerr,
 		}
 	}
 
-	user := entities.NewUser(payload)
+	user := entities.NewUser(payload, find)
 	if err := user.Validate(); err != nil {
 		multilerr = multierror.Append(multilerr, err)
 		return nil, &exceptions.CustomError{
@@ -31,7 +30,7 @@ func (x *userInteractor) Create(ctx context.Context, payload entities.UserDto) (
 		}
 	}
 
-	if err := x.userRepo.Create(ctx, user); err != nil {
+	if err := x.userRepo.Update(ctx, user); err != nil {
 		multilerr = multierror.Append(multilerr, err)
 		return nil, &exceptions.CustomError{
 			Status: exceptions.ERRREPOSITORY,

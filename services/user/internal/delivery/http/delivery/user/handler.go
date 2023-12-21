@@ -27,5 +27,7 @@ func UserHttpHandler(
 		),
 	}
 
-	r.HandleFunc("/v1/user/profile", handler.Profile).Methods("GET")
+	r.HandleFunc("/v1/users", handler.GetAll).Methods("GET")
+	r.HandleFunc("/v1/user", handler.Create).Methods("POST")
+	r.HandleFunc("/v1/user/{id}", handler.Update).Methods("PUT")
 }

@@ -12,6 +12,13 @@ type User struct {
 	UpdatedAt time.Time `bson:"updated_at"`
 }
 
+type UserMeta struct {
+	Data    []*User `bson:"data,omitempty"`
+	Page    int     `json:"page,omitempty"`
+	PerPage int     `json:"per_page,omitempty"`
+	Total   int     `json:"total,omitempty"`
+}
+
 func (User) TableName() string {
 	return "users"
 }

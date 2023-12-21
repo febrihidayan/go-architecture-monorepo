@@ -1,4 +1,4 @@
-package user
+package profile
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
-func (x *userInteractor) Profile(ctx context.Context, id string) (*entities.User, *exceptions.CustomError) {
+func (x *profileInteractor) Find(ctx context.Context, id string) (*entities.User, *exceptions.CustomError) {
 	var multilerr *multierror.Error
 
 	find, err := x.userRepo.Find(ctx, id)

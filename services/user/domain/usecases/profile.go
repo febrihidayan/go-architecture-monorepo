@@ -7,8 +7,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/entities"
 )
 
-type UserUsecase interface {
-	Create(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
-	GetAll(ctx context.Context, params entities.UserQueryParams) (*entities.UserMeta, *exceptions.CustomError)
+type ProfileUsecase interface {
+	Find(ctx context.Context, id string) (*entities.User, *exceptions.CustomError)
 	Update(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
 }

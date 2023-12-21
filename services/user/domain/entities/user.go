@@ -24,20 +24,35 @@ type UserDto struct {
 	Email string
 }
 
-func NewUser(x UserDto) *User {
-	id := common.NewID()
+type UserQueryParams struct {
+	Search  string
+	Page    int
+	PerPage int
+}
 
-	if x.ID != nil {
-		id = *x.ID
-	}
+type UserMeta struct {
+	Data  []*User
+	Total int
+}
 
-	return &User{
-		ID:        id,
+func NewUser(x UserDto, finds ...*User) *User {
+	user := User{
+		ID:        common.NewID(),
 		Name:      x.Name,
 		Email:     x.Email,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
+
+	if x.ID != nil {
+		user.ID = *x.ID
+	}
+
+	for _, item := range finds {
+		user.CreatedAt = item.CreatedAt
+	}
+
+	return &user
 }
 
 func (x *User) Validate() (err *multierror.Error) {

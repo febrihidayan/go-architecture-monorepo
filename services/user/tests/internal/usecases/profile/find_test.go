@@ -1,4 +1,4 @@
-package user
+package profile
 
 import (
 	"context"
@@ -6,22 +6,15 @@ import (
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
-	"github.com/febrihidayan/go-architecture-monorepo/pkg/lang"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/entities"
 	"github.com/hashicorp/go-multierror"
 	"github.com/stretchr/testify/mock"
 )
 
-func (x *UserUsecaseSuite) TestCreate() {
+func (x *ProfileUsecaseSuite) TestFind() {
 	id := common.NewID()
 	var user *entities.User
-
-	payloadDto := entities.UserDto{
-		ID:    &id,
-		Name:  "Admin",
-		Email: "admin@app.com",
-	}
 
 	user = &entities.User{
 		ID:        id,
@@ -39,38 +32,19 @@ func (x *UserUsecaseSuite) TestCreate() {
 		{
 			name: "Success Positive Case",
 			tests: func(arg Any) {
-				x.userRepo.Mock.On("FindByEmail", payloadDto.Email).Return(nil, errors.New(mock.Anything))
+				x.userRepo.Mock.On("Find", id.String()).Return(user, nil)
 
-				x.userRepo.Mock.On("Create", user).Return(nil)
-
-				result, err := x.userUsecase.Create(context.Background(), payloadDto)
+				profile, err := x.profileUsecase.Find(context.Background(), id.String())
 				x.Nil(err)
-				x.Equal(result, user)
-			},
-		},
-		{
-			name: "Failed Email Is Already",
-			tests: func(arg Any) {
-				x.userRepo.Mock.On("FindByEmail", payloadDto.Email).Return(user, lang.ErrEmailAlready)
-
-				_, err := x.userUsecase.Create(context.Background(), payloadDto)
-
-				e := &exceptions.CustomError{
-					Status: exceptions.ERRREPOSITORY,
-					Errors: multierror.Append(lang.ErrEmailAlready),
-				}
-
-				x.Equal(err, e)
+				x.Equal(profile, user)
 			},
 		},
 		{
 			name: "Failed Negative Case",
 			tests: func(arg Any) {
-				x.userRepo.Mock.On("FindByEmail", payloadDto.Email).Return(nil, errors.New(mock.Anything))
+				x.userRepo.Mock.On("Find", id.String()).Return(nil, errors.New(mock.Anything))
 
-				x.userRepo.Mock.On("Create", user).Return(errors.New(mock.Anything))
-
-				_, err := x.userUsecase.Create(context.Background(), payloadDto)
+				_, err := x.profileUsecase.Find(context.Background(), id.String())
 
 				e := &exceptions.CustomError{
 					Status: exceptions.ERRREPOSITORY,

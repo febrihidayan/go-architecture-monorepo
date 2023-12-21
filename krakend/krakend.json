@@ -311,8 +311,117 @@
             }
         },
         {
+            "endpoint": "/v1/users",
+            "method": "GET",
+            "input_headers": ["Authorization"],
+            "input_query_strings": ["*"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/users",
+                    "host": [
+                        "http://user-go:8084"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "roles": ["superadministrator", "administrator"],
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
+            "endpoint": "/v1/user",
+            "method": "POST",
+            "input_headers": ["Authorization"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/user",
+                    "host": [
+                        "http://user-go:8084"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "roles": ["superadministrator", "administrator"],
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
+            "endpoint": "/v1/user/{id}",
+            "method": "PUT",
+            "input_headers": ["Authorization"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/user/{id}",
+                    "host": [
+                        "http://user-go:8084"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "roles": ["superadministrator", "administrator"],
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
             "endpoint": "/v1/user/profile",
             "method": "GET",
+            "input_headers": ["Authorization"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/user/profile",
+                    "host": [
+                        "http://user-go:8084"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "roles": ["superadministrator", "administrator", "member"],
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
+            "endpoint": "/v1/user/profile",
+            "method": "PUT",
             "input_headers": ["Authorization"],
             "output_encoding": "no-op",
             "backend": [

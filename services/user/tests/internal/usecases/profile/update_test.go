@@ -1,20 +1,24 @@
-package user
+package profile
 
 import (
 	"context"
 	"errors"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
-	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/entities"
-	"github.com/hashicorp/go-multierror"
 	"github.com/stretchr/testify/mock"
 )
 
-func (x *UserUsecaseSuite) TestProfile() {
+func (x *ProfileUsecaseSuite) TestUpdate() {
 	id := common.NewID()
 	var user *entities.User
+
+	payloadDto := entities.UserDto{
+		ID:    &id,
+		Name:  "Admin",
+		Email: "admin@app.com",
+	}
 
 	user = &entities.User{
 		ID:        id,
@@ -32,26 +36,22 @@ func (x *UserUsecaseSuite) TestProfile() {
 		{
 			name: "Success Positive Case",
 			tests: func(arg Any) {
-				x.userRepo.Mock.On("Find", id.String()).Return(user, nil)
+				x.userRepo.Mock.On("Find", payloadDto.ID.String()).Return(user, nil)
 
-				profile, err := x.userUsecase.Profile(context.Background(), id.String())
+				x.userRepo.Mock.On("Update", user).Return(nil)
+
+				result, err := x.profileUsecase.Update(context.Background(), payloadDto)
 				x.Nil(err)
-				x.Equal(profile, user)
+				x.Equal(user, result)
 			},
 		},
 		{
-			name: "Failed Negative Case",
+			name: "Failed Negatif Case",
 			tests: func(arg Any) {
-				x.userRepo.Mock.On("Find", id.String()).Return(nil, errors.New(mock.Anything))
+				x.userRepo.Mock.On("Find", payloadDto.ID.String()).Return(nil, errors.New(mock.Anything))
 
-				_, err := x.userUsecase.Profile(context.Background(), id.String())
-
-				e := &exceptions.CustomError{
-					Status: exceptions.ERRREPOSITORY,
-					Errors: multierror.Append(errors.New(mock.Anything)),
-				}
-
-				x.Equal(err, e)
+				_, err := x.profileUsecase.Update(context.Background(), payloadDto)
+				x.NotNil(err)
 			},
 		},
 	}

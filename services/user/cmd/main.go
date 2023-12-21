@@ -12,6 +12,7 @@ import (
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
 	grpc_server "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_server"
+	profile_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/profile"
 	user_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/user"
 	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/mongo"
 	"github.com/gorilla/mux"
@@ -76,5 +77,7 @@ func RunGrpcServer() {
 func initHandler(
 	router *mux.Router,
 	cfg *config.UserConfig) {
+
+	profile_handler.ProfileHttpHandler(router, cfg, userRepo)
 	user_handler.UserHttpHandler(router, cfg, userRepo)
 }

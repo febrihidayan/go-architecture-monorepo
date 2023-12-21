@@ -15,6 +15,7 @@ var (
 	ErrConfitmPasswordNotSame  = errors.New("Password confirmation does not match.")
 	ErrRoleRequired            = errors.New("Role is required.")
 	ErrEmailNotFound           = errors.New("The email has not been registered.")
+	ErrEmailAlready            = errors.New("The email is already.")
 	ErrPasswordIsIncorrent     = errors.New("The password you entered is incorrect.")
 	ErrRoleAlready             = errors.New("The name role is already.")
 	ErrPermissionAlready       = errors.New("The name permission is already.")
