@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/middleware"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 
 	"github.com/hashicorp/go-multierror"
@@ -61,6 +62,21 @@ func (x *authInteractor) Register(ctx context.Context, payload entities.Register
 		return nil, &exceptions.CustomError{
 			Status: exceptions.ERRREPOSITORY,
 			Errors: multilerr,
+		}
+	}
+
+	// saves the default role for new users
+	role, _ := x.roleRepo.FindByName(ctx, middleware.ROLE_MEMBER)
+	if role != nil {
+		payloadRoleUser := make([]*entities.RoleUser, 0)
+
+		payloadRoleUser = append(payloadRoleUser, &entities.RoleUser{
+			RoleId: role.ID.String(),
+			UserId: auth.UserId,
+		})
+
+		if err := x.roleUserRepo.CreateMany(ctx, payloadRoleUser); err != nil {
+			log.Println(err)
 		}
 	}
 
