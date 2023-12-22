@@ -2,8 +2,8 @@ package grpc_server
 
 import (
 	"context"
-	"errors"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/proto/_generated/auth"
 	authPb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/auth"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
@@ -18,7 +18,7 @@ func (x *server) CreateOrUpdateAuth(ctx context.Context, req *authPb.CreateOrUpd
 		Password: req.Data.GetPassword(),
 	})
 	if err != nil {
-		return nil, status.Error(codes.Canceled, errors.New(err.Errors.GoString()).Error())
+		return nil, status.Error(codes.Code(exceptions.MapToHttpStatusCode(err.Status)), err.Errors.Error())
 	}
 
 	return &authPb.CreateOrUpdateAuthResponse{

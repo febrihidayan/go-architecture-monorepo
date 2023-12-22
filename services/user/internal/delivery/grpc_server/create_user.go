@@ -2,8 +2,8 @@ package grpc_server
 
 import (
 	"context"
-	"errors"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/proto/_generated/user"
 	userPb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/user"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/entities"
@@ -18,7 +18,7 @@ func (x *server) CreateUser(ctx context.Context, req *userPb.CreateUserRequest) 
 		Email: req.Data.GetEmail(),
 	})
 	if err != nil {
-		return nil, status.Error(codes.Canceled, errors.New(err.Errors.GoString()).Error())
+		return nil, status.Error(codes.Code(exceptions.MapToHttpStatusCode(err.Status)), err.Errors.Error())
 	}
 
 	return &userPb.CreateUserResponse{
