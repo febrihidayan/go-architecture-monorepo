@@ -45,21 +45,36 @@ type AuthTokenMeta struct {
 	Exp          int
 }
 
-func NewAuth(x AuthDto) *Auth {
-	id := common.NewID()
-
-	if x.ID != nil {
-		id = *x.ID
-	}
-
-	return &Auth{
-		ID:        id,
+func NewAuth(x AuthDto, finds ...*Auth) *Auth {
+	auth := Auth{
+		ID:        common.NewID(),
 		UserId:    x.UserId,
 		Email:     x.Email,
-		Password:  x.Password,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
+
+	if x.ID != nil {
+		auth.ID = *x.ID
+	}
+
+	if len(finds) > 0 {
+
+	}
+
+	for _, item := range finds {
+		if item != nil {
+			auth.Password = item.Password
+			auth.CreatedAt = item.CreatedAt
+		}
+	}
+
+	// set password hash
+	if x.Password != "" {
+		auth.SetPasswordHash(x.Password)
+	}
+
+	return &auth
 }
 
 func NewAuthLogin(x *AuthMeta) *AuthTokenMeta {

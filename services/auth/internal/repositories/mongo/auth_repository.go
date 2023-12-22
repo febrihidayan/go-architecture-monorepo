@@ -54,6 +54,18 @@ func (x *AuthRepository) FindByEmail(ctx context.Context, email string) (*entiti
 	return mappers.ToDomainAuth(&auth), nil
 }
 
+func (x *AuthRepository) FindByUserId(ctx context.Context, userId string) (*entities.Auth, error) {
+	var auth models.Auth
+
+	err := x.db.Collection(models.Auth{}.TableName()).FindOne(ctx, bson.M{"user_id": userId}).Decode(&auth)
+
+	if err != nil {
+		return nil, errors.New("auth not found")
+	}
+
+	return mappers.ToDomainAuth(&auth), nil
+}
+
 func (x *AuthRepository) Update(ctx context.Context, payload *entities.Auth) error {
 	_, err := x.db.Collection(models.Auth{}.TableName()).ReplaceOne(ctx, bson.M{
 		"_id": payload.ID.String(),

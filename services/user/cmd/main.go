@@ -14,6 +14,7 @@ import (
 	grpc_server "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_server"
 	profile_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/profile"
 	user_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/user"
+	repository_grpc "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/grpc"
 	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/mongo"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
@@ -35,8 +36,11 @@ func main() {
 	go RunGrpcServer()
 	// end run Grpc Server
 
+	// run grpc client
+	conGrpcAuthClient := RunGrpcAuthClient()
+
 	router := mux.NewRouter()
-	initHandler(router, cfg)
+	initHandler(router, cfg, conGrpcAuthClient)
 	http.Handle("/", router)
 
 	log.Println("Http Run on", cfg.HttpPort)
@@ -74,10 +78,24 @@ func RunGrpcServer() {
 	}()
 }
 
+func RunGrpcAuthClient() *grpc.ClientConn {
+	conGrpcClient, err := grpc.Dial(cfg.GrpcClient.Auth, grpc.WithInsecure())
+	if err != nil {
+		cancel()
+		log.Fatalf("did not connect: %v", err)
+	}
+	log.Println("rpc user started on", cfg.GrpcClient.Auth)
+
+	return conGrpcClient
+}
+
 func initHandler(
 	router *mux.Router,
-	cfg *config.UserConfig) {
+	cfg *config.UserConfig,
+	grpcConnAuth *grpc.ClientConn) {
+
+	authRepo := repository_grpc.NewAuthRepository(grpcConnAuth)
 
 	profile_handler.ProfileHttpHandler(router, cfg, userRepo)
-	user_handler.UserHttpHandler(router, cfg, userRepo)
+	user_handler.UserHttpHandler(router, cfg, userRepo, authRepo)
 }

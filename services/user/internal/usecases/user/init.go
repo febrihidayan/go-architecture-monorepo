@@ -8,15 +8,18 @@ import (
 type userInteractor struct {
 	cfg      *config.UserConfig
 	userRepo repositories.UserRepository
+	authRepo repositories.AuthRepository
 }
 
 func NewUserInteractor(
 	config *config.UserConfig,
 	userRepo repositories.UserRepository,
+	authRepo repositories.AuthRepository,
 ) *userInteractor {
 
 	return &userInteractor{
 		cfg:      config,
 		userRepo: userRepo,
+		authRepo: authRepo,
 	}
 }

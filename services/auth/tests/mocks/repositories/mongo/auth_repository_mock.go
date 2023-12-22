@@ -49,6 +49,20 @@ func (x *AuthRepositoryMock) FindByEmail(ctx context.Context, email string) (res
 	return
 }
 
+func (x *AuthRepositoryMock) FindByUserId(ctx context.Context, userId string) (result *entities.Auth, err error) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).(*entities.Auth); ok {
+		result = n
+	}
+
+	if n, ok := args.Get(1).(error); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *AuthRepositoryMock) Update(ctx context.Context, payload *entities.Auth) (err error) {
 	args := x.Called(payload)
 

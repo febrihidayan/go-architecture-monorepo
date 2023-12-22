@@ -21,6 +21,9 @@ func (x *UserUsecaseSuite) TestCreate() {
 		ID:    &id,
 		Name:  "Admin",
 		Email: "admin@app.com",
+		Auth: entities.Auth{
+			Password: "password",
+		},
 	}
 
 	user = &entities.User{
@@ -29,6 +32,12 @@ func (x *UserUsecaseSuite) TestCreate() {
 		Email:     "admin@app.com",
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
+	}
+
+	auth := entities.Auth{
+		UserId:   id.String(),
+		Email:    user.Email,
+		Password: payloadDto.Auth.Password,
 	}
 
 	args := []struct {
@@ -40,6 +49,8 @@ func (x *UserUsecaseSuite) TestCreate() {
 			name: "Success Positive Case",
 			tests: func(arg Any) {
 				x.userRepo.Mock.On("FindByEmail", payloadDto.Email).Return(nil, errors.New(mock.Anything))
+
+				x.authRepo.Mock.On("CreateOrUpdate", &auth).Return(nil)
 
 				x.userRepo.Mock.On("Create", user).Return(nil)
 
@@ -67,6 +78,8 @@ func (x *UserUsecaseSuite) TestCreate() {
 			name: "Failed Negative Case",
 			tests: func(arg Any) {
 				x.userRepo.Mock.On("FindByEmail", payloadDto.Email).Return(nil, errors.New(mock.Anything))
+
+				x.authRepo.Mock.On("CreateOrUpdate", &auth).Return(nil)
 
 				x.userRepo.Mock.On("Create", user).Return(errors.New(mock.Anything))
 

@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	AuthServices_UpdateAuthByUserId_FullMethodName = "/auth.AuthServices/UpdateAuthByUserId"
+	AuthServices_CreateOrUpdateAuth_FullMethodName = "/auth.AuthServices/CreateOrUpdateAuth"
 )
 
 // AuthServicesClient is the client API for AuthServices service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type AuthServicesClient interface {
-	UpdateAuthByUserId(ctx context.Context, in *UpdateAuthByUserIdRequest, opts ...grpc.CallOption) (*UpdateAuthByUserIdResponse, error)
+	CreateOrUpdateAuth(ctx context.Context, in *CreateOrUpdateAuthRequest, opts ...grpc.CallOption) (*CreateOrUpdateAuthResponse, error)
 }
 
 type authServicesClient struct {
@@ -37,9 +37,9 @@ func NewAuthServicesClient(cc grpc.ClientConnInterface) AuthServicesClient {
 	return &authServicesClient{cc}
 }
 
-func (c *authServicesClient) UpdateAuthByUserId(ctx context.Context, in *UpdateAuthByUserIdRequest, opts ...grpc.CallOption) (*UpdateAuthByUserIdResponse, error) {
-	out := new(UpdateAuthByUserIdResponse)
-	err := c.cc.Invoke(ctx, AuthServices_UpdateAuthByUserId_FullMethodName, in, out, opts...)
+func (c *authServicesClient) CreateOrUpdateAuth(ctx context.Context, in *CreateOrUpdateAuthRequest, opts ...grpc.CallOption) (*CreateOrUpdateAuthResponse, error) {
+	out := new(CreateOrUpdateAuthResponse)
+	err := c.cc.Invoke(ctx, AuthServices_CreateOrUpdateAuth_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,15 +50,15 @@ func (c *authServicesClient) UpdateAuthByUserId(ctx context.Context, in *UpdateA
 // All implementations should embed UnimplementedAuthServicesServer
 // for forward compatibility
 type AuthServicesServer interface {
-	UpdateAuthByUserId(context.Context, *UpdateAuthByUserIdRequest) (*UpdateAuthByUserIdResponse, error)
+	CreateOrUpdateAuth(context.Context, *CreateOrUpdateAuthRequest) (*CreateOrUpdateAuthResponse, error)
 }
 
 // UnimplementedAuthServicesServer should be embedded to have forward compatible implementations.
 type UnimplementedAuthServicesServer struct {
 }
 
-func (UnimplementedAuthServicesServer) UpdateAuthByUserId(context.Context, *UpdateAuthByUserIdRequest) (*UpdateAuthByUserIdResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateAuthByUserId not implemented")
+func (UnimplementedAuthServicesServer) CreateOrUpdateAuth(context.Context, *CreateOrUpdateAuthRequest) (*CreateOrUpdateAuthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrUpdateAuth not implemented")
 }
 
 // UnsafeAuthServicesServer may be embedded to opt out of forward compatibility for this service.
@@ -72,20 +72,20 @@ func RegisterAuthServicesServer(s grpc.ServiceRegistrar, srv AuthServicesServer)
 	s.RegisterService(&AuthServices_ServiceDesc, srv)
 }
 
-func _AuthServices_UpdateAuthByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateAuthByUserIdRequest)
+func _AuthServices_CreateOrUpdateAuth_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOrUpdateAuthRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(AuthServicesServer).UpdateAuthByUserId(ctx, in)
+		return srv.(AuthServicesServer).CreateOrUpdateAuth(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: AuthServices_UpdateAuthByUserId_FullMethodName,
+		FullMethod: AuthServices_CreateOrUpdateAuth_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(AuthServicesServer).UpdateAuthByUserId(ctx, req.(*UpdateAuthByUserIdRequest))
+		return srv.(AuthServicesServer).CreateOrUpdateAuth(ctx, req.(*CreateOrUpdateAuthRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -98,8 +98,8 @@ var AuthServices_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*AuthServicesServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UpdateAuthByUserId",
-			Handler:    _AuthServices_UpdateAuthByUserId_Handler,
+			MethodName: "CreateOrUpdateAuth",
+			Handler:    _AuthServices_CreateOrUpdateAuth_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

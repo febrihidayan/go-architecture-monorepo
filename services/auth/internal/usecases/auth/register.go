@@ -53,9 +53,6 @@ func (x *authInteractor) Register(ctx context.Context, payload entities.Register
 		}
 	}
 
-	// set password
-	auth.SetPasswordHash(payload.Password)
-
 	log.Println("start create auth")
 	if err := x.authRepo.Create(ctx, auth); err != nil {
 		multilerr = multierror.Append(multilerr, err)

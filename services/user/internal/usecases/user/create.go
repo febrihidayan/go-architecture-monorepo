@@ -31,6 +31,20 @@ func (x *userInteractor) Create(ctx context.Context, payload entities.UserDto) (
 		}
 	}
 
+	auth := entities.Auth{
+		UserId:   user.ID.String(),
+		Email:    user.Email,
+		Password: payload.Auth.Password,
+	}
+
+	if err := x.authRepo.CreateOrUpdate(ctx, &auth); err != nil {
+		multilerr = multierror.Append(multilerr, err)
+		return nil, &exceptions.CustomError{
+			Status: exceptions.ERRREPOSITORY,
+			Errors: multilerr,
+		}
+	}
+
 	if err := x.userRepo.Create(ctx, user); err != nil {
 		multilerr = multierror.Append(multilerr, err)
 		return nil, &exceptions.CustomError{

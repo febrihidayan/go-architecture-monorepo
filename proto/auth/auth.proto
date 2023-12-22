@@ -5,7 +5,7 @@ package auth;
 import "google/protobuf/timestamp.proto";
 
 service AuthServices {
-    rpc UpdateAuthByUserId(UpdateAuthByUserIdRequest) returns (UpdateAuthByUserIdResponse);
+    rpc CreateOrUpdateAuth(CreateOrUpdateAuthRequest) returns (CreateOrUpdateAuthResponse);
 }
 
 message RequestResponse {
@@ -17,14 +17,15 @@ message Auth {
     string id = 1;
     string user_id = 2;
     string email = 3;
-    google.protobuf.Timestamp created_at = 4;
-    google.protobuf.Timestamp deleted_at = 5;
+    string password = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
 }
 
-message UpdateAuthByUserIdRequest {
+message CreateOrUpdateAuthRequest {
     Auth data = 1;
 }
 
-message UpdateAuthByUserIdResponse {
+message CreateOrUpdateAuthResponse {
     RequestResponse response = 1;
 }

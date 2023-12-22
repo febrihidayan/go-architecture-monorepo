@@ -14,6 +14,6 @@ func HandlerUserServices(s *grpc.Server, db *mongo.Database, cfg config.UserConf
 	userRepo := repositories.NewUserRepository(db)
 
 	userPb.RegisterUserServicesServer(s, &server{
-		userUsecase: user.NewUserInteractor(&cfg, &userRepo),
+		userUsecase: user.NewUserInteractor(&cfg, &userRepo, nil),
 	})
 }

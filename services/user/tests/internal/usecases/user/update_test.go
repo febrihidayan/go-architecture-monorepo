@@ -18,6 +18,9 @@ func (x *UserUsecaseSuite) TestUpdate() {
 		ID:    &id,
 		Name:  "Admin",
 		Email: "admin@app.com",
+		Auth: entities.Auth{
+			Password: "password",
+		},
 	}
 
 	user = &entities.User{
@@ -26,6 +29,12 @@ func (x *UserUsecaseSuite) TestUpdate() {
 		Email:     "admin@app.com",
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
+	}
+
+	auth := entities.Auth{
+		UserId:   id.String(),
+		Email:    user.Email,
+		Password: payloadDto.Auth.Password,
 	}
 
 	args := []struct {
@@ -37,6 +46,8 @@ func (x *UserUsecaseSuite) TestUpdate() {
 			name: "Success Positive Case",
 			tests: func(arg Any) {
 				x.userRepo.Mock.On("Find", payloadDto.ID.String()).Return(user, nil)
+
+				x.authRepo.Mock.On("CreateOrUpdate", &auth).Return(nil)
 
 				x.userRepo.Mock.On("Update", user).Return(nil)
 

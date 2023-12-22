@@ -22,6 +22,7 @@ type UserDto struct {
 	ID    *common.ID
 	Name  string
 	Email string
+	Auth  Auth
 }
 
 type UserQueryParams struct {

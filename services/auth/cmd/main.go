@@ -4,12 +4,14 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"net"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/grpc_server"
 	auth_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/auth"
 	permision_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/permission"
 	role_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/role"
@@ -34,14 +36,12 @@ func main() {
 		db.Client().Disconnect(ctx)
 	}()
 
-	// run rpc user client
-	conGrpcUser, errGUser := grpc.Dial(cfg.GrpcClient.User, grpc.WithInsecure())
-	if errGUser != nil {
-		cancel()
-		log.Fatalf("did not connect: %v", errGUser)
-	}
-	log.Println("rpc user started on", cfg.GrpcClient.User)
-	// end run rpc user client
+	// run Grpc Server
+	go RunGrpcServer()
+	// end run Grpc Server
+
+	// run rpc client
+	conGrpcUser := RunGrpcUserClient()
 
 	router := mux.NewRouter()
 	initHandler(router, cfg, conGrpcUser)
@@ -64,6 +64,33 @@ func main() {
 	}
 
 	log.Println("Server Exited Properly")
+}
+
+func RunGrpcServer() {
+
+	grpcServer := grpc.NewServer()
+	grpc_server.HandlerAuthServices(grpcServer, db, *cfg)
+
+	lis, err := net.Listen("tcp", cfg.RpcPort)
+	if err != nil {
+		log.Fatalln("Failed to listen:", err)
+	}
+
+	go func() {
+		log.Println(fmt.Sprintf("Grpc Server listen to: %v", cfg.RpcPort))
+		log.Fatal(grpcServer.Serve(lis))
+	}()
+}
+
+func RunGrpcUserClient() *grpc.ClientConn {
+	conGrpc, err := grpc.Dial(cfg.GrpcClient.User, grpc.WithInsecure())
+	if err != nil {
+		cancel()
+		log.Fatalf("did not connect: %v", err)
+	}
+	log.Println("rpc user started on", cfg.GrpcClient.User)
+
+	return conGrpc
 }
 
 func initHandler(
