@@ -19,6 +19,7 @@ var (
 	ErrPasswordIsIncorrent     = errors.New("The password you entered is incorrect.")
 	ErrRoleAlready             = errors.New("The name role is already.")
 	ErrPermissionAlready       = errors.New("The name permission is already.")
+	ErrUnsupportFile           = errors.New("unsupport file type.")
 
 	Locales = map[string]string{
 		"filled": "The :attribute field is required.",

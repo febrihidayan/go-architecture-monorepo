@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package storage;
+
+import "google/protobuf/timestamp.proto";
+
+service StorageServices {
+}
+
+message Cloud {
+    string id = 1;
+    string name = 2;
+    string url = 3;
+    string created_by = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp deleted_at = 6;
+}

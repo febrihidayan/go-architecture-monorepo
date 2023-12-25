@@ -67,3 +67,27 @@ services:
     ports:
       - '8084:8084'
       - '9084:9084'
+
+  storage-go:
+    container_name: arch_storage_go
+    image: febrihidayan/go-architecture-monorepo/storage
+    build:
+      context: .
+      dockerfile: docker/storage/Dockerfile
+    environment:
+      HTTP_PORT: ':8085'
+      RPC_PORT: ':9085'
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_NAME: arch_storage
+      MONGODB_HOST: 'mongo'
+      MONGODB_PORT: '27017'
+      MAX_UPLOAD_FILE: 15
+      AWS_ACCESS_KEY: "key"
+      AWS_ACCESS_SECRET: "secret"
+      AWS_BUCKET: "bucket"
+      AWS_DIRECTORY: "test"
+      AWS_REGION: "ap-southeast-1"
+    ports:
+      - '8085:8085'
+      - '9085:9085'

@@ -28,3 +28,4 @@ Started rest API with clean architecture monorepo golang
 | :----------- | :-------- | :------- |
 | auth         | 8083      | 9083     |
 | user         | 8084      | 9084     |
+| storage      | 8085      | 9085     |
