@@ -8,6 +8,7 @@ type Cloud struct {
 	ID        string    `bson:"_id"`
 	Name      string    `bson:"name"`
 	Url       string    `bson:"url"`
+	Status    string    `bson:"status"`
 	CreatedBy string    `bson:"created_by"`
 	CreatedAt time.Time `bson:"created_at"`
 	UpdatedAt time.Time `bson:"updated_at"`

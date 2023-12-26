@@ -2,9 +2,11 @@ syntax = "proto3";
 
 package storage;
 
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service StorageServices {
+    rpc UpdateCloudApprove(UpdateCloudApproveRequest) returns (google.protobuf.Empty);
 }
 
 message Cloud {
@@ -14,4 +16,8 @@ message Cloud {
     string created_by = 4;
     google.protobuf.Timestamp created_at = 5;
     google.protobuf.Timestamp deleted_at = 6;
+}
+
+message UpdateCloudApproveRequest {
+    repeated string ids = 1;
 }

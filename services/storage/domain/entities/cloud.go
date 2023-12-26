@@ -9,10 +9,16 @@ import (
 	"github.com/hashicorp/go-multierror"
 )
 
+const (
+	CloudStatusPending = "pending"
+	CloudStatusApprove = "approve"
+)
+
 type Cloud struct {
 	ID        common.ID
 	Name      string
 	Url       string
+	Status    string
 	CreatedBy string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -22,8 +28,15 @@ type CloudDto struct {
 	ID        *common.ID
 	Name      string
 	Url       string
+	Status    string
 	CreatedBy string
 	File      File
+}
+
+type CloudQueryParams struct {
+	Search    string
+	Status    string
+	CreatedAt time.Time
 }
 
 func NewCloud(x CloudDto, finds ...*Cloud) *Cloud {
@@ -32,6 +45,7 @@ func NewCloud(x CloudDto, finds ...*Cloud) *Cloud {
 		ID:        common.NewID(),
 		Name:      x.Name,
 		Url:       x.Url,
+		Status:    x.Status,
 		CreatedBy: x.CreatedBy,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
@@ -42,6 +56,7 @@ func NewCloud(x CloudDto, finds ...*Cloud) *Cloud {
 	}
 
 	for _, item := range finds {
+		cloud.CreatedBy = item.CreatedBy
 		cloud.CreatedAt = item.CreatedAt
 	}
 
@@ -64,4 +79,8 @@ func (x *Cloud) Validate() (err *multierror.Error) {
 
 func (x *Cloud) SetUrl(url string) {
 	x.Url = url
+}
+
+func (x *Cloud) SetStatus(status string) {
+	x.Status = status
 }

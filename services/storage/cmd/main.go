@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/cron_job"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/grpc_server"
 	cloud_handler "github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/http/delivery/cloud"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/factories"
@@ -35,6 +36,9 @@ func main() {
 	// run Grpc Server
 	go RunGrpcServer()
 	// end run Grpc Server
+
+	// run cron job
+	go cron_job.HandlerJobService(cfg, db)
 
 	router := mux.NewRouter()
 	initHandler(router, cfg)

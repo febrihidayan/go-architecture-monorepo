@@ -21,6 +21,20 @@ func (x *CloudRepositoryMock) Create(ctx context.Context, payload *entities.Clou
 	return
 }
 
+func (x *CloudRepositoryMock) All(ctx context.Context, params *entities.CloudQueryParams) (results []*entities.Cloud, err error) {
+	args := x.Called(params)
+
+	if n, ok := args.Get(0).([]*entities.Cloud); ok {
+		results = n
+	}
+
+	if n, ok := args.Get(1).(error); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *CloudRepositoryMock) Find(ctx context.Context, id string) (result *entities.Cloud, err error) {
 	args := x.Called(id)
 
@@ -29,6 +43,16 @@ func (x *CloudRepositoryMock) Find(ctx context.Context, id string) (result *enti
 	}
 
 	if n, ok := args.Get(1).(error); ok {
+		err = n
+	}
+
+	return
+}
+
+func (x *CloudRepositoryMock) Update(ctx context.Context, payload *entities.Cloud) (err error) {
+	args := x.Called(payload)
+
+	if n, ok := args.Get(0).(error); ok {
 		err = n
 	}
 

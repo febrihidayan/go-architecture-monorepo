@@ -30,6 +30,37 @@ func (x *CloudRepository) Create(ctx context.Context, payload *entities.Cloud) e
 	return nil
 }
 
+func (x *CloudRepository) All(ctx context.Context, params *entities.CloudQueryParams) ([]*entities.Cloud, error) {
+	var (
+		results []*entities.Cloud
+		filter  bson.M
+	)
+
+	if params.Status != "" {
+		filter = bson.M{
+			"status": params.Status,
+		}
+	}
+
+	cursor, err := x.db.Collection(models.Cloud{}.TableName()).Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var item models.Cloud
+		if err := cursor.Decode(&item); err != nil {
+			return nil, err
+		}
+
+		results = append(results, mappers.ToDomainCloud(&item))
+	}
+
+	return results, nil
+}
+
 func (x *CloudRepository) Find(ctx context.Context, id string) (*entities.Cloud, error) {
 	var item models.Cloud
 
@@ -40,6 +71,18 @@ func (x *CloudRepository) Find(ctx context.Context, id string) (*entities.Cloud,
 	}
 
 	return mappers.ToDomainCloud(&item), nil
+}
+
+func (x *CloudRepository) Update(ctx context.Context, payload *entities.Cloud) error {
+	_, err := x.db.Collection(models.Cloud{}.TableName()).ReplaceOne(ctx, bson.M{
+		"_id": payload.ID.String(),
+	}, mappers.ToModelCloud(payload))
+
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (x *CloudRepository) Delete(ctx context.Context, id string) error {
