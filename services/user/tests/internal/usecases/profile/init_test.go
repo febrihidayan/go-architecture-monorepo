@@ -7,6 +7,7 @@ import (
 	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/profile"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/user/tests/mocks/repositories/mongo"
 	"github.com/stretchr/testify/suite"
@@ -15,6 +16,7 @@ import (
 type ProfileUsecaseSuite struct {
 	suite.Suite
 	cfg            *config.UserConfig
+	mongoFactory   *factories.MongoFactory
 	userRepo       *mongo_repositories.UserRepositoryMock
 	profileUsecase usecases.ProfileUsecase
 }
@@ -24,7 +26,11 @@ func (x *ProfileUsecaseSuite) SetupTest() {
 
 	x.userRepo = new(mongo_repositories.UserRepositoryMock)
 
-	x.profileUsecase = profile.NewProfileInteractor(x.cfg, x.userRepo)
+	x.mongoFactory = &factories.MongoFactory{
+		UserRepo: x.userRepo,
+	}
+
+	x.profileUsecase = profile.NewProfileInteractor(x.cfg, x.mongoFactory)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

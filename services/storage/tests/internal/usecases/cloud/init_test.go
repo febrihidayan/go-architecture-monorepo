@@ -7,6 +7,7 @@ import (
 	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/usecases/cloud"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/storage/tests/mocks/repositories/mongo"
 	services "github.com/febrihidayan/go-architecture-monorepo/services/storage/tests/mocks/services"
@@ -16,6 +17,7 @@ import (
 type CloudUsecaseSuite struct {
 	suite.Suite
 	cfg          *config.StorageConfig
+	mongoFactory *factories.MongoFactory
 	cloudRepo    *mongo_repositories.CloudRepositoryMock
 	awsService   *services.AwsServiceMock
 	cloudUsecase usecases.CloudUsecase
@@ -27,7 +29,11 @@ func (x *CloudUsecaseSuite) SetupTest() {
 	x.cloudRepo = new(mongo_repositories.CloudRepositoryMock)
 	x.awsService = new(services.AwsServiceMock)
 
-	x.cloudUsecase = cloud.NewCloudInteractor(x.cfg, x.cloudRepo, x.awsService)
+	x.mongoFactory = &factories.MongoFactory{
+		CloudRepo: x.cloudRepo,
+	}
+
+	x.cloudUsecase = cloud.NewCloudInteractor(x.cfg, x.mongoFactory, x.awsService)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

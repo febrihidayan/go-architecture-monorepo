@@ -3,7 +3,7 @@ package permission_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
-	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/permission"
 
 	"github.com/gorilla/mux"
@@ -17,13 +17,13 @@ type permissionHttpHandler struct {
 func PermissionHttpHandler(
 	r *mux.Router,
 	config *config.AuthConfig,
-	permissionRepo repository_mongo.PermissionRepository,
+	mongoFactory *factories.MongoFactory,
 ) {
 	handler := &permissionHttpHandler{
 		cfg: config,
 		permissionUsecase: permission.NewPermissionInteractor(
 			config,
-			&permissionRepo,
+			mongoFactory,
 		),
 	}
 

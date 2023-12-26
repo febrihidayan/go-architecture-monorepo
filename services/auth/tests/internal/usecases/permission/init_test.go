@@ -7,6 +7,7 @@ import (
 	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/permission"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/auth/tests/mocks/repositories/mongo"
 	"github.com/stretchr/testify/suite"
@@ -15,6 +16,7 @@ import (
 type PermissionUsecaseSuite struct {
 	suite.Suite
 	cfg               *config.AuthConfig
+	mongoFactory      *factories.MongoFactory
 	permissionRepo    *mongo_repositories.PermissionRepositoryMock
 	permissionUsecase usecases.PermissionUsecase
 }
@@ -23,7 +25,12 @@ func (x *PermissionUsecaseSuite) SetupTest() {
 	x.cfg = &config.AuthConfig{}
 
 	x.permissionRepo = new(mongo_repositories.PermissionRepositoryMock)
-	x.permissionUsecase = permission.NewPermissionInteractor(x.cfg, x.permissionRepo)
+
+	x.mongoFactory = &factories.MongoFactory{
+		PermissionRepo: x.permissionRepo,
+	}
+
+	x.permissionUsecase = permission.NewPermissionInteractor(x.cfg, x.mongoFactory)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

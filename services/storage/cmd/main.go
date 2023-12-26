@@ -13,18 +13,18 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/grpc_server"
 	cloud_handler "github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/http/delivery/cloud"
-	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/mongo"
+	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/services"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )
 
 var (
-	cfg         = config.Storage()
-	ctx, cancel = context.WithCancel(context.Background())
-	db          = config.InitDatabaseMongodb()
-	cloudRepo   = repository_mongo.NewCloudRepository(db)
-	awsService  = services.NewAwsService(&cfg.Aws)
+	cfg          = config.Storage()
+	ctx, cancel  = context.WithCancel(context.Background())
+	db           = config.InitDatabaseMongodb()
+	mongoFactory = factories.NewMongoFactory(db)
+	awsService   = services.NewAwsService(&cfg.Aws)
 )
 
 func main() {
@@ -78,5 +78,5 @@ func initHandler(
 	router *mux.Router,
 	cfg *config.StorageConfig) {
 
-	cloud_handler.RoleHttpHandler(router, cfg, cloudRepo, *awsService)
+	cloud_handler.CloudHttpHandler(router, cfg, mongoFactory, *awsService)
 }

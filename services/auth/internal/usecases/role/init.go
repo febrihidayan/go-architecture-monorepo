@@ -3,6 +3,7 @@ package role
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/repositories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
 )
 
 type roleInteractor struct {
@@ -12,11 +13,11 @@ type roleInteractor struct {
 
 func NewRoleInteractor(
 	config *config.AuthConfig,
-	roleRepo repositories.RoleRepository,
+	mongoFactory *factories.MongoFactory,
 ) *roleInteractor {
 
 	return &roleInteractor{
 		cfg:      config,
-		roleRepo: roleRepo,
+		roleRepo: mongoFactory.RoleRepo,
 	}
 }

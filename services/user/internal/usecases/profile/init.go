@@ -3,6 +3,7 @@ package profile
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/repositories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
 )
 
 type profileInteractor struct {
@@ -12,11 +13,11 @@ type profileInteractor struct {
 
 func NewProfileInteractor(
 	config *config.UserConfig,
-	userRepo repositories.UserRepository,
+	mongoFactory *factories.MongoFactory,
 ) *profileInteractor {
 
 	return &profileInteractor{
 		cfg:      config,
-		userRepo: userRepo,
+		userRepo: mongoFactory.UserRepo,
 	}
 }

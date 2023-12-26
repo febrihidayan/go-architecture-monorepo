@@ -3,6 +3,7 @@ package permission
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/repositories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
 )
 
 type permissionInteractor struct {
@@ -12,11 +13,11 @@ type permissionInteractor struct {
 
 func NewPermissionInteractor(
 	config *config.AuthConfig,
-	permissionRepo repositories.PermissionRepository,
+	mongoFactory *factories.MongoFactory,
 ) *permissionInteractor {
 
 	return &permissionInteractor{
 		cfg:            config,
-		permissionRepo: permissionRepo,
+		permissionRepo: mongoFactory.PermissionRepo,
 	}
 }

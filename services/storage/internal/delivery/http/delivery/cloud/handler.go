@@ -3,7 +3,7 @@ package cloud_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/config"
-	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/mongo"
+	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/services"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/usecases/cloud"
 
@@ -15,17 +15,17 @@ type cloudHttpHandler struct {
 	cloudUsecase usecases.CloudUsecase
 }
 
-func RoleHttpHandler(
+func CloudHttpHandler(
 	r *mux.Router,
 	config *config.StorageConfig,
-	cloudRepo repository_mongo.CloudRepository,
+	mongoFactory *factories.MongoFactory,
 	awsService services.AwsService,
 ) {
 	handler := &cloudHttpHandler{
 		cfg: config,
 		cloudUsecase: cloud.NewCloudInteractor(
 			config,
-			&cloudRepo,
+			mongoFactory,
 			&awsService,
 		),
 	}

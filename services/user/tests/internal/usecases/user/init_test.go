@@ -7,6 +7,7 @@ import (
 	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/user"
 	grpc_repositories "github.com/febrihidayan/go-architecture-monorepo/services/user/tests/mocks/repositories/grpc"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/user/tests/mocks/repositories/mongo"
@@ -15,10 +16,12 @@ import (
 
 type UserUsecaseSuite struct {
 	suite.Suite
-	cfg         *config.UserConfig
-	userRepo    *mongo_repositories.UserRepositoryMock
-	authRepo    *grpc_repositories.AuthRepositoryMock
-	userUsecase usecases.UserUsecase
+	cfg          *config.UserConfig
+	mongoFactory *factories.MongoFactory
+	grpcFactory  *factories.GrpcClientFactory
+	userRepo     *mongo_repositories.UserRepositoryMock
+	authRepo     *grpc_repositories.AuthRepositoryMock
+	userUsecase  usecases.UserUsecase
 }
 
 func (x *UserUsecaseSuite) SetupTest() {
@@ -27,7 +30,15 @@ func (x *UserUsecaseSuite) SetupTest() {
 	x.userRepo = new(mongo_repositories.UserRepositoryMock)
 	x.authRepo = new(grpc_repositories.AuthRepositoryMock)
 
-	x.userUsecase = user.NewUserInteractor(x.cfg, x.userRepo, x.authRepo)
+	x.mongoFactory = &factories.MongoFactory{
+		UserRepo: x.userRepo,
+	}
+
+	x.grpcFactory = &factories.GrpcClientFactory{
+		AuthRepo: x.authRepo,
+	}
+
+	x.userUsecase = user.NewUserInteractor(x.cfg, x.mongoFactory, x.grpcFactory)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

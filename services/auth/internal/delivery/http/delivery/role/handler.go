@@ -3,7 +3,7 @@ package role_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
-	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/role"
 
 	"github.com/gorilla/mux"
@@ -17,13 +17,13 @@ type roleHttpHandler struct {
 func RoleHttpHandler(
 	r *mux.Router,
 	config *config.AuthConfig,
-	roleRepo repository_mongo.RoleRepository,
+	mongoFactory *factories.MongoFactory,
 ) {
 	handler := &roleHttpHandler{
 		cfg: config,
 		roleUsecase: role.NewRoleInteractor(
 			config,
-			&roleRepo,
+			mongoFactory,
 		),
 	}
 

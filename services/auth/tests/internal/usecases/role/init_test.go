@@ -7,6 +7,7 @@ import (
 	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/role"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/auth/tests/mocks/repositories/mongo"
 	"github.com/stretchr/testify/suite"
@@ -14,16 +15,22 @@ import (
 
 type RoleUsecaseSuite struct {
 	suite.Suite
-	cfg         *config.AuthConfig
-	roleRepo    *mongo_repositories.RoleRepositoryMock
-	roleUsecase usecases.RoleUsecase
+	cfg          *config.AuthConfig
+	mongoFactory *factories.MongoFactory
+	roleRepo     *mongo_repositories.RoleRepositoryMock
+	roleUsecase  usecases.RoleUsecase
 }
 
 func (x *RoleUsecaseSuite) SetupTest() {
 	x.cfg = &config.AuthConfig{}
 
 	x.roleRepo = new(mongo_repositories.RoleRepositoryMock)
-	x.roleUsecase = role.NewRoleInteractor(x.cfg, x.roleRepo)
+
+	x.mongoFactory = &factories.MongoFactory{
+		RoleRepo: x.roleRepo,
+	}
+
+	x.roleUsecase = role.NewRoleInteractor(x.cfg, x.mongoFactory)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

@@ -3,8 +3,7 @@ package user_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
-	repository_grpc "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/grpc"
-	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/mongo"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/user"
 
 	"github.com/gorilla/mux"
@@ -18,15 +17,15 @@ type userHttpHandler struct {
 func UserHttpHandler(
 	r *mux.Router,
 	config *config.UserConfig,
-	userRepo repository_mongo.UserRepository,
-	authRepo repository_grpc.AuthRepository,
+	mongoFactory *factories.MongoFactory,
+	grpcFactory *factories.GrpcClientFactory,
 ) {
 	handler := &userHttpHandler{
 		cfg: config,
 		userUsecase: user.NewUserInteractor(
 			config,
-			&userRepo,
-			&authRepo,
+			mongoFactory,
+			grpcFactory,
 		),
 	}
 
