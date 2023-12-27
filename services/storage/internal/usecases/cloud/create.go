@@ -25,6 +25,7 @@ func (x *cloudInteractor) Create(ctx context.Context, payload entities.CloudDto)
 		}
 
 		cloud.SetUrl(path)
+		cloud.SetStatus(entities.CloudStatusPending)
 
 		if err := os.Remove(payload.File.Name); err != nil {
 			multilerr = multierror.Append(multilerr, err)
