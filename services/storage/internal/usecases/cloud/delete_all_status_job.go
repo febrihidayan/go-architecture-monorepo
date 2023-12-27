@@ -3,6 +3,7 @@ package cloud
 import (
 	"context"
 	"log"
+	"time"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/domain/entities"
@@ -15,7 +16,8 @@ func (x *cloudInteractor) DeleteAllStatusJob(ctx context.Context) *exceptions.Cu
 	log.Println("start delete all status job")
 
 	params := entities.CloudQueryParams{
-		Status: entities.CloudStatusPending,
+		Status:    entities.CloudStatusPending,
+		CreatedAt: time.Now().AddDate(0, 0, -1),
 	}
 
 	all, err := x.cloudRepo.All(ctx, &params)

@@ -9,6 +9,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/mongo/models"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -33,16 +34,31 @@ func (x *CloudRepository) Create(ctx context.Context, payload *entities.Cloud) e
 func (x *CloudRepository) All(ctx context.Context, params *entities.CloudQueryParams) ([]*entities.Cloud, error) {
 	var (
 		results []*entities.Cloud
-		filter  bson.M
+		filter  = mongo.Pipeline{}
+		match   bson.D
 	)
 
 	if params.Status != "" {
-		filter = bson.M{
-			"status": params.Status,
-		}
+		match = append(match, bson.D{{"status", params.Status}}...)
 	}
 
-	cursor, err := x.db.Collection(models.Cloud{}.TableName()).Find(ctx, filter)
+	if !params.CreatedAt.IsZero() {
+		match = append(match, bson.D{{
+			"created_at", bson.D{
+				{"$gte", primitive.NewDateTimeFromTime(params.CreatedAt.Local())},
+			},
+		}}...)
+	}
+
+	if len(match) > 0 {
+		filter = append(filter, mongo.Pipeline{
+			bson.D{{
+				"$match", match,
+			}},
+		}...)
+	}
+
+	cursor, err := x.db.Collection(models.Cloud{}.TableName()).Aggregate(ctx, filter)
 	if err != nil {
 		return nil, err
 	}
