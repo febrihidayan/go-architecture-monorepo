@@ -41,9 +41,10 @@ func (x *profileHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := entities.UserDto{
-		ID:    payload.ID,
-		Name:  payload.Name,
-		Email: payload.Email,
+		ID:     payload.ID,
+		Name:   payload.Name,
+		Email:  payload.Email,
+		Avatar: payload.Avatar,
 	}
 
 	result, err := x.profileUsecase.Update(ctx, data)

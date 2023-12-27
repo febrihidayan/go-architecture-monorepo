@@ -12,12 +12,16 @@ import (
 
 func (x *UserUsecaseSuite) TestUpdate() {
 	id := common.NewID()
-	var user *entities.User
+	var (
+		user     *entities.User
+		fullPath = "https://testing.s3.ap-southeast-1.amazonaws.com/storage_test/upload.jpg"
+	)
 
 	payloadDto := entities.UserDto{
-		ID:    &id,
-		Name:  "Admin",
-		Email: "admin@app.com",
+		ID:     &id,
+		Name:   "Admin",
+		Email:  "admin@app.com",
+		Avatar: fullPath,
 		Auth: entities.Auth{
 			Password: "password",
 		},
@@ -27,6 +31,7 @@ func (x *UserUsecaseSuite) TestUpdate() {
 		ID:        id,
 		Name:      "Admin",
 		Email:     "admin@app.com",
+		Avatar:    fullPath,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
@@ -50,6 +55,8 @@ func (x *UserUsecaseSuite) TestUpdate() {
 				x.authRepo.Mock.On("CreateOrUpdate", &auth).Return(nil)
 
 				x.userRepo.Mock.On("Update", user).Return(nil)
+
+				x.storageGrpcRepo.Mock.On("UpdateCloudApprove", []string{fullPath}).Return(nil)
 
 				result, err := x.userUsecase.Update(context.Background(), payloadDto)
 				x.Nil(err)

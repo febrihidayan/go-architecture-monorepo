@@ -7,9 +7,10 @@ import (
 )
 
 type userInteractor struct {
-	cfg      *config.UserConfig
-	userRepo repositories.UserRepository
-	authRepo repositories.AuthRepository
+	cfg             *config.UserConfig
+	userRepo        repositories.UserRepository
+	authGrpcRepo    repositories.AuthRepository
+	storageGrpcRepo repositories.StorageRepository
 }
 
 func NewUserInteractor(
@@ -19,8 +20,9 @@ func NewUserInteractor(
 ) *userInteractor {
 
 	return &userInteractor{
-		cfg:      config,
-		userRepo: mongoFactory.UserRepo,
-		authRepo: grpcFactory.AuthRepo,
+		cfg:             config,
+		userRepo:        mongoFactory.UserRepo,
+		authGrpcRepo:    grpcFactory.AuthRepo,
+		storageGrpcRepo: grpcFactory.StorageRepo,
 	}
 }

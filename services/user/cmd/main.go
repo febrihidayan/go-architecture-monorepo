@@ -89,6 +89,6 @@ func initHandler(
 
 	grpcFactory := factories.NewGrpcFactory(grpcClient)
 
-	profile_handler.ProfileHttpHandler(router, cfg, mongoFactory)
+	profile_handler.ProfileHttpHandler(router, cfg, mongoFactory, grpcFactory)
 	user_handler.UserHttpHandler(router, cfg, mongoFactory, grpcFactory)
 }

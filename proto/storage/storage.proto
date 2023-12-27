@@ -19,5 +19,5 @@ message Cloud {
 }
 
 message UpdateCloudApproveRequest {
-    repeated string ids = 1;
+    repeated string url = 1;
 }

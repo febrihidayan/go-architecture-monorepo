@@ -12,7 +12,7 @@ func (x *cloudInteractor) UpdateStatus(ctx context.Context, payloads []*entities
 	var multilerr *multierror.Error
 
 	for _, item := range payloads {
-		find, _ := x.cloudRepo.Find(ctx, item.ID.String())
+		find, _ := x.cloudRepo.FindByUrl(ctx, item.Url)
 		if find == nil || find.Status == item.Status {
 			continue
 		}

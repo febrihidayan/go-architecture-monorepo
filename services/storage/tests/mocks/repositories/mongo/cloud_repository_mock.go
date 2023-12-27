@@ -49,6 +49,20 @@ func (x *CloudRepositoryMock) Find(ctx context.Context, id string) (result *enti
 	return
 }
 
+func (x *CloudRepositoryMock) FindByUrl(ctx context.Context, url string) (result *entities.Cloud, err error) {
+	args := x.Called(url)
+
+	if n, ok := args.Get(0).(*entities.Cloud); ok {
+		result = n
+	}
+
+	if n, ok := args.Get(1).(error); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *CloudRepositoryMock) Update(ctx context.Context, payload *entities.Cloud) (err error) {
 	args := x.Called(payload)
 

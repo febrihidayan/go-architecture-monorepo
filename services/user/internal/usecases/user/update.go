@@ -36,7 +36,7 @@ func (x *userInteractor) Update(ctx context.Context, payload entities.UserDto) (
 		Password: payload.Auth.Password,
 	}
 
-	if err := x.authRepo.CreateOrUpdate(ctx, &auth); err != nil {
+	if err := x.authGrpcRepo.CreateOrUpdate(ctx, &auth); err != nil {
 		multilerr = multierror.Append(multilerr, err)
 		return nil, &exceptions.CustomError{
 			Status: exceptions.ERRREPOSITORY,
@@ -49,6 +49,16 @@ func (x *userInteractor) Update(ctx context.Context, payload entities.UserDto) (
 		return nil, &exceptions.CustomError{
 			Status: exceptions.ERRREPOSITORY,
 			Errors: multilerr,
+		}
+	}
+
+	if user.Avatar != "" && find.Avatar != user.Avatar {
+		if err := x.storageGrpcRepo.UpdateCloudApprove(ctx, []string{user.Avatar}); err != nil {
+			multilerr = multierror.Append(multilerr, err)
+			return nil, &exceptions.CustomError{
+				Status: exceptions.ERRREPOSITORY,
+				Errors: multilerr,
+			}
 		}
 	}
 

@@ -31,7 +31,7 @@ func (x *CloudUsecaseSuite) TestUpdateStatus() {
 	}
 
 	payloads = append(payloads, &entities.Cloud{
-		ID:     id,
+		Url:    fullPath,
 		Status: entities.CloudStatusApprove,
 	})
 
@@ -43,7 +43,7 @@ func (x *CloudUsecaseSuite) TestUpdateStatus() {
 		{
 			name: "Success Positive Case",
 			tests: func(arg Any) {
-				x.cloudRepo.Mock.On("Find", cloud.ID.String()).Return(cloud, nil)
+				x.cloudRepo.Mock.On("FindByUrl", cloud.Url).Return(cloud, nil)
 
 				x.cloudRepo.Mock.On("Update", cloud).Return(nil)
 
@@ -56,7 +56,7 @@ func (x *CloudUsecaseSuite) TestUpdateStatus() {
 			tests: func(arg Any) {
 				// reset status pending
 				cloud.SetStatus(entities.CloudStatusPending)
-				x.cloudRepo.Mock.On("Find", cloud.ID.String()).Return(cloud, nil)
+				x.cloudRepo.Mock.On("FindByUrl", cloud.Url).Return(cloud, nil)
 
 				x.cloudRepo.Mock.On("Update", cloud).Return(errors.New(mock.Anything))
 

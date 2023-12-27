@@ -14,15 +14,17 @@ type User struct {
 	ID        common.ID
 	Name      string
 	Email     string
+	Avatar    string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
 type UserDto struct {
-	ID    *common.ID
-	Name  string
-	Email string
-	Auth  Auth
+	ID     *common.ID
+	Name   string
+	Email  string
+	Avatar string
+	Auth   Auth
 }
 
 type UserQueryParams struct {
@@ -41,6 +43,7 @@ func NewUser(x UserDto, finds ...*User) *User {
 		ID:        common.NewID(),
 		Name:      x.Name,
 		Email:     x.Email,
+		Avatar:    x.Avatar,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}

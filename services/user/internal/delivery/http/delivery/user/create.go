@@ -30,8 +30,9 @@ func (x *userHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := entities.UserDto{
-		Name:  payload.Name,
-		Email: payload.Email,
+		Name:   payload.Name,
+		Email:  payload.Email,
+		Avatar: payload.Avatar,
 		Auth: entities.Auth{
 			Password: payload.Password,
 		},

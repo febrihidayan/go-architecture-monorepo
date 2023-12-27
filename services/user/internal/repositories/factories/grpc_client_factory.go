@@ -7,17 +7,21 @@ import (
 )
 
 type GrpcClientFactory struct {
-	AuthRepo repositories.AuthRepository
+	AuthRepo    repositories.AuthRepository
+	StorageRepo repositories.StorageRepository
 }
 
 func NewGrpcFactory(client *grpc_client.ServerClient) *GrpcClientFactory {
 	var (
-		userRepoGrpc repository_grpc.AuthRepository
+		authRepoGrpc    repository_grpc.AuthRepository
+		storageRepoGrpc repository_grpc.StorageRepository
 	)
 
-	userRepoGrpc = repository_grpc.NewAuthRepository(client.AuthClient)
+	authRepoGrpc = repository_grpc.NewAuthRepository(client.AuthClient)
+	storageRepoGrpc = repository_grpc.NewStorageRepository(client.StorageClient)
 
 	return &GrpcClientFactory{
-		AuthRepo: &userRepoGrpc,
+		AuthRepo:    &authRepoGrpc,
+		StorageRepo: &storageRepoGrpc,
 	}
 }

@@ -16,12 +16,13 @@ import (
 
 type UserUsecaseSuite struct {
 	suite.Suite
-	cfg          *config.UserConfig
-	mongoFactory *factories.MongoFactory
-	grpcFactory  *factories.GrpcClientFactory
-	userRepo     *mongo_repositories.UserRepositoryMock
-	authRepo     *grpc_repositories.AuthRepositoryMock
-	userUsecase  usecases.UserUsecase
+	cfg             *config.UserConfig
+	mongoFactory    *factories.MongoFactory
+	grpcFactory     *factories.GrpcClientFactory
+	userRepo        *mongo_repositories.UserRepositoryMock
+	authRepo        *grpc_repositories.AuthRepositoryMock
+	storageGrpcRepo *grpc_repositories.StorageRepositoryMock
+	userUsecase     usecases.UserUsecase
 }
 
 func (x *UserUsecaseSuite) SetupTest() {
@@ -29,13 +30,15 @@ func (x *UserUsecaseSuite) SetupTest() {
 
 	x.userRepo = new(mongo_repositories.UserRepositoryMock)
 	x.authRepo = new(grpc_repositories.AuthRepositoryMock)
+	x.storageGrpcRepo = new(grpc_repositories.StorageRepositoryMock)
 
 	x.mongoFactory = &factories.MongoFactory{
 		UserRepo: x.userRepo,
 	}
 
 	x.grpcFactory = &factories.GrpcClientFactory{
-		AuthRepo: x.authRepo,
+		AuthRepo:    x.authRepo,
+		StorageRepo: x.storageGrpcRepo,
 	}
 
 	x.userUsecase = user.NewUserInteractor(x.cfg, x.mongoFactory, x.grpcFactory)

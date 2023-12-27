@@ -73,6 +73,17 @@ func (x *CloudRepository) Find(ctx context.Context, id string) (*entities.Cloud,
 	return mappers.ToDomainCloud(&item), nil
 }
 
+func (x *CloudRepository) FindByUrl(ctx context.Context, url string) (*entities.Cloud, error) {
+	var item models.Cloud
+
+	err := x.db.Collection(models.Cloud{}.TableName()).FindOne(ctx, bson.M{"url": url}).Decode(&item)
+	if err != nil {
+		return nil, errors.New("cloud not found")
+	}
+
+	return mappers.ToDomainCloud(&item), nil
+}
+
 func (x *CloudRepository) Update(ctx context.Context, payload *entities.Cloud) error {
 	_, err := x.db.Collection(models.Cloud{}.TableName()).ReplaceOne(ctx, bson.M{
 		"_id": payload.ID.String(),

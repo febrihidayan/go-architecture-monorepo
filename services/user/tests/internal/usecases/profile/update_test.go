@@ -12,18 +12,23 @@ import (
 
 func (x *ProfileUsecaseSuite) TestUpdate() {
 	id := common.NewID()
-	var user *entities.User
+	var (
+		user     *entities.User
+		fullPath = "https://testing.s3.ap-southeast-1.amazonaws.com/storage_test/upload.jpg"
+	)
 
 	payloadDto := entities.UserDto{
-		ID:    &id,
-		Name:  "Admin",
-		Email: "admin@app.com",
+		ID:     &id,
+		Name:   "Admin",
+		Email:  "admin@app.com",
+		Avatar: fullPath,
 	}
 
 	user = &entities.User{
 		ID:        id,
 		Name:      "Admin",
 		Email:     "admin@app.com",
+		Avatar:    fullPath,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}

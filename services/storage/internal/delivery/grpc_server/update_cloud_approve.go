@@ -3,7 +3,6 @@ package grpc_server
 import (
 	"context"
 
-	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	storagePb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/storage"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/domain/entities"
@@ -15,11 +14,9 @@ import (
 func (x server) UpdateCloudApprove(ctx context.Context, req *storagePb.UpdateCloudApproveRequest) (*emptypb.Empty, error) {
 	payloads := make([]*entities.Cloud, 0)
 
-	for _, id := range req.GetIds() {
-		uuid, _ := common.StringToID(id)
-
+	for _, url := range req.GetUrl() {
 		payloads = append(payloads, &entities.Cloud{
-			ID:     uuid,
+			Url:    url,
 			Status: entities.CloudStatusApprove,
 		})
 	}

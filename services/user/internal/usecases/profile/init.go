@@ -7,17 +7,20 @@ import (
 )
 
 type profileInteractor struct {
-	cfg      *config.UserConfig
-	userRepo repositories.UserRepository
+	cfg             *config.UserConfig
+	userRepo        repositories.UserRepository
+	storageGrpcRepo repositories.StorageRepository
 }
 
 func NewProfileInteractor(
 	config *config.UserConfig,
 	mongoFactory *factories.MongoFactory,
+	grpcFactory *factories.GrpcClientFactory,
 ) *profileInteractor {
 
 	return &profileInteractor{
-		cfg:      config,
-		userRepo: mongoFactory.UserRepo,
+		cfg:             config,
+		userRepo:        mongoFactory.UserRepo,
+		storageGrpcRepo: grpcFactory.StorageRepo,
 	}
 }

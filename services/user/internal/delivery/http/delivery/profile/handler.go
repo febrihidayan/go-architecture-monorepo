@@ -18,12 +18,15 @@ func ProfileHttpHandler(
 	r *mux.Router,
 	config *config.UserConfig,
 	mongoFactory *factories.MongoFactory,
-) {
+	grpcFactory *factories.GrpcClientFactory,
+
+	) {
 	handler := &profileHttpHandler{
 		cfg: config,
 		profileUsecase: profile.NewProfileInteractor(
 			config,
 			mongoFactory,
+			grpcFactory,
 		),
 	}
 

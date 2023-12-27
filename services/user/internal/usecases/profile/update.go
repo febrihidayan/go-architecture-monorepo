@@ -38,5 +38,15 @@ func (x *profileInteractor) Update(ctx context.Context, payload entities.UserDto
 		}
 	}
 
+	if user.Avatar != "" && find.Avatar != user.Avatar {
+		if err := x.storageGrpcRepo.UpdateCloudApprove(ctx, []string{user.Avatar}); err != nil {
+			multilerr = multierror.Append(multilerr, err)
+			return nil, &exceptions.CustomError{
+				Status: exceptions.ERRREPOSITORY,
+				Errors: multilerr,
+			}
+		}
+	}
+
 	return user, nil
 }

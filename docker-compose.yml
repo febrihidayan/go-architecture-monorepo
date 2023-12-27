@@ -59,6 +59,7 @@ services:
       HTTP_PORT: ':8084'
       RPC_PORT: ':9084'
       RPC_AUTH: 'auth-go:9083'
+      RPC_STORAGE: 'storage-go:9085'
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: root
       MONGODB_NAME: arch_user

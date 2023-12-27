@@ -15,7 +15,8 @@ type UserConfig struct {
 }
 
 type GrpcClient struct {
-	Auth string
+	Auth    string
+	Storage string
 }
 
 func User() *UserConfig {
@@ -24,7 +25,8 @@ func User() *UserConfig {
 		RpcPort:  os.Getenv("RPC_PORT"),
 		Timeout:  time.Duration(config.ConvertInt("APP_TIMEOUT")) * time.Second,
 		GrpcClient: GrpcClient{
-			Auth: os.Getenv("RPC_AUTH"),
+			Auth:    os.Getenv("RPC_AUTH"),
+			Storage: os.Getenv("RPC_STORAGE"),
 		},
 	}
 }
