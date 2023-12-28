@@ -34,6 +34,7 @@ func (x *CloudUsecaseSuite) TestCreate() {
 		ID:        id,
 		Name:      "upload",
 		Url:       fullPath,
+		Status:    entities.CloudStatusPending,
 		CreatedBy: id.String(),
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),

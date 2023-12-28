@@ -19,3 +19,13 @@ func (x *StorageRepositoryMock) UpdateCloudApprove(ctx context.Context, url []st
 
 	return
 }
+
+func (x *StorageRepositoryMock) DeleteCloudApprove(ctx context.Context, url []string) (err error) {
+	args := x.Called(url)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}

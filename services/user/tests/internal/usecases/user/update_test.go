@@ -13,8 +13,9 @@ import (
 func (x *UserUsecaseSuite) TestUpdate() {
 	id := common.NewID()
 	var (
-		user     *entities.User
-		fullPath = "https://testing.s3.ap-southeast-1.amazonaws.com/storage_test/upload.jpg"
+		user             *entities.User
+		userDeleteAvatar *entities.User
+		fullPath         = "https://testing.s3.ap-southeast-1.amazonaws.com/storage_test/upload.jpg"
 	)
 
 	payloadDto := entities.UserDto{
@@ -27,11 +28,28 @@ func (x *UserUsecaseSuite) TestUpdate() {
 		},
 	}
 
+	payloadDeleteAvatarDto := entities.UserDto{
+		ID:    &id,
+		Name:  "Admin",
+		Email: "admin@app.com",
+		Auth: entities.Auth{
+			Password: "password",
+		},
+	}
+
 	user = &entities.User{
 		ID:        id,
 		Name:      "Admin",
 		Email:     "admin@app.com",
 		Avatar:    fullPath,
+		CreatedAt: utils.TimeUTC(),
+		UpdatedAt: utils.TimeUTC(),
+	}
+
+	userDeleteAvatar = &entities.User{
+		ID:        id,
+		Name:      "Admin",
+		Email:     "admin@app.com",
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
@@ -61,6 +79,38 @@ func (x *UserUsecaseSuite) TestUpdate() {
 				result, err := x.userUsecase.Update(context.Background(), payloadDto)
 				x.Nil(err)
 				x.Equal(user, result)
+			},
+		},
+		{
+			name: "Success Upload Avatar Positive Case",
+			tests: func(arg Any) {
+				x.userRepo.Mock.On("Find", payloadDto.ID.String()).Return(userDeleteAvatar, nil)
+
+				x.authRepo.Mock.On("CreateOrUpdate", &auth).Return(nil)
+
+				x.userRepo.Mock.On("Update", user).Return(nil)
+
+				x.storageGrpcRepo.Mock.On("UpdateCloudApprove", []string{fullPath}).Return(nil)
+
+				result, err := x.userUsecase.Update(context.Background(), payloadDto)
+				x.Nil(err)
+				x.Equal(user, result)
+			},
+		},
+		{
+			name: "Success Delete Avatar Positive Case",
+			tests: func(arg Any) {
+				x.userRepo.Mock.On("Find", payloadDto.ID.String()).Return(user, nil)
+
+				x.authRepo.Mock.On("CreateOrUpdate", &auth).Return(nil)
+
+				x.userRepo.Mock.On("Update", userDeleteAvatar).Return(nil)
+
+				x.storageGrpcRepo.Mock.On("DeleteCloudApprove", []string{fullPath}).Return(nil)
+
+				result, err := x.userUsecase.Update(context.Background(), payloadDeleteAvatarDto)
+				x.Nil(err)
+				x.Equal(userDeleteAvatar, result)
 			},
 		},
 		{

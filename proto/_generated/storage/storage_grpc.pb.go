@@ -21,13 +21,15 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	StorageServices_UpdateCloudApprove_FullMethodName = "/storage.StorageServices/UpdateCloudApprove"
+	StorageServices_DeleteCloudApprove_FullMethodName = "/storage.StorageServices/DeleteCloudApprove"
 )
 
 // StorageServicesClient is the client API for StorageServices service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type StorageServicesClient interface {
-	UpdateCloudApprove(ctx context.Context, in *UpdateCloudApproveRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	UpdateCloudApprove(ctx context.Context, in *CloudApproveRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteCloudApprove(ctx context.Context, in *CloudApproveRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type storageServicesClient struct {
@@ -38,9 +40,18 @@ func NewStorageServicesClient(cc grpc.ClientConnInterface) StorageServicesClient
 	return &storageServicesClient{cc}
 }
 
-func (c *storageServicesClient) UpdateCloudApprove(ctx context.Context, in *UpdateCloudApproveRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *storageServicesClient) UpdateCloudApprove(ctx context.Context, in *CloudApproveRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, StorageServices_UpdateCloudApprove_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *storageServicesClient) DeleteCloudApprove(ctx context.Context, in *CloudApproveRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, StorageServices_DeleteCloudApprove_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,15 +62,19 @@ func (c *storageServicesClient) UpdateCloudApprove(ctx context.Context, in *Upda
 // All implementations should embed UnimplementedStorageServicesServer
 // for forward compatibility
 type StorageServicesServer interface {
-	UpdateCloudApprove(context.Context, *UpdateCloudApproveRequest) (*emptypb.Empty, error)
+	UpdateCloudApprove(context.Context, *CloudApproveRequest) (*emptypb.Empty, error)
+	DeleteCloudApprove(context.Context, *CloudApproveRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedStorageServicesServer should be embedded to have forward compatible implementations.
 type UnimplementedStorageServicesServer struct {
 }
 
-func (UnimplementedStorageServicesServer) UpdateCloudApprove(context.Context, *UpdateCloudApproveRequest) (*emptypb.Empty, error) {
+func (UnimplementedStorageServicesServer) UpdateCloudApprove(context.Context, *CloudApproveRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCloudApprove not implemented")
+}
+func (UnimplementedStorageServicesServer) DeleteCloudApprove(context.Context, *CloudApproveRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCloudApprove not implemented")
 }
 
 // UnsafeStorageServicesServer may be embedded to opt out of forward compatibility for this service.
@@ -74,7 +89,7 @@ func RegisterStorageServicesServer(s grpc.ServiceRegistrar, srv StorageServicesS
 }
 
 func _StorageServices_UpdateCloudApprove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCloudApproveRequest)
+	in := new(CloudApproveRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
@@ -86,7 +101,25 @@ func _StorageServices_UpdateCloudApprove_Handler(srv interface{}, ctx context.Co
 		FullMethod: StorageServices_UpdateCloudApprove_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StorageServicesServer).UpdateCloudApprove(ctx, req.(*UpdateCloudApproveRequest))
+		return srv.(StorageServicesServer).UpdateCloudApprove(ctx, req.(*CloudApproveRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _StorageServices_DeleteCloudApprove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CloudApproveRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(StorageServicesServer).DeleteCloudApprove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: StorageServices_DeleteCloudApprove_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(StorageServicesServer).DeleteCloudApprove(ctx, req.(*CloudApproveRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -101,6 +134,10 @@ var StorageServices_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCloudApprove",
 			Handler:    _StorageServices_UpdateCloudApprove_Handler,
+		},
+		{
+			MethodName: "DeleteCloudApprove",
+			Handler:    _StorageServices_DeleteCloudApprove_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

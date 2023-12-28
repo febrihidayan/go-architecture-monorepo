@@ -23,7 +23,15 @@ func NewStorageRepository(con *grpc.ClientConn) StorageRepository {
 }
 
 func (x *StorageRepository) UpdateCloudApprove(ctx context.Context, url []string) error {
-	_, err := x.svc.UpdateCloudApprove(ctx, &storagePb.UpdateCloudApproveRequest{
+	_, err := x.svc.UpdateCloudApprove(ctx, &storagePb.CloudApproveRequest{
+		Url: url,
+	})
+
+	return err
+}
+
+func (x *StorageRepository) DeleteCloudApprove(ctx context.Context, url []string) error {
+	_, err := x.svc.DeleteCloudApprove(ctx, &storagePb.CloudApproveRequest{
 		Url: url,
 	})
 

@@ -6,7 +6,8 @@ import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 service StorageServices {
-    rpc UpdateCloudApprove(UpdateCloudApproveRequest) returns (google.protobuf.Empty);
+    rpc UpdateCloudApprove(CloudApproveRequest) returns (google.protobuf.Empty);
+    rpc DeleteCloudApprove(CloudApproveRequest) returns (google.protobuf.Empty);
 }
 
 message Cloud {
@@ -18,6 +19,6 @@ message Cloud {
     google.protobuf.Timestamp deleted_at = 6;
 }
 
-message UpdateCloudApproveRequest {
+message CloudApproveRequest {
     repeated string url = 1;
 }

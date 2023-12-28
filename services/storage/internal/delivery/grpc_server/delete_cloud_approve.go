@@ -11,7 +11,7 @@ import (
 	"google.golang.org/protobuf/types/known/emptypb"
 )
 
-func (x server) UpdateCloudApprove(ctx context.Context, req *storagePb.CloudApproveRequest) (*emptypb.Empty, error) {
+func (x server) DeleteCloudApprove(ctx context.Context, req *storagePb.CloudApproveRequest) (*emptypb.Empty, error) {
 	payloads := make([]*entities.Cloud, 0)
 
 	for _, url := range req.GetUrl() {
@@ -21,7 +21,7 @@ func (x server) UpdateCloudApprove(ctx context.Context, req *storagePb.CloudAppr
 		})
 	}
 
-	if err := x.cloudUsecase.UpdateStatus(ctx, payloads); err != nil {
+	if err := x.cloudUsecase.Deletes(ctx, payloads); err != nil {
 		return nil, status.Error(codes.Code(exceptions.MapToHttpStatusCode(err.Status)), err.Errors.Error())
 	}
 
