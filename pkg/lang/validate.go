@@ -20,6 +20,7 @@ var (
 	ErrRoleAlready             = errors.New("The name role is already.")
 	ErrPermissionAlready       = errors.New("The name permission is already.")
 	ErrUnsupportFile           = errors.New("unsupport file type.")
+	ErrTemplateAlready         = errors.New("The name template is already.")
 
 	Locales = map[string]string{
 		"filled": "The :attribute field is required.",

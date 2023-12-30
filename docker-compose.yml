@@ -92,3 +92,21 @@ services:
     ports:
       - '8085:8085'
       - '9085:9085'
+
+  notification-go:
+    container_name: arch_notification_go
+    image: febrihidayan/go-architecture-monorepo/notification
+    build:
+      context: .
+      dockerfile: docker/notification/Dockerfile
+    environment:
+      HTTP_PORT: ':8086'
+      RPC_PORT: ':9086'
+      MONGODB_USERNAME: root
+      MONGODB_PASSWORD: root
+      MONGODB_NAME: arch_notification
+      MONGODB_HOST: 'mongo'
+      MONGODB_PORT: '27017'
+    ports:
+      - '8086:8086'
+      - '9086:9086'

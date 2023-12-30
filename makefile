@@ -6,3 +6,6 @@ user-build:
 
 storage-build:
 	docker build --pull -t febrihidayan/go-architecture-monorepo/storage:latest . -f docker/storage/Dockerfile
+
+notification-build:
+	docker build --pull -t febrihidayan/go-architecture-monorepo/notification:latest . -f docker/notification/Dockerfile
