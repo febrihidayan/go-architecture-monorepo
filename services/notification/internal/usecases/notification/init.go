@@ -12,7 +12,7 @@ type notificationInteractor struct {
 	templateRepo     repositories.TemplateRepository
 }
 
-func NewTemplateInteractor(
+func NewNotificationInteractor(
 	config *config.NotificationConfig,
 	mongoFactory *factories.MongoFactory,
 ) *notificationInteractor {

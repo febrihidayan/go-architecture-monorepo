@@ -21,7 +21,7 @@ func TemplateHttpHandler(
 ) {
 	handler := &notificationHttpHandler{
 		cfg: config,
-		notificationUsecase: notification.NewTemplateInteractor(
+		notificationUsecase: notification.NewNotificationInteractor(
 			config,
 			mongoFactory,
 		),
