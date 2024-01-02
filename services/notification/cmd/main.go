@@ -12,8 +12,9 @@ import (
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/grpc_server"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
+	notification_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/notification"
 	template_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/template"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )
@@ -76,6 +77,7 @@ func RunGrpcServer() {
 func initHandler(
 	router *mux.Router,
 	cfg *config.NotificationConfig) {
-	
+
+	notification_handler.TemplateHttpHandler(router, cfg, mongoFactory)
 	template_handler.TemplateHttpHandler(router, cfg, mongoFactory)
 }

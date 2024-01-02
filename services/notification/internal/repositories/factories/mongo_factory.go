@@ -7,15 +7,18 @@ import (
 )
 
 type MongoFactory struct {
-	TemplateRepo repositories.TemplateRepository
+	TemplateRepo     repositories.TemplateRepository
+	NotificationRepo repositories.NotificationRepository
 }
 
 func NewMongoFactory(db *mongo.Database) *MongoFactory {
 	var (
-		TemplateRepo = mongo_repositories.NewTemplateRepository(db)
+		TemplateRepo     = mongo_repositories.NewTemplateRepository(db)
+		NotificationRepo = mongo_repositories.NewNotificationRepository(db)
 	)
 
 	return &MongoFactory{
-		TemplateRepo: &TemplateRepo,
+		TemplateRepo:     &TemplateRepo,
+		NotificationRepo: &NotificationRepo,
 	}
 }
