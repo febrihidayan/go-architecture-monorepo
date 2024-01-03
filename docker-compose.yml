@@ -102,6 +102,7 @@ services:
     environment:
       HTTP_PORT: ':8086'
       RPC_PORT: ':9086'
+      RPC_USER: 'user-go:9084'
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: root
       MONGODB_NAME: arch_notification

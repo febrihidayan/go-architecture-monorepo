@@ -37,10 +37,11 @@ func (x *userHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := entities.UserDto{
-		ID:     payload.ID,
-		Name:   payload.Name,
-		Email:  payload.Email,
-		Avatar: payload.Avatar,
+		ID:       payload.ID,
+		Name:     payload.Name,
+		Email:    payload.Email,
+		Avatar:   payload.Avatar,
+		LangCode: payload.LangCode,
 		Auth: entities.Auth{
 			Password: payload.Password,
 		},

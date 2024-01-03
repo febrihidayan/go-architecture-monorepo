@@ -9,6 +9,7 @@ type User struct {
 	Name      string    `bson:"name"`
 	Email     string    `bson:"email"`
 	Avatar    string    `bson:"avatar"`
+	LangCode  string    `bson:"lang_code"`
 	CreatedAt time.Time `bson:"created_at"`
 	UpdatedAt time.Time `bson:"updated_at"`
 }

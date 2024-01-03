@@ -12,6 +12,7 @@ func ToModelUser(x *entities.User) *models.User {
 		Name:      x.Name,
 		Email:     x.Email,
 		Avatar:    x.Avatar,
+		LangCode:  x.LangCode,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}
@@ -24,6 +25,7 @@ func ToDomainUser(x *models.User) *entities.User {
 		Name:      x.Name,
 		Email:     x.Email,
 		Avatar:    x.Avatar,
+		LangCode:  x.LangCode,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}

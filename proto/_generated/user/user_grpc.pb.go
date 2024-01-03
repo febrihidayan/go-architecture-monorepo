@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	UserServices_CreateUser_FullMethodName = "/user.UserServices/CreateUser"
+	UserServices_FindUser_FullMethodName   = "/user.UserServices/FindUser"
 )
 
 // UserServicesClient is the client API for UserServices service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserServicesClient interface {
 	CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error)
+	FindUser(ctx context.Context, in *FindUserRequest, opts ...grpc.CallOption) (*FindUserResponse, error)
 }
 
 type userServicesClient struct {
@@ -46,11 +48,21 @@ func (c *userServicesClient) CreateUser(ctx context.Context, in *CreateUserReque
 	return out, nil
 }
 
+func (c *userServicesClient) FindUser(ctx context.Context, in *FindUserRequest, opts ...grpc.CallOption) (*FindUserResponse, error) {
+	out := new(FindUserResponse)
+	err := c.cc.Invoke(ctx, UserServices_FindUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServicesServer is the server API for UserServices service.
 // All implementations should embed UnimplementedUserServicesServer
 // for forward compatibility
 type UserServicesServer interface {
 	CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error)
+	FindUser(context.Context, *FindUserRequest) (*FindUserResponse, error)
 }
 
 // UnimplementedUserServicesServer should be embedded to have forward compatible implementations.
@@ -59,6 +71,9 @@ type UnimplementedUserServicesServer struct {
 
 func (UnimplementedUserServicesServer) CreateUser(context.Context, *CreateUserRequest) (*CreateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateUser not implemented")
+}
+func (UnimplementedUserServicesServer) FindUser(context.Context, *FindUserRequest) (*FindUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method FindUser not implemented")
 }
 
 // UnsafeUserServicesServer may be embedded to opt out of forward compatibility for this service.
@@ -90,6 +105,24 @@ func _UserServices_CreateUser_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserServices_FindUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FindUserRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServicesServer).FindUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: UserServices_FindUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServicesServer).FindUser(ctx, req.(*FindUserRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // UserServices_ServiceDesc is the grpc.ServiceDesc for UserServices service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -100,6 +133,10 @@ var UserServices_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateUser",
 			Handler:    _UserServices_CreateUser_Handler,
+		},
+		{
+			MethodName: "FindUser",
+			Handler:    _UserServices_FindUser_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

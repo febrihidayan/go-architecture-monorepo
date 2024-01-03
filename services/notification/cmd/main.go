@@ -11,6 +11,7 @@ import (
 	"syscall"
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/grpc_client"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/grpc_server"
 	notification_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/notification"
 	template_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/template"
@@ -31,12 +32,19 @@ func main() {
 		db.Client().Disconnect(ctx)
 	}()
 
+	// run rpc client
+	grpcClient, errs := grpc_client.NewGrpcClient(&cfg.GrpcClient)
+	if len(errs) > 0 {
+		cancel()
+		log.Fatalf("did not connect grpc client: %v", errs)
+	}
+
 	// run Grpc Server
 	go RunGrpcServer()
 	// end run Grpc Server
 
 	router := mux.NewRouter()
-	initHandler(router, cfg)
+	initHandler(router, cfg, grpcClient)
 	http.Handle("/", router)
 
 	log.Println("Http Run on", cfg.HttpPort)
@@ -76,8 +84,11 @@ func RunGrpcServer() {
 
 func initHandler(
 	router *mux.Router,
-	cfg *config.NotificationConfig) {
+	cfg *config.NotificationConfig,
+	grpcClient *grpc_client.ServerClient) {
 
-	notification_handler.TemplateHttpHandler(router, cfg, mongoFactory)
+	grpcClientFactory := factories.NewGrpcFactory(grpcClient)
+
+	notification_handler.TemplateHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
 	template_handler.TemplateHttpHandler(router, cfg, mongoFactory)
 }

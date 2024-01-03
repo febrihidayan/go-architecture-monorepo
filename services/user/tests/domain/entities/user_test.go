@@ -23,29 +23,32 @@ func TestValidateUser(t *testing.T) {
 		{
 			name: "Success Positive Case",
 			args: entities.UserDto{
-				ID:    &uuid,
-				Name:  "admin",
-				Email: "admin@app.com",
+				ID:       &uuid,
+				Name:     "admin",
+				Email:    "admin@app.com",
+				LangCode: entities.UserLangEN,
 			},
 			errs: multierror.Append(errs, errs.ErrorOrNil()),
 		},
 		{
 			name: "error not adding name and email",
 			args: entities.UserDto{
-				ID:    &uuid,
-				Name:  "",
-				Email: "",
+				ID:       &uuid,
+				Name:     "",
+				Email:    "",
+				LangCode: entities.UserLangEN,
 			},
 			errs: multierror.Append(errs, lang.ErrNameRequired, lang.ErrEmailRequired),
 		},
 		{
-			name: "error not adding role",
+			name: "error empty lang code",
 			args: entities.UserDto{
-				ID:    &uuid,
-				Name:  "admin",
-				Email: "admin@app.com",
+				ID:       &uuid,
+				Name:     "admin",
+				Email:    "admin@app.com",
+				LangCode: "",
 			},
-			errs: multierror.Append(errs, lang.ErrRoleRequired),
+			errs: multierror.Append(errs, lang.Trans("filled", "LangCode")),
 		},
 	}
 

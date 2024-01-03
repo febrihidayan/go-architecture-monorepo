@@ -19,6 +19,7 @@ func (x *NotificationUsecaseSuite) TestGetAll() {
 		notification  *entities.Notification
 		notifications []*entities.Notification
 		results       *entities.NotificationMeta
+		user          *entities.User
 	)
 
 	template = &entities.Template{
@@ -52,6 +53,11 @@ func (x *NotificationUsecaseSuite) TestGetAll() {
 		PerPage: 10,
 	}
 
+	user = &entities.User{
+		ID:       id,
+		LangCode: entities.TemplateLangEN,
+	}
+
 	args := []struct {
 		name  string
 		args  Any
@@ -60,6 +66,8 @@ func (x *NotificationUsecaseSuite) TestGetAll() {
 		{
 			name: "Success Positive Case",
 			tests: func(arg Any) {
+				x.userGrpcRepo.Mock.On("FindUser", params.UserId).Return(user, nil)
+
 				x.notificationRepo.Mock.On("GetAll", &params).Return(notifications, len(notifications), nil)
 
 				x.templateRepo.Mock.On("FindByName", notification.Type).Return(template, nil)
@@ -72,6 +80,8 @@ func (x *NotificationUsecaseSuite) TestGetAll() {
 		{
 			name: "Failed Negatif Case",
 			tests: func(arg Any) {
+				x.userGrpcRepo.Mock.On("FindUser", params.UserId).Return(user, nil)
+
 				x.notificationRepo.Mock.On("GetAll", &params).Return(notifications, len(notifications), errors.New(mock.Anything))
 
 				_, err := x.notificationUsecase.GetAll(context.Background(), params)

@@ -35,6 +35,7 @@ func (x *UserUsecaseSuite) TestCreate() {
 		Name:      "Admin",
 		Email:     "admin@app.com",
 		Avatar:    fullPath,
+		LangCode:  entities.UserLangEN,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}

@@ -6,6 +6,7 @@ import (
 )
 
 type server struct {
-	userUsecase usecases.UserUsecase
-	cfg         config.UserConfig
+	userUsecase    usecases.UserUsecase
+	profileUsecase usecases.ProfileUsecase
+	cfg            config.UserConfig
 }

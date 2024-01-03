@@ -6,27 +6,29 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/proto/_generated/user"
 	userPb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/user"
-	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/entities"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_server/mappers"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (x *server) CreateUser(ctx context.Context, req *userPb.CreateUserRequest) (*user.CreateUserResponse, error) {
-	user, err := x.userUsecase.Create(ctx, entities.UserDto{
-		Name:  req.Data.GetName(),
-		Email: req.Data.GetEmail(),
-	})
+	user, err := x.userUsecase.Create(ctx, mappers.ToDomainUserDto(req.GetData()))
 	if err != nil {
 		return nil, status.Error(codes.Code(exceptions.MapToHttpStatusCode(err.Status)), err.Errors.Error())
 	}
 
 	return &userPb.CreateUserResponse{
-		Data: &userPb.User{
-			Id:        user.ID.String(),
-			Name:      user.Name,
-			CreatedAt: timestamppb.New(user.CreatedAt),
-			UpdatedAt: timestamppb.New(user.UpdatedAt),
-		},
+		Data: mappers.ToProtoUser(user),
+	}, nil
+}
+
+func (x *server) FindUser(ctx context.Context, req *userPb.FindUserRequest) (*user.FindUserResponse, error) {
+	user, err := x.profileUsecase.Find(ctx, req.GetId())
+	if err != nil {
+		return nil, status.Error(codes.Code(exceptions.MapToHttpStatusCode(err.Status)), err.Errors.Error())
+	}
+
+	return &userPb.FindUserResponse{
+		Data: mappers.ToProtoUser(user),
 	}, nil
 }

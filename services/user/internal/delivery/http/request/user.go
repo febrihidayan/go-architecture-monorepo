@@ -14,6 +14,7 @@ type UserUpdateRequest struct {
 	Name     string     `json:"name" validate:"required|min:3"`
 	Email    string     `json:"email" validate:"required|email|min:3"`
 	Avatar   string     `json:"avatar"`
+	LangCode string     `json:"lang_code" validate:"required"`
 	Password string     `json:"password" validate:"nullable|min:6"`
 }
 

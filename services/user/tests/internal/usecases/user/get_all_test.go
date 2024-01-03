@@ -20,6 +20,7 @@ func (x *UserUsecaseSuite) TestGetAll() {
 		ID:        id,
 		Name:      "Admin",
 		Email:     "admin@app.com",
+		LangCode:  entities.UserLangEN,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	})

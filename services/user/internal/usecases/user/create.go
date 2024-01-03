@@ -23,6 +23,8 @@ func (x *userInteractor) Create(ctx context.Context, payload entities.UserDto) (
 	}
 
 	user := entities.NewUser(payload)
+	user.DefaultLang()
+
 	if err := user.Validate(); err != nil {
 		multilerr = multierror.Append(multilerr, err)
 		return nil, &exceptions.CustomError{

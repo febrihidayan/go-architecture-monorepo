@@ -9,17 +9,20 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/usecases/notification"
+	grpc_repositories "github.com/febrihidayan/go-architecture-monorepo/services/notification/tests/mocks/repositories/grpc"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/notification/tests/mocks/repositories/mongo"
 	"github.com/stretchr/testify/suite"
 )
 
 type NotificationUsecaseSuite struct {
 	suite.Suite
-	cfg              *config.NotificationConfig
-	mongoFactory     *factories.MongoFactory
-	templateRepo     *mongo_repositories.TemplateRepositoryMock
-	notificationRepo *mongo_repositories.NotificationRepositoryMock
-	notificationUsecase  usecases.NotificationUsecase
+	cfg                 *config.NotificationConfig
+	mongoFactory        *factories.MongoFactory
+	grpcClientFactory   *factories.GrpcClientFactory
+	templateRepo        *mongo_repositories.TemplateRepositoryMock
+	notificationRepo    *mongo_repositories.NotificationRepositoryMock
+	userGrpcRepo        *grpc_repositories.UserRepositoryMock
+	notificationUsecase usecases.NotificationUsecase
 }
 
 func (x *NotificationUsecaseSuite) SetupTest() {
@@ -27,13 +30,18 @@ func (x *NotificationUsecaseSuite) SetupTest() {
 
 	x.templateRepo = new(mongo_repositories.TemplateRepositoryMock)
 	x.notificationRepo = new(mongo_repositories.NotificationRepositoryMock)
+	x.userGrpcRepo = new(grpc_repositories.UserRepositoryMock)
 
 	x.mongoFactory = &factories.MongoFactory{
 		NotificationRepo: x.notificationRepo,
 		TemplateRepo:     x.templateRepo,
 	}
 
-	x.notificationUsecase = notification.NewNotificationInteractor(x.cfg, x.mongoFactory)
+	x.grpcClientFactory = &factories.GrpcClientFactory{
+		UserRepo: x.userGrpcRepo,
+	}
+
+	x.notificationUsecase = notification.NewNotificationInteractor(x.cfg, x.mongoFactory, x.grpcClientFactory)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

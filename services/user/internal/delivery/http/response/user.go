@@ -12,6 +12,7 @@ type UserListResponse struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Avatar    string    `json:"avatar"`
+	LangCode  string    `json:"lang_code"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
@@ -22,6 +23,7 @@ func MapUserListResponse(x *entities.User) UserListResponse {
 		Name:      x.Name,
 		Email:     x.Email,
 		Avatar:    x.Avatar,
+		LangCode:  x.LangCode,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}

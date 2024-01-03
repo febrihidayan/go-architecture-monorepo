@@ -18,10 +18,11 @@ func (x *ProfileUsecaseSuite) TestUpdate() {
 	)
 
 	payloadDto := entities.UserDto{
-		ID:     &id,
-		Name:   "Admin",
-		Email:  "admin@app.com",
-		Avatar: fullPath,
+		ID:       &id,
+		Name:     "Admin",
+		Email:    "admin@app.com",
+		Avatar:   fullPath,
+		LangCode: entities.UserLangEN,
 	}
 
 	user = &entities.User{
@@ -29,6 +30,7 @@ func (x *ProfileUsecaseSuite) TestUpdate() {
 		Name:      "Admin",
 		Email:     "admin@app.com",
 		Avatar:    fullPath,
+		LangCode:  entities.UserLangEN,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}

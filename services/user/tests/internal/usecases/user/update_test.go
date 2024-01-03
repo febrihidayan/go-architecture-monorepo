@@ -19,19 +19,21 @@ func (x *UserUsecaseSuite) TestUpdate() {
 	)
 
 	payloadDto := entities.UserDto{
-		ID:     &id,
-		Name:   "Admin",
-		Email:  "admin@app.com",
-		Avatar: fullPath,
+		ID:       &id,
+		Name:     "Admin",
+		Email:    "admin@app.com",
+		Avatar:   fullPath,
+		LangCode: entities.UserLangEN,
 		Auth: entities.Auth{
 			Password: "password",
 		},
 	}
 
 	payloadDeleteAvatarDto := entities.UserDto{
-		ID:    &id,
-		Name:  "Admin",
-		Email: "admin@app.com",
+		ID:       &id,
+		Name:     "Admin",
+		Email:    "admin@app.com",
+		LangCode: entities.UserLangEN,
 		Auth: entities.Auth{
 			Password: "password",
 		},
@@ -42,6 +44,7 @@ func (x *UserUsecaseSuite) TestUpdate() {
 		Name:      "Admin",
 		Email:     "admin@app.com",
 		Avatar:    fullPath,
+		LangCode:  entities.UserLangEN,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
@@ -50,6 +53,7 @@ func (x *UserUsecaseSuite) TestUpdate() {
 		ID:        id,
 		Name:      "Admin",
 		Email:     "admin@app.com",
+		LangCode:  entities.UserLangEN,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}

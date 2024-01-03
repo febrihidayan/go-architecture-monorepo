@@ -18,12 +18,14 @@ func TemplateHttpHandler(
 	r *mux.Router,
 	config *config.NotificationConfig,
 	mongoFactory *factories.MongoFactory,
+	grpcClientFactory *factories.GrpcClientFactory,
 ) {
 	handler := &notificationHttpHandler{
 		cfg: config,
 		notificationUsecase: notification.NewNotificationInteractor(
 			config,
 			mongoFactory,
+			grpcClientFactory,
 		),
 	}
 

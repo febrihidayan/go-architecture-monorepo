@@ -14,6 +14,15 @@ func (x *notificationInteractor) GetAll(ctx context.Context, params entities.Not
 		results   = make([]*entities.Notification, 0)
 	)
 
+	user, err := x.userGrpcRepo.FindUser(ctx, params.UserId)
+	if err != nil {
+		multilerr = multierror.Append(multilerr, err)
+		return nil, &exceptions.CustomError{
+			Status: exceptions.ERRREPOSITORY,
+			Errors: multilerr,
+		}
+	}
+
 	getAll, total, err := x.notificationRepo.GetAll(ctx, &params)
 	if err != nil {
 		multilerr = multierror.Append(multilerr, err)
@@ -26,7 +35,7 @@ func (x *notificationInteractor) GetAll(ctx context.Context, params entities.Not
 	for _, item := range getAll {
 		temp, _ := x.templateRepo.FindByName(ctx, item.Type)
 
-		content := temp.GetTemplateData(item.GetData(), entities.TemplateLangEN)
+		content := temp.GetTemplateData(item.GetData(), user.LangCode)
 
 		item.SetData(content.Body)
 

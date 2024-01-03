@@ -15,16 +15,18 @@ type User struct {
 	Name      string
 	Email     string
 	Avatar    string
+	LangCode  string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 
 type UserDto struct {
-	ID     *common.ID
-	Name   string
-	Email  string
-	Avatar string
-	Auth   Auth
+	ID       *common.ID
+	Name     string
+	Email    string
+	Avatar   string
+	LangCode string
+	Auth     Auth
 }
 
 type UserQueryParams struct {
@@ -38,12 +40,18 @@ type UserMeta struct {
 	Total int
 }
 
+const (
+	UserLangEN = "en"
+	UserLangID = "id"
+)
+
 func NewUser(x UserDto, finds ...*User) *User {
 	user := User{
 		ID:        common.NewID(),
 		Name:      x.Name,
 		Email:     x.Email,
 		Avatar:    x.Avatar,
+		LangCode:  x.LangCode,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
@@ -66,6 +74,14 @@ func (x *User) Validate() (err *multierror.Error) {
 	if x.Email == "" {
 		err = multierror.Append(err, lang.ErrEmailRequired)
 	}
+	if x.LangCode == "" {
+		err = multierror.Append(err, lang.Trans("filled", "LangCode"))
+	}
 
 	return
+}
+
+// default language english (en)
+func (x *User) DefaultLang() {
+	x.LangCode = UserLangEN
 }
