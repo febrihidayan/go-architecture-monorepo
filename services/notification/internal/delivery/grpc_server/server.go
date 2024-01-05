@@ -6,6 +6,7 @@ import (
 )
 
 type server struct {
-	cfg             config.NotificationConfig
-	templateUsecase usecases.TemplateUsecase
+	cfg                config.NotificationConfig
+	templateUsecase    usecases.TemplateUsecase
+	deviceTokenUsecase usecases.DeviceTokenUsecase
 }

@@ -9,16 +9,19 @@ import (
 type MongoFactory struct {
 	TemplateRepo     repositories.TemplateRepository
 	NotificationRepo repositories.NotificationRepository
+	DeviceTokenRepo  repositories.DeviceTokenRepository
 }
 
 func NewMongoFactory(db *mongo.Database) *MongoFactory {
 	var (
-		TemplateRepo     = mongo_repositories.NewTemplateRepository(db)
-		NotificationRepo = mongo_repositories.NewNotificationRepository(db)
+		TemplateRepo        = mongo_repositories.NewTemplateRepository(db)
+		NotificationRepo    = mongo_repositories.NewNotificationRepository(db)
+		DeviceTokenRepoRepo = mongo_repositories.NewDeviceTokenRepository(db)
 	)
 
 	return &MongoFactory{
 		TemplateRepo:     &TemplateRepo,
 		NotificationRepo: &NotificationRepo,
+		DeviceTokenRepo:  &DeviceTokenRepoRepo,
 	}
 }

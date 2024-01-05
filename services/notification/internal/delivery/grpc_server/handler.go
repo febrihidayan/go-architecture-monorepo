@@ -5,6 +5,7 @@ import (
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/usecases/device_token"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/usecases/template"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
@@ -14,6 +15,7 @@ func HandlerNotificationServices(s *grpc.Server, db *mongo.Database, cfg config.
 	mongoFactory := factories.NewMongoFactory(db)
 
 	notificationPb.RegisterNotificationServicesServer(s, &server{
-		templateUsecase: template.NewTemplateInteractor(&cfg, mongoFactory),
+		templateUsecase:    template.NewTemplateInteractor(&cfg, mongoFactory),
+		deviceTokenUsecase: device_token.NewDeviceTokenInteractor(&cfg, mongoFactory),
 	})
 }
