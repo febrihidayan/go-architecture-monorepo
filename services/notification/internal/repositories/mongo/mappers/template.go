@@ -10,6 +10,7 @@ func ToModelTemplate(x *entities.Template) *models.Template {
 	return &models.Template{
 		ID:        x.ID.String(),
 		Name:      x.Name,
+		Type:      x.Type,
 		Data:      x.Data,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
@@ -21,6 +22,7 @@ func ToDomainTemplate(x *models.Template) *entities.Template {
 	return &entities.Template{
 		ID:        id,
 		Name:      x.Name,
+		Type:      x.Type,
 		Data:      x.Data,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,

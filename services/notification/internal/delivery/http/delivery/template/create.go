@@ -37,6 +37,7 @@ func (x *templateHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 
 	data := entities.TemplateDto{
 		Name: payload.Name,
+		Type: payload.Type,
 		Data: string(dataJson),
 	}
 
