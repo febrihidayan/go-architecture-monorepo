@@ -12,6 +12,7 @@ func ToDomainDeviceTokenDto(x *notificationPb.DeviceToken) entities.DeviceTokenD
 		ID:        &id,
 		UserId:    x.GetUserId(),
 		Token:     x.GetToken(),
+		OsName:    x.GetOsName(),
 		CreatedAt: x.CreatedAt.AsTime(),
 		UpdatedAt: x.UpdatedAt.AsTime(),
 	}

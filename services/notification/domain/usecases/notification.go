@@ -9,4 +9,5 @@ import (
 
 type NotificationUsecase interface {
 	GetAll(ctx context.Context, params entities.NotificationQueryParams) (*entities.NotificationMeta, *exceptions.CustomError)
+	SendPushJobs(ctx context.Context, params entities.NotificationSends) *exceptions.CustomError
 }

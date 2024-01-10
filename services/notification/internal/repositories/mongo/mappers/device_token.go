@@ -11,6 +11,7 @@ func ToModelDeviceToken(x *entities.DeviceToken) *models.DeviceToken {
 		ID:        x.ID.String(),
 		UserId:    x.UserId,
 		Token:     x.Token,
+		OsName:    x.OsName,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}
@@ -22,6 +23,7 @@ func ToDomainDeviceToken(x *models.DeviceToken) *entities.DeviceToken {
 		ID:        id,
 		UserId:    x.UserId,
 		Token:     x.Token,
+		OsName:    x.OsName,
 		CreatedAt: x.CreatedAt,
 		UpdatedAt: x.UpdatedAt,
 	}

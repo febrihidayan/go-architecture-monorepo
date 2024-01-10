@@ -16,6 +16,7 @@ import (
 	notification_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/notification"
 	template_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/template"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/services"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )
@@ -39,8 +40,15 @@ func main() {
 		log.Fatalf("did not connect grpc client: %v", errs)
 	}
 
+	// run firebase google service
+	firebaseGoogleService, errFGService := services.NewFcmGoogleService(cfg.FirebaseGoogleService)
+	if errFGService != nil {
+		cancel()
+		log.Fatalf("did not connect firebase service: %v", errFGService)
+	}
+
 	// run Grpc Server
-	go RunGrpcServer()
+	go RunGrpcServer(grpcClient, firebaseGoogleService)
 	// end run Grpc Server
 
 	router := mux.NewRouter()
@@ -66,9 +74,12 @@ func main() {
 	log.Println("Server Exited Properly")
 }
 
-func RunGrpcServer() {
+func RunGrpcServer(
+	grpcClient *grpc_client.ServerClient,
+	firebaseGoogleService *services.FirebaseGoogleService) {
+
 	grpcServer := grpc.NewServer()
-	grpc_server.HandlerNotificationServices(grpcServer, db, *cfg)
+	grpc_server.HandlerNotificationServices(grpcServer, db, grpcClient, firebaseGoogleService, *cfg)
 
 	lis, err := net.Listen("tcp", cfg.RpcPort)
 	if err != nil {

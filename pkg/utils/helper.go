@@ -71,3 +71,14 @@ func MapQueryParams(r *http.Request, data interface{}) error {
 
 	return nil
 }
+
+// Contains reports whether substr is within s.
+func ContainsString(s []string, str string) bool {
+	for _, v := range s {
+		if strings.Contains(strings.ToLower(v), strings.ToLower(str)) {
+			return true
+		}
+	}
+
+	return false
+}

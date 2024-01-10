@@ -41,7 +41,7 @@ func (x *NotificationUsecaseSuite) SetupTest() {
 		UserRepo: x.userGrpcRepo,
 	}
 
-	x.notificationUsecase = notification.NewNotificationInteractor(x.cfg, x.mongoFactory, x.grpcClientFactory)
+	x.notificationUsecase = notification.NewNotificationInteractor(x.cfg, x.mongoFactory, x.grpcClientFactory, nil)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

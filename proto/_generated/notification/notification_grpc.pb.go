@@ -21,6 +21,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	NotificationServices_CreateDeviceToken_FullMethodName = "/notification.NotificationServices/CreateDeviceToken"
+	NotificationServices_SendNotification_FullMethodName  = "/notification.NotificationServices/SendNotification"
 )
 
 // NotificationServicesClient is the client API for NotificationServices service.
@@ -28,6 +29,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type NotificationServicesClient interface {
 	CreateDeviceToken(ctx context.Context, in *CreateDeviceTokenRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	SendNotification(ctx context.Context, in *SendNotificationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type notificationServicesClient struct {
@@ -47,11 +49,21 @@ func (c *notificationServicesClient) CreateDeviceToken(ctx context.Context, in *
 	return out, nil
 }
 
+func (c *notificationServicesClient) SendNotification(ctx context.Context, in *SendNotificationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, NotificationServices_SendNotification_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NotificationServicesServer is the server API for NotificationServices service.
 // All implementations should embed UnimplementedNotificationServicesServer
 // for forward compatibility
 type NotificationServicesServer interface {
 	CreateDeviceToken(context.Context, *CreateDeviceTokenRequest) (*emptypb.Empty, error)
+	SendNotification(context.Context, *SendNotificationRequest) (*emptypb.Empty, error)
 }
 
 // UnimplementedNotificationServicesServer should be embedded to have forward compatible implementations.
@@ -60,6 +72,9 @@ type UnimplementedNotificationServicesServer struct {
 
 func (UnimplementedNotificationServicesServer) CreateDeviceToken(context.Context, *CreateDeviceTokenRequest) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateDeviceToken not implemented")
+}
+func (UnimplementedNotificationServicesServer) SendNotification(context.Context, *SendNotificationRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SendNotification not implemented")
 }
 
 // UnsafeNotificationServicesServer may be embedded to opt out of forward compatibility for this service.
@@ -91,6 +106,24 @@ func _NotificationServices_CreateDeviceToken_Handler(srv interface{}, ctx contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _NotificationServices_SendNotification_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SendNotificationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NotificationServicesServer).SendNotification(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: NotificationServices_SendNotification_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NotificationServicesServer).SendNotification(ctx, req.(*SendNotificationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // NotificationServices_ServiceDesc is the grpc.ServiceDesc for NotificationServices service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -101,6 +134,10 @@ var NotificationServices_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CreateDeviceToken",
 			Handler:    _NotificationServices_CreateDeviceToken_Handler,
+		},
+		{
+			MethodName: "SendNotification",
+			Handler:    _NotificationServices_SendNotification_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -34,12 +34,25 @@ type NotificationQueryParams struct {
 	PerPage int
 }
 
+type NotificationSends struct {
+	UserId       string
+	TemplateName string
+	Data         string
+	Services     []string
+}
+
 type NotificationMeta struct {
 	Data    []*Notification
 	Total   int
 	Page    int
 	PerPage int
 }
+
+const (
+	NotificationTypeEmail = "email"
+	NotificationTypeFCM   = "fcm"
+	NotificationTypeApp   = "app"
+)
 
 func NewNotification(x NotificationDto, finds ...*Notification) *Notification {
 
@@ -85,6 +98,12 @@ func (x *Notification) SetData(data interface{}) {
 
 func (x *Notification) GetData() (data interface{}) {
 	json.Unmarshal([]byte(x.Data), &data)
+
+	return
+}
+
+func (x *NotificationSends) GetData() (result map[string]string) {
+	json.Unmarshal([]byte(x.Data), &result)
 
 	return
 }

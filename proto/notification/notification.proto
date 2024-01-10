@@ -7,16 +7,29 @@ import "google/protobuf/timestamp.proto";
 
 service NotificationServices {
     rpc CreateDeviceToken(CreateDeviceTokenRequest) returns (google.protobuf.Empty);
+    rpc SendNotification(SendNotificationRequest) returns (google.protobuf.Empty);
 }
 
 message DeviceToken {
     string id = 1;
     string user_id = 2;
     string token = 3;
-    google.protobuf.Timestamp created_at = 4;
-    google.protobuf.Timestamp updated_at = 5;
+    string os_name = 4;
+    google.protobuf.Timestamp created_at = 5;
+    google.protobuf.Timestamp updated_at = 6;
+}
+
+message SendParams {
+    string user_id = 1;
+    string type = 2;
+    string data = 3;
+    repeated string services = 4;
 }
 
 message CreateDeviceTokenRequest {
     DeviceToken data = 1;
+}
+
+message SendNotificationRequest {
+    SendParams data = 1;
 }

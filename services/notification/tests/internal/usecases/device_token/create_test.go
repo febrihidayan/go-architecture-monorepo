@@ -23,18 +23,21 @@ func (x *DeviceTokenUsecaseSuite) TestCreate() {
 		ID:     &id,
 		UserId: id.String(),
 		Token:  "sdfghjkvftyu",
+		OsName: entities.DeviceOsAndroid,
 	}
 
 	payloadEmptyDto := entities.DeviceTokenDto{
 		ID:     &id,
 		UserId: id.String(),
 		Token:  "",
+		OsName: entities.DeviceOsAndroid,
 	}
 
 	template = &entities.DeviceToken{
 		ID:        id,
 		UserId:    id.String(),
 		Token:     "sdfghjkvftyu",
+		OsName:    entities.DeviceOsAndroid,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
 	}
