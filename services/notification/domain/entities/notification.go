@@ -39,6 +39,7 @@ type NotificationSends struct {
 	TemplateName string
 	Data         string
 	Services     []string
+	PathEmail    string
 }
 
 type NotificationMeta struct {

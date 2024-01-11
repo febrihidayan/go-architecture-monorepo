@@ -3,10 +3,13 @@ package notification
 import (
 	"context"
 	"log"
+	"path"
+	"strings"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/entities"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/services"
 	"github.com/hashicorp/go-multierror"
 )
 
@@ -74,7 +77,25 @@ func (x *notificationInteractor) SendPushJobs(ctx context.Context, params entiti
 
 	// send email
 	if utils.ContainsString(params.Services, entities.NotificationTypeEmail) {
-		// TODO
+		go func(mail *services.MailgunService, user *entities.User, tmp *entities.Template, param entities.NotificationSends, data entities.TemplateData) {
+			user.LangDefault()
+
+			contentData := tmp.GetTemplateMaps(param.GetData(), user.LangCode)
+
+			contentHtml, err := utils.ParseTemplate(path.Join("services/notification/resources/email_templates", user.LangCode, param.PathEmail), contentData)
+			if err != nil {
+				log.Println("SendPushJobs::error#6:", err)
+			}
+
+			contentText, err := utils.ParseTemplate(path.Join("services/notification/resources/email_templates", user.LangCode, strings.ReplaceAll(param.PathEmail, "html", "tmpl")), contentData)
+			if err != nil {
+				log.Println("SendPushJobs::error#7:", err)
+			}
+
+			if _, err := mail.SendEmail(data.Title, []string{user.Email}, contentHtml, contentText); err != nil {
+				log.Println("SendPushJobs::error#8:", err)
+			}
+		}(x.mailgunService, user, template, params, content)
 	}
 
 	return nil

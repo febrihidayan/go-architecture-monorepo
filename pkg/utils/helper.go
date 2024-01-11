@@ -1,8 +1,13 @@
 package utils
 
 import (
+	"bytes"
 	"errors"
+	"fmt"
+	"html/template"
 	"net/http"
+	"os"
+	"path"
 	"reflect"
 	"strconv"
 	"strings"
@@ -81,4 +86,29 @@ func ContainsString(s []string, str string) bool {
 	}
 
 	return false
+}
+
+// ref: https://github.com/Golang-Coach/Lessons/blob/master/GoMailer/template_helper.go
+func ParseTemplate(templateFileName string, data interface{}) (string, error) {
+	// ref: https://stackoverflow.com/a/18537419
+	pwd, err := os.Getwd()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+
+	filepath := path.Join(pwd, templateFileName)
+
+	tmpl, err := template.ParseFiles(filepath)
+	if err != nil {
+		return "", err
+	}
+
+	buf := new(bytes.Buffer)
+
+	if err := tmpl.Execute(buf, data); err != nil {
+		return "", err
+	}
+
+	return buf.String(), nil
 }

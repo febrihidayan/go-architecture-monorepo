@@ -13,6 +13,7 @@ type NotificationConfig struct {
 	Timeout               time.Duration
 	GrpcClient            GrpcClient
 	FirebaseGoogleService *FirebaseGoogle
+	Mailgun               *Mailgun
 }
 
 type GrpcClient struct {
@@ -31,6 +32,13 @@ type FirebaseGoogle struct {
 	AuthProviderCertUrl string
 	ClientCertUrl       string
 	UniverseDomain      string
+}
+
+type Mailgun struct {
+	MailFromDomain string
+	MailFromName   string
+	MailgunDomain  string
+	MailgunSecret  string
 }
 
 func Notification() *NotificationConfig {
@@ -53,6 +61,12 @@ func Notification() *NotificationConfig {
 			AuthProviderCertUrl: os.Getenv("GOOGLE_FIREBASE_AUTH_PROVIDER_CERT_URL"),
 			ClientCertUrl:       os.Getenv("GOOGLE_FIREBASE_CLIENT_CERT_URL"),
 			UniverseDomain:      os.Getenv("GOOGLE_FIREBASE_UNIVERSE_DOMAIN"),
+		},
+		Mailgun: &Mailgun{
+			MailFromDomain: os.Getenv("MAILGUN_FROM_DOMAIN"),
+			MailFromName:   os.Getenv("MAILGUN_FROM_NAME"),
+			MailgunDomain:  os.Getenv("MAILGUN_DOMAIN"),
+			MailgunSecret:  os.Getenv("MAILGUN_SECRET"),
 		},
 	}
 }

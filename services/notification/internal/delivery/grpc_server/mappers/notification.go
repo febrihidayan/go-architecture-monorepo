@@ -11,5 +11,6 @@ func ToDomainNotificationParamsDto(x *notificationPb.SendParams) entities.Notifi
 		TemplateName: x.GetType(),
 		Data:         x.GetData(),
 		Services:     x.GetServices(),
+		PathEmail:    x.GetPathEmail(),
 	}
 }

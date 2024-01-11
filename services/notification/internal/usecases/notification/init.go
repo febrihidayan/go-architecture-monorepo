@@ -14,6 +14,7 @@ type notificationInteractor struct {
 	deviceTokenRepo       repositories.DeviceTokenRepository
 	userGrpcRepo          repositories.UserRepository
 	firebaseGoogleService *services.FirebaseGoogleService
+	mailgunService        *services.MailgunService
 }
 
 func NewNotificationInteractor(
@@ -23,6 +24,8 @@ func NewNotificationInteractor(
 	firebaseGoogleService *services.FirebaseGoogleService,
 ) *notificationInteractor {
 
+	mailgunService := services.NewMailgunClient(config.Mailgun)
+
 	return &notificationInteractor{
 		cfg:                   config,
 		templateRepo:          mongoFactory.TemplateRepo,
@@ -30,5 +33,6 @@ func NewNotificationInteractor(
 		deviceTokenRepo:       mongoFactory.DeviceTokenRepo,
 		userGrpcRepo:          grpcClientFactory.UserRepo,
 		firebaseGoogleService: firebaseGoogleService,
+		mailgunService:        mailgunService,
 	}
 }

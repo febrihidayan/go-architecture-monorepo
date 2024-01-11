@@ -3,6 +3,7 @@ package entities
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"text/template"
 	"time"
 
@@ -117,4 +118,30 @@ func (x *Template) GetTemplateData(data interface{}, lang string) (result Templa
 	}
 
 	return
+}
+
+func (x *Template) GetTemplateMaps(data interface{}, lang string) map[string]string {
+	var (
+		replaced   bytes.Buffer
+		resultData map[string]interface{}
+		result     = make(map[string]string, 0)
+	)
+
+	parser, _ := template.New("").Option("missingkey=error").Parse(x.Data)
+
+	parser.Execute(&replaced, data)
+	json.Unmarshal(replaced.Bytes(), &resultData)
+
+	for key, items := range resultData {
+		for langCode, val := range items.(map[string]interface{}) {
+			switch lang {
+			case langCode:
+				result[key] = fmt.Sprintf("%s", val)
+			default:
+				result[TemplateLangEN] = fmt.Sprintf("%s", val)
+			}
+		}
+	}
+
+	return result
 }

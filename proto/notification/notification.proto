@@ -24,6 +24,7 @@ message SendParams {
     string type = 2;
     string data = 3;
     repeated string services = 4;
+    string path_email = 5;
 }
 
 message CreateDeviceTokenRequest {

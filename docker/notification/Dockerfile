@@ -22,6 +22,8 @@ FROM gcr.io/distroless/base-debian11
 
 COPY --from=builder --chown=nonroot /go/bin/app /app
 
+COPY --chown=nonroot:nonroot --chmod=777 ./services/notification/resources /services/notification/resources
+
 USER nonroot:nonroot
 
 CMD ["/app"]
