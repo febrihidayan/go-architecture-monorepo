@@ -7,7 +7,6 @@ import (
 type Template struct {
 	ID        string    `bson:"_id"`
 	Name      string    `bson:"name"`
-	Type      string    `bson:"type"`
 	Data      string    `bson:"data"`
 	CreatedAt time.Time `bson:"created_at"`
 	UpdatedAt time.Time `bson:"updated_at"`

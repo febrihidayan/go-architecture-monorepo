@@ -16,7 +16,6 @@ import (
 type Template struct {
 	ID        common.ID
 	Name      string
-	Type      string
 	Data      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -25,7 +24,6 @@ type Template struct {
 type TemplateDto struct {
 	ID        *common.ID
 	Name      string
-	Type      string
 	Data      string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -60,7 +58,6 @@ func NewTemplate(x TemplateDto, finds ...*Template) *Template {
 	result := Template{
 		ID:        common.NewID(),
 		Name:      x.Name,
-		Type:      x.Type,
 		Data:      x.Data,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),
@@ -80,9 +77,6 @@ func NewTemplate(x TemplateDto, finds ...*Template) *Template {
 func (x *Template) Validate() (err *multierror.Error) {
 	if x.Name == "" {
 		err = multierror.Append(err, lang.Trans("filled", "Name"))
-	}
-	if x.Type == "" {
-		err = multierror.Append(err, lang.Trans("filled", "Type"))
 	}
 	if x.Data == "" {
 		err = multierror.Append(err, lang.Trans("filled", "Data"))

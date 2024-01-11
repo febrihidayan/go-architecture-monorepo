@@ -25,7 +25,6 @@ func TestValidateTemplate(t *testing.T) {
 			args: entities.TemplateDto{
 				ID:   &uuid,
 				Name: "register_user",
-				Type: "in-app",
 				Data: `{"title":{"en":"Welcome","id":"Selamat Datang"}}`,
 			},
 			errs: multierror.Append(errs, errs.ErrorOrNil()),
@@ -35,7 +34,6 @@ func TestValidateTemplate(t *testing.T) {
 			args: entities.TemplateDto{
 				ID:   &uuid,
 				Name: "register_user",
-				Type: "in-app",
 				Data: "",
 			},
 			errs: multierror.Append(errs, lang.Trans("filled", "Data")),

@@ -22,21 +22,18 @@ func (x *TemplateUsecaseSuite) TestCreate() {
 	payloadDto := entities.TemplateDto{
 		ID:   &id,
 		Name: "register_user",
-		Type: "in-app",
 		Data: `{"title":{"en":"Welcome","id":"Selamat Datang"}}`,
 	}
 
 	payloadEmptyDto := entities.TemplateDto{
 		ID:   &id,
 		Name: "register_user",
-		Type: "in-app",
 		Data: "",
 	}
 
 	template = &entities.Template{
 		ID:        id,
 		Name:      "register_user",
-		Type:      "in-app",
 		Data:      `{"title":{"en":"Welcome","id":"Selamat Datang"}}`,
 		CreatedAt: utils.TimeUTC(),
 		UpdatedAt: utils.TimeUTC(),

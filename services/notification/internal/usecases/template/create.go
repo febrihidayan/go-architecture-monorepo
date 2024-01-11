@@ -13,7 +13,7 @@ func (x *templateInteractor) Create(ctx context.Context, payload entities.Templa
 	var multilerr *multierror.Error
 
 	find, _ := x.templateRepo.FindByName(ctx, payload.Name)
-	if find != nil && find.Type == payload.Type {
+	if find != nil {
 		multilerr = multierror.Append(multilerr, lang.ErrTemplateAlready)
 		return nil, &exceptions.CustomError{
 			Status: exceptions.ERRREPOSITORY,
