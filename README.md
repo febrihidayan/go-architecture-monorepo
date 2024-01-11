@@ -9,7 +9,7 @@ Started rest API with clean architecture monorepo golang
   - [Port HTTP and RPC Services](#port-http-and-rpc-services)
 
 ## Required
-1. [Golang](https://go.dev/) v1.18.1 or above
+1. [Golang](https://go.dev/) v1.21.5 or above
 2. [MongoDB](https://www.mongodb.com/)
 3. [Buf](https://docs.buf.build/) to generate protobuf grpc
 

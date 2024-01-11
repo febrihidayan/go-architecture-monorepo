@@ -1,5 +1,5 @@
 # argument for Go version
-ARG GO_VERSION=1.18.1
+ARG GO_VERSION=1.21.5
 
 # STAGE 1: building the executable
 FROM golang:${GO_VERSION} AS builder
@@ -15,7 +15,7 @@ RUN go get -d -v ./...
 
 WORKDIR /go/src/app/services/user/cmd
 
-RUN go build -o /go/bin/app
+RUN CGO_ENABLED=0 go build -o /go/bin/app
 
 # Now copy it into our base image.
 FROM gcr.io/distroless/base-debian11
