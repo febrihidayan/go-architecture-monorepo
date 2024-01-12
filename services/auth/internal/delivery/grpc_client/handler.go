@@ -22,5 +22,13 @@ func NewGrpcClient(cfg *config.GrpcClient) (*ServerClient, []error) {
 	}
 	log.Println("rpc user started on", cfg.User)
 
+	client.NotificationClient, err = grpc.Dial(cfg.Notification, grpc.WithInsecure())
+	if err != nil {
+		log.Fatalf("did not connect grpc notification: %v", err)
+
+		errs = append(errs, err)
+	}
+	log.Println("rpc notification started on", cfg.Notification)
+
 	return &client, errs
 }

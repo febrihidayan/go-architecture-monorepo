@@ -7,11 +7,12 @@ import (
 )
 
 type authInteractor struct {
-	cfg          *config.AuthConfig
-	authRepo     repositories.AuthRepository
-	userRepo     repositories.UserRepository
-	roleUserRepo repositories.RoleUserRepository
-	roleRepo     repositories.RoleRepository
+	cfg                  *config.AuthConfig
+	authRepo             repositories.AuthRepository
+	userRepo             repositories.UserRepository
+	roleUserRepo         repositories.RoleUserRepository
+	roleRepo             repositories.RoleRepository
+	notificationGrpcRepo repositories.NotificationRepository
 }
 
 func NewAuthInteractor(
@@ -21,10 +22,11 @@ func NewAuthInteractor(
 ) *authInteractor {
 
 	return &authInteractor{
-		cfg:          config,
-		authRepo:     mongoFactory.AuthRepo,
-		roleUserRepo: mongoFactory.RoleUserRepo,
-		roleRepo:     mongoFactory.RoleRepo,
-		userRepo:     grpcClientFactory.UserRepo,
+		cfg:                  config,
+		authRepo:             mongoFactory.AuthRepo,
+		roleUserRepo:         mongoFactory.RoleUserRepo,
+		roleRepo:             mongoFactory.RoleRepo,
+		userRepo:             grpcClientFactory.UserRepo,
+		notificationGrpcRepo: grpcClientFactory.NotificationRepo,
 	}
 }

@@ -20,12 +20,17 @@ func ToProtoUser(x *entities.User) *userPb.User {
 }
 
 func ToDomainUserDto(x *userPb.User) entities.UserDto {
-	id, _ := common.StringToID(x.GetId())
-	return entities.UserDto{
-		ID:       &id,
+	result := entities.UserDto{
 		Name:     x.GetName(),
 		Email:    x.GetEmail(),
 		Avatar:   x.GetAvatar(),
 		LangCode: x.GetLangCode(),
 	}
+
+	if x.GetId() != "" {
+		id, _ := common.StringToID(x.GetId())
+		result.ID = &id
+	}
+
+	return result
 }

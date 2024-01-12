@@ -12,7 +12,7 @@ import (
 )
 
 func (x *server) CreateUser(ctx context.Context, req *userPb.CreateUserRequest) (*user.CreateUserResponse, error) {
-	user, err := x.userUsecase.Create(ctx, mappers.ToDomainUserDto(req.GetData()))
+	user, err := x.userUsecase.CreateAuth(ctx, mappers.ToDomainUserDto(req.GetData()))
 	if err != nil {
 		return nil, status.Error(codes.Code(exceptions.MapToHttpStatusCode(err.Status)), err.Errors.Error())
 	}

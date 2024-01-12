@@ -7,17 +7,21 @@ import (
 )
 
 type GrpcClientFactory struct {
-	UserRepo repositories.UserRepository
+	UserRepo         repositories.UserRepository
+	NotificationRepo repositories.NotificationRepository
 }
 
 func NewGrpcFactory(client *grpc_client.ServerClient) *GrpcClientFactory {
 	var (
-		userRepoGrpc repository_grpc.UserRepository
+		userRepoGrpc         repository_grpc.UserRepository
+		notificationRepoGrpc repository_grpc.NotificationRepository
 	)
 
 	userRepoGrpc = repository_grpc.NewUserRepository(client.UserClient)
+	notificationRepoGrpc = repository_grpc.NewNotificationRepository(client.NotificationClient)
 
 	return &GrpcClientFactory{
-		UserRepo: &userRepoGrpc,
+		UserRepo:         &userRepoGrpc,
+		NotificationRepo: &notificationRepoGrpc,
 	}
 }

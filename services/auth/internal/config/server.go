@@ -17,7 +17,8 @@ type AuthConfig struct {
 }
 
 type GrpcClient struct {
-	User string
+	User         string
+	Notification string
 }
 
 func Auth() *AuthConfig {
@@ -28,7 +29,8 @@ func Auth() *AuthConfig {
 		JwtExpired:  config.ConvertInt("JWT_EXPIRED"),
 		Timeout:     time.Duration(config.ConvertInt("APP_TIMEOUT")) * time.Second,
 		GrpcClient: GrpcClient{
-			User: os.Getenv("RPC_USER"),
+			User:         os.Getenv("RPC_USER"),
+			Notification: os.Getenv("RPC_NOTIFICATION"),
 		},
 	}
 }

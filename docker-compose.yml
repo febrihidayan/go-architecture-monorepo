@@ -38,6 +38,7 @@ services:
       HTTP_PORT: ':8083'
       RPC_PORT: ':9083'
       RPC_USER: 'user-go:9084'
+      RPC_NOTIFICATION: 'notification-go:9086'
       MONGODB_USERNAME: root
       MONGODB_PASSWORD: root
       MONGODB_NAME: arch_auth

@@ -9,6 +9,7 @@ import (
 
 type UserUsecase interface {
 	Create(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
+	CreateAuth(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
 	GetAll(ctx context.Context, params entities.UserQueryParams) (*entities.UserMeta, *exceptions.CustomError)
 	Update(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
 }

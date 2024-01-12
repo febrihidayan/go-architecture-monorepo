@@ -58,10 +58,6 @@ func NewAuth(x AuthDto, finds ...*Auth) *Auth {
 		auth.ID = *x.ID
 	}
 
-	if len(finds) > 0 {
-
-	}
-
 	for _, item := range finds {
 		if item != nil {
 			auth.Password = item.Password
