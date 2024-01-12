@@ -41,14 +41,10 @@ func main() {
 	}
 
 	// run firebase google service
-	firebaseGoogleService, errFGService := services.NewFcmGoogleService(cfg.FirebaseGoogleService)
-	if errFGService != nil {
-		cancel()
-		log.Fatalf("did not connect firebase service: %v", errFGService)
-	}
+	clientService := services.NewServiceHandler(cfg)
 
 	// run Grpc Server
-	go RunGrpcServer(grpcClient, firebaseGoogleService)
+	go RunGrpcServer(grpcClient, clientService)
 	// end run Grpc Server
 
 	router := mux.NewRouter()
@@ -76,10 +72,10 @@ func main() {
 
 func RunGrpcServer(
 	grpcClient *grpc_client.ServerClient,
-	firebaseGoogleService *services.FirebaseGoogleService) {
+	clientService *services.ClientService) {
 
 	grpcServer := grpc.NewServer()
-	grpc_server.HandlerNotificationServices(grpcServer, db, grpcClient, firebaseGoogleService, *cfg)
+	grpc_server.HandlerNotificationServices(grpcServer, db, grpcClient, clientService, *cfg)
 
 	lis, err := net.Listen("tcp", cfg.RpcPort)
 	if err != nil {

@@ -22,9 +22,8 @@ func NewNotificationInteractor(
 	mongoFactory *factories.MongoFactory,
 	grpcClientFactory *factories.GrpcClientFactory,
 	firebaseGoogleService *services.FirebaseGoogleService,
+	mailgunService *services.MailgunService,
 ) *notificationInteractor {
-
-	mailgunService := services.NewMailgunClient(config.Mailgun)
 
 	return &notificationInteractor{
 		cfg:                   config,

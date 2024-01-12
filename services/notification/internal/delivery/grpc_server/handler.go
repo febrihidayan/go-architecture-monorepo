@@ -18,7 +18,7 @@ func HandlerNotificationServices(
 	s *grpc.Server,
 	db *mongo.Database,
 	grpcClient *grpc_client.ServerClient,
-	firebaseGoogleService *services.FirebaseGoogleService,
+	clientService *services.ClientService,
 	cfg config.NotificationConfig) {
 	mongoFactory := factories.NewMongoFactory(db)
 	grpcClientFactory := factories.NewGrpcFactory(grpcClient)
@@ -26,6 +26,6 @@ func HandlerNotificationServices(
 	notificationPb.RegisterNotificationServicesServer(s, &server{
 		templateUsecase:     template.NewTemplateInteractor(&cfg, mongoFactory),
 		deviceTokenUsecase:  device_token.NewDeviceTokenInteractor(&cfg, mongoFactory),
-		notificationUsecase: notification.NewNotificationInteractor(&cfg, mongoFactory, grpcClientFactory, firebaseGoogleService),
+		notificationUsecase: notification.NewNotificationInteractor(&cfg, mongoFactory, grpcClientFactory, clientService.FirebaseGoogle, clientService.Mailgun),
 	})
 }

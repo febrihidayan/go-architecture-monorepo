@@ -27,6 +27,7 @@ func TemplateHttpHandler(
 			mongoFactory,
 			grpcClientFactory,
 			nil,
+			nil,
 		),
 	}
 
