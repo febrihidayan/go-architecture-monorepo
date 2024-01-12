@@ -529,6 +529,33 @@
                     "disable_jwk_security": true
                 }
             }
+        },
+        {
+            "endpoint": "/v1/notification/device-token",
+            "method": "POST",
+            "input_headers": ["Authorization"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/notification/device-token",
+                    "host": [
+                        "http://notification-go:8086"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "roles": ["superadministrator", "administrator", "member"],
+                    "disable_jwk_security": true
+                }
+            }
         }
     ]
 }
