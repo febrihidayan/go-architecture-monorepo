@@ -14,7 +14,7 @@ import (
 func (x *authHttpHandler) SendEmailVerified(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
-		payload request.AuthSendEmailVerifiedRequest
+		payload request.AuthEmailRequest
 	)
 
 	decoder := json.NewDecoder(r.Body)

@@ -12,10 +12,6 @@ type AuthRegisterRequest struct {
 	ConfirmPassword string `json:"confirm_password" validate:"required|min:6|same:password"`
 }
 
-type AuthSendEmailVerifiedRequest struct {
-	Email string `json:"email" validate:"required|min:3|email"`
-}
-
 type AuthEmailRequest struct {
 	Email string `json:"email" validate:"required|min:3|email"`
 }
