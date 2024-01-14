@@ -13,4 +13,6 @@ type AuthUsecase interface {
 	CreateOrUpdate(ctx context.Context, payload entities.AuthDto) (*entities.Auth, *exceptions.CustomError)
 	EmailVerified(ctx context.Context, token string) *exceptions.CustomError
 	SendEmailVerified(ctx context.Context, email string) *exceptions.CustomError
+	PasswordEmail(ctx context.Context, email string) *exceptions.CustomError
+	PasswordReset(ctx context.Context, payload entities.PasswordReset) *exceptions.CustomError
 }

@@ -33,4 +33,6 @@ func AuthHttpHandler(
 	r.HandleFunc("/v1/auth/register", handler.Register).Methods("POST")
 	r.HandleFunc("/v1/auth/email/verified", handler.SendEmailVerified).Methods("POST")
 	r.HandleFunc("/v1/auth/email/{token}", handler.EmailVerified).Methods("GET")
+	r.HandleFunc("/v1/auth/password/email", handler.PasswordEmail).Methods("POST")
+	r.HandleFunc("/v1/auth/password/reset", handler.PasswordReset).Methods("POST")
 }

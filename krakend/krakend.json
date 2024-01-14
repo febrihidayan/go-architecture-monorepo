@@ -129,6 +129,42 @@
             ]
         },
         {
+            "endpoint": "/v1/auth/password/email",
+            "method": "POST",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/password/email",
+                    "host": [
+                        "http://auth-go:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/v1/auth/password/reset",
+            "method": "POST",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/password/reset",
+                    "host": [
+                        "http://auth-go:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
             "endpoint": "/v1/auth/roles",
             "method": "GET",
             "input_headers": ["Authorization"],

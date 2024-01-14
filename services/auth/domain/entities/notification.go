@@ -11,6 +11,7 @@ type NotificationSends struct {
 const (
 	TemplateTypeWelcome       = "welcome"
 	TemplateTypeEmailVerified = "email-verified"
+	TemplateTypePasswordReset = "password-reset"
 )
 
 const (
