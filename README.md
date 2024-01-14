@@ -37,39 +37,60 @@ Started rest API with clean architecture monorepo golang
 Here I will provide the information that the service needs to set some default configurations.
 
 ### Notification Service
-In the notification service you must store templates for email and FCM needs, here I will provide sample data from the database. You can modify as you wish, you need to know that the use of email and FCM templates must be different. If they are the same then the concept of both must be the same as the welcome template.
+In the notification service you must save templates for email and FCM needs, here I will provide an example payload to save to the database. You can modify as you wish, you need to know that the use of email and FCM templates must be different. If they are the same then the concept of both should be the same as the welcome template.
 
 **Welcome**:
 ```json
 {
-  "_id": "458c523a-b5a0-4ca0-9915-b389bae31770",
-  "name": "welcome",
-  "type": "email",
-  "data": "{"body":{"en":"Hi {{.name}}, you have become one of us.","id":"Hai {{.name}}, kamu telah menjadi bagian dari kami."},"title":{"en":"Welcome","id":"Selamat Datang"}}",
-  "created_at": "2024-01-11T07:52:59.953+00:00",
-  "updated_at": "2024-01-11T07:52:59.953+00:00"
+	"name": "welcome",
+	"data": {
+		"title": {
+			"id": "Selamat Datang",
+			"en": "Welcome"
+		},
+		"body": {
+			"id": "Hai {{.name}}, kamu telah menjadi bagian dari kami.",
+			"en": "Hi {{.name}}, you have become one of us."
+		}
+	}
 }
 ```
 
 **Email Verified**:
 ```json
 {
-  "_id": "80faa307-7f5d-4c2c-9d66-05f77641b161",
-  "name": "email-verified",
-  "data": "{"link":{"en":"{{.link}}","id":"{{.link}}"},"title":{"en":"Verify Email Address","id":"Verifikasi Alamat Email"}}",
-  "created_at": "2024-01-11T07:52:59.953+00:00",
-  "updated_at": "2024-01-11T07:52:59.953+00:00"
+	"name": "email-verified",
+	"data": {
+		"title": {
+			"id": "Pemberitahuan Reset Kata Sandi",
+			"en": "Reset Password Notification"
+		},
+		"link": {
+			"id": "{{.link}}",
+			"en": "{{.link}}"
+		}
+	}
 }
 ```
 
 **Password Reset**:
 ```json
 {
-  "_id": "2adbcd01-ae67-491e-a95d-72faa78cd246",
-  "name": "password-reset",
-  "data": "{"expire":{"en":"{{.expire}}","id":"{{.expire}}"},"link":{"en":"{{.link}}","id":"{{.link}}"},"title":{"en":"Reset Password Notification","id":"Pemberitahuan Reset Kata Sandi"}}",
-  "created_at": "2024-01-11T07:52:59.953+00:00",
-  "updated_at": "2024-01-11T07:52:59.953+00:00"
+	"name": "password-reset",
+	"data": {
+		"title": {
+			"id": "Pemberitahuan Reset Kata Sandi",
+			"en": "Reset Password Notification"
+		},
+		"link": {
+			"id": "{{.link}}",
+			"en": "{{.link}}"
+		},
+		"expire": {
+			"id": "{{.expire}}",
+			"en": "{{.expire}}"
+		}
+	}
 }
 ```
 
