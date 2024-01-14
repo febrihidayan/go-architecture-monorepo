@@ -12,12 +12,13 @@ import (
 )
 
 type Auth struct {
-	ID        common.ID
-	UserId    string
-	Email     string
-	Password  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID              common.ID
+	UserId          string
+	Email           string
+	Password        string
+	EmailVerifiedAt time.Time
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
 }
 
 type AuthDto struct {
@@ -61,6 +62,7 @@ func NewAuth(x AuthDto, finds ...*Auth) *Auth {
 	for _, item := range finds {
 		if item != nil {
 			auth.Password = item.Password
+			auth.EmailVerifiedAt = item.EmailVerifiedAt
 			auth.CreatedAt = item.CreatedAt
 		}
 	}
@@ -111,4 +113,8 @@ func (x *Auth) Validate() (err *multierror.Error) {
 func (x *Auth) SetPasswordHash(hashedPwd string) {
 	pwd, _ := utils.HashPassword(hashedPwd)
 	x.Password = pwd
+}
+
+func (x *Auth) SetEmailVerifiedAt() {
+	x.EmailVerifiedAt = utils.TimeUTC()
 }

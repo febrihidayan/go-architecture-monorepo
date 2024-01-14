@@ -9,22 +9,24 @@ import (
 
 func ToProtoUser(x *entities.User) *userPb.User {
 	return &userPb.User{
-		Id:        x.ID.String(),
-		Name:      x.Name,
-		Email:     x.Email,
-		Avatar:    x.Avatar,
-		LangCode:  x.LangCode,
-		CreatedAt: timestamppb.New(x.CreatedAt),
-		UpdatedAt: timestamppb.New(x.UpdatedAt),
+		Id:              x.ID.String(),
+		Name:            x.Name,
+		Email:           x.Email,
+		Avatar:          x.Avatar,
+		LangCode:        x.LangCode,
+		EmailVerifiedAt: timestamppb.New(x.EmailVerifiedAt),
+		CreatedAt:       timestamppb.New(x.CreatedAt),
+		UpdatedAt:       timestamppb.New(x.UpdatedAt),
 	}
 }
 
 func ToDomainUserDto(x *userPb.User) entities.UserDto {
 	result := entities.UserDto{
-		Name:     x.GetName(),
-		Email:    x.GetEmail(),
-		Avatar:   x.GetAvatar(),
-		LangCode: x.GetLangCode(),
+		Name:            x.GetName(),
+		Email:           x.GetEmail(),
+		Avatar:          x.GetAvatar(),
+		LangCode:        x.GetLangCode(),
+		EmailVerifiedAt: x.EmailVerifiedAt.AsTime(),
 	}
 
 	if x.GetId() != "" {

@@ -46,6 +46,8 @@ services:
       MONGODB_PORT: '27017'
       JWT_TOKEN_JTI: mnb23vcsrt756yuiomnbvcx98ertyuiop
       JWT_EXPIRED: 60
+      APP_URL: "http://domain.com"
+      APP_SECRET_KEY: "key for AES-256"
     ports:
       - '8083:8083'
       - '9083:9083'

@@ -9,7 +9,8 @@ type NotificationSends struct {
 }
 
 const (
-	TemplateTypeWelcome = "welcome"
+	TemplateTypeWelcome       = "welcome"
+	TemplateTypeEmailVerified = "email-verified"
 )
 
 const (

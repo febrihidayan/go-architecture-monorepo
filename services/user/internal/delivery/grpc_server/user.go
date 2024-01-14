@@ -9,6 +9,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_server/mappers"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
+	"google.golang.org/protobuf/types/known/emptypb"
 )
 
 func (x *server) CreateUser(ctx context.Context, req *userPb.CreateUserRequest) (*user.CreateUserResponse, error) {
@@ -31,4 +32,12 @@ func (x *server) FindUser(ctx context.Context, req *userPb.FindUserRequest) (*us
 	return &userPb.FindUserResponse{
 		Data: mappers.ToProtoUser(user),
 	}, nil
+}
+
+func (x *server) UpdateEmailVerifiedUser(ctx context.Context, req *userPb.User) (*emptypb.Empty, error) {
+	if err := x.userUsecase.UpdateEmailVerified(ctx, mappers.ToDomainUserDto(req)); err != nil {
+		return nil, status.Error(codes.Code(exceptions.MapToHttpStatusCode(err.Status)), err.Errors.Error())
+	}
+
+	return &emptypb.Empty{}, nil
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/common"
 	userPb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/user"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/grpc/mappers"
 
 	"google.golang.org/grpc"
 )
@@ -45,4 +46,10 @@ func (u *UserRepository) CreateUser(ctx context.Context, payload entities.User) 
 		CreatedAt: user.Data.GetCreatedAt().AsTime(),
 		UpdatedAt: user.Data.GetUpdatedAt().AsTime(),
 	}, nil
+}
+
+func (u *UserRepository) UpdateEmailVerifiedUser(ctx context.Context, payload entities.User) error {
+	_, err := u.svc.UpdateEmailVerifiedUser(ctx, mappers.ToProtoUser(payload))
+
+	return err
 }

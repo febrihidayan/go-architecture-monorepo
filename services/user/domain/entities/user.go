@@ -11,22 +11,24 @@ import (
 )
 
 type User struct {
-	ID        common.ID
-	Name      string
-	Email     string
-	Avatar    string
-	LangCode  string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID              common.ID
+	Name            string
+	Email           string
+	Avatar          string
+	LangCode        string
+	EmailVerifiedAt time.Time
+	CreatedAt       time.Time
+	UpdatedAt       time.Time
 }
 
 type UserDto struct {
-	ID       *common.ID
-	Name     string
-	Email    string
-	Avatar   string
-	LangCode string
-	Auth     Auth
+	ID              *common.ID
+	Name            string
+	Email           string
+	Avatar          string
+	LangCode        string
+	EmailVerifiedAt time.Time
+	Auth            Auth
 }
 
 type UserQueryParams struct {
@@ -47,13 +49,14 @@ const (
 
 func NewUser(x UserDto, finds ...*User) *User {
 	user := User{
-		ID:        common.NewID(),
-		Name:      x.Name,
-		Email:     x.Email,
-		Avatar:    x.Avatar,
-		LangCode:  x.LangCode,
-		CreatedAt: utils.TimeUTC(),
-		UpdatedAt: utils.TimeUTC(),
+		ID:              common.NewID(),
+		Name:            x.Name,
+		Email:           x.Email,
+		Avatar:          x.Avatar,
+		LangCode:        x.LangCode,
+		EmailVerifiedAt: x.EmailVerifiedAt,
+		CreatedAt:       utils.TimeUTC(),
+		UpdatedAt:       utils.TimeUTC(),
 	}
 
 	if x.ID != nil {
@@ -84,4 +87,9 @@ func (x *User) Validate() (err *multierror.Error) {
 // default language english (en)
 func (x *User) DefaultLang() {
 	x.LangCode = UserLangEN
+}
+
+// default language english (en)
+func (x *User) SetEmailVerifiedAt(val time.Time) {
+	x.EmailVerifiedAt = val
 }

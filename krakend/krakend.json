@@ -93,6 +93,42 @@
             ]
         },
         {
+            "endpoint": "/v1/auth/email/verified",
+            "method": "POST",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/email/verified",
+                    "host": [
+                        "http://auth-go:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
+            "endpoint": "/v1/auth/email/{token}",
+            "method": "GET",
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/email/{token}",
+                    "host": [
+                        "http://auth-go:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ]
+        },
+        {
             "endpoint": "/v1/auth/roles",
             "method": "GET",
             "input_headers": ["Authorization"],

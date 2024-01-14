@@ -1,16 +1,18 @@
 package mappers
 
 import (
-	notificationPb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/notification"
+	userPb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/user"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func ToProtoNotificationSendParams(x entities.NotificationSends) *notificationPb.SendParams {
-	return &notificationPb.SendParams{
-		UserId:    x.UserId,
-		Type:      x.TemplateName,
-		Data:      x.Data,
-		Services:  x.Services,
-		PathEmail: x.PathEmail,
+func ToProtoUser(x entities.User) *userPb.User {
+	return &userPb.User{
+		Id:              x.ID.String(),
+		Name:            x.Name,
+		Email:           x.Email,
+		EmailVerifiedAt: timestamppb.New(x.EmailVerifiedAt),
+		CreatedAt:       timestamppb.New(x.CreatedAt),
+		UpdatedAt:       timestamppb.New(x.UpdatedAt),
 	}
 }

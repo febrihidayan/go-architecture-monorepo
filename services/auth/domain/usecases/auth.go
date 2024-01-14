@@ -11,4 +11,6 @@ type AuthUsecase interface {
 	Login(ctx context.Context, payload entities.AuthDto) (*entities.AuthTokenMeta, *exceptions.CustomError)
 	Register(ctx context.Context, payload entities.RegisterDto) (*entities.Auth, *exceptions.CustomError)
 	CreateOrUpdate(ctx context.Context, payload entities.AuthDto) (*entities.Auth, *exceptions.CustomError)
+	EmailVerified(ctx context.Context, token string) *exceptions.CustomError
+	SendEmailVerified(ctx context.Context, email string) *exceptions.CustomError
 }

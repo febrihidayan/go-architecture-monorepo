@@ -24,3 +24,13 @@ func (x *UserRepositoryMock) CreateUser(ctx context.Context, payload entities.Us
 
 	return
 }
+
+func (x *UserRepositoryMock) UpdateEmailVerifiedUser(ctx context.Context, payload entities.User) (err error) {
+	args := x.Called(payload)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}

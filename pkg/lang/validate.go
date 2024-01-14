@@ -21,6 +21,11 @@ var (
 	ErrPermissionAlready       = errors.New("The name permission is already.")
 	ErrUnsupportFile           = errors.New("unsupport file type.")
 	ErrTemplateAlready         = errors.New("The name template is already.")
+	EmailAddressVerified       = errors.New("Your email address is verified.")
+	EmailAddressUnverified     = errors.New("Your email address is unverified.")
+	TokenNotValid              = errors.New("The token is not valid.")
+	TokenHasExpired            = errors.New("The token has expired.")
+	UserNotFound               = errors.New("User not found.")
 
 	Locales = map[string]string{
 		"filled": "The :attribute field is required.",

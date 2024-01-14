@@ -8,24 +8,26 @@ import (
 
 func ToModelAuth(x *entities.Auth) *models.Auth {
 	return &models.Auth{
-		ID:        x.ID.String(),
-		UserId:    x.UserId,
-		Email:     x.Email,
-		Password:  x.Password,
-		CreatedAt: x.CreatedAt,
-		UpdatedAt: x.UpdatedAt,
+		ID:              x.ID.String(),
+		UserId:          x.UserId,
+		Email:           x.Email,
+		Password:        x.Password,
+		EmailVerifiedAt: x.EmailVerifiedAt,
+		CreatedAt:       x.CreatedAt,
+		UpdatedAt:       x.UpdatedAt,
 	}
 }
 
 func ToDomainAuth(x *models.Auth) *entities.Auth {
 	id, _ := common.StringToID(x.ID)
 	return &entities.Auth{
-		ID:        id,
-		UserId:    x.UserId,
-		Email:     x.Email,
-		Password:  x.Password,
-		CreatedAt: x.CreatedAt,
-		UpdatedAt: x.UpdatedAt,
+		ID:              id,
+		UserId:          x.UserId,
+		Email:           x.Email,
+		Password:        x.Password,
+		EmailVerifiedAt: x.EmailVerifiedAt,
+		CreatedAt:       x.CreatedAt,
+		UpdatedAt:       x.UpdatedAt,
 	}
 }
 

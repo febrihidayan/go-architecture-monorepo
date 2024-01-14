@@ -3,10 +3,12 @@ syntax = "proto3";
 package user;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
 
 service UserServices {
     rpc CreateUser(CreateUserRequest) returns (CreateUserResponse);
     rpc FindUser(FindUserRequest) returns (FindUserResponse);
+    rpc UpdateEmailVerifiedUser(User) returns (google.protobuf.Empty);
 }
 
 message RequestResponse {
@@ -22,6 +24,7 @@ message User {
     google.protobuf.Timestamp updated_at = 5;
     string avatar = 6;
     string lang_code = 7;
+    google.protobuf.Timestamp email_verified_at = 8;
 }
 
 message CreateUserRequest {
