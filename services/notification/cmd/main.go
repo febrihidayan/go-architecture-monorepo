@@ -13,6 +13,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/grpc_client"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/grpc_server"
+	device_token_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/device_token"
 	notification_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/notification"
 	template_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/template"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
@@ -96,6 +97,7 @@ func initHandler(
 
 	grpcClientFactory := factories.NewGrpcFactory(grpcClient)
 
-	notification_handler.TemplateHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
+	notification_handler.NotificationHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
 	template_handler.TemplateHttpHandler(router, cfg, mongoFactory)
+	device_token_handler.DeviceTokenHttpHandler(router, cfg, mongoFactory)
 }

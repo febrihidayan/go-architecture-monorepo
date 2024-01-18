@@ -14,7 +14,7 @@ type notificationHttpHandler struct {
 	notificationUsecase usecases.NotificationUsecase
 }
 
-func TemplateHttpHandler(
+func NotificationHttpHandler(
 	r *mux.Router,
 	config *config.NotificationConfig,
 	mongoFactory *factories.MongoFactory,

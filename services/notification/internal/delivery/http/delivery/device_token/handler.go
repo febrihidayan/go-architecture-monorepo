@@ -14,7 +14,7 @@ type deviceTokenHttpHandler struct {
 	deviceTokenUsecase usecases.DeviceTokenUsecase
 }
 
-func TemplateHttpHandler(
+func DeviceTokenHttpHandler(
 	r *mux.Router,
 	config *config.NotificationConfig,
 	mongoFactory *factories.MongoFactory,
