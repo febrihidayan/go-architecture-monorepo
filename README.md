@@ -3,12 +3,12 @@ Started rest API with clean architecture monorepo golang
 
 **Table of Contents**
 - [Go Architecture Monorepo](#go-architecture-monorepo)
-  - [Required](#required)
-  - [Installation](#installation)
-  - [With Docker](#with-docker)
-  - [Port HTTP and RPC Services](#port-http-and-rpc-services)
-  - [Docs Services](#docs-services)
-    - [Notification Service](#notification-service)
+	- [Required](#required)
+	- [Installation](#installation)
+	- [With Docker](#with-docker)
+	- [Port HTTP and RPC Services](#port-http-and-rpc-services)
+	- [Docs Services](#docs-services)
+		- [Notification Service](#notification-service)
 
 ## Required
 1. [Golang](https://go.dev/) v1.21.5 or above
@@ -35,6 +35,8 @@ Started rest API with clean architecture monorepo golang
 
 ## Docs Services
 Here I will provide the information that the service needs to set some default configurations.
+
+You can see all endpoints at the following link: [Endpoints Go Architecture Monorepo](https://www.postman.com/aviation-geologist-28886159/workspace/go-architecture-monorepo)
 
 ### Notification Service
 In the notification service you must save templates for email and FCM needs, here I will provide an example payload to save to the database. You can modify as you wish, you need to know that the use of email and FCM templates must be different. If they are the same then the concept of both should be the same as the welcome template.
