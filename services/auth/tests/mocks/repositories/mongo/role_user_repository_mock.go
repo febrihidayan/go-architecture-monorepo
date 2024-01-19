@@ -54,13 +54,3 @@ func (x *RoleUserRepositoryMock) DeleteByUserId(ctx context.Context, userId stri
 
 	return
 }
-
-func (x *RoleUserRepositoryMock) Delete(ctx context.Context, payload *entities.RoleUser) (err error) {
-	args := x.Called(payload.UserId, payload.RoleId)
-
-	if n, ok := args.Get(0).(error); ok {
-		err = n
-	}
-
-	return
-}

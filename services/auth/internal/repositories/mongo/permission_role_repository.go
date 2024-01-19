@@ -45,15 +45,6 @@ func (x *PermissionRoleRepository) AllByRoleId(ctx context.Context, roleId strin
 	return mappers.ToListDomainPermissionRole(roles), nil
 }
 
-func (x *PermissionRoleRepository) Delete(ctx context.Context, payload *entities.PermissionRole) error {
-	_, err := x.db.Collection(models.PermissionRole{}.TableName()).DeleteOne(ctx, bson.M{
-		"role_id":       payload.RoleId,
-		"permission_id": payload.PermissionId,
-	})
-
-	return err
-}
-
 func (x *PermissionRoleRepository) DeleteByPermissionIds(ctx context.Context, ids []string) error {
 	_, err := x.db.Collection(models.PermissionRole{}.TableName()).DeleteMany(ctx, bson.M{
 		"permission_id": bson.D{{"$in", ids}},

@@ -45,15 +45,6 @@ func (x *RoleUserRepository) AllByUserId(ctx context.Context, userId string) ([]
 	return mappers.ToListDomainRoleUser(roles), nil
 }
 
-func (x *RoleUserRepository) Delete(ctx context.Context, payload *entities.RoleUser) error {
-	_, err := x.db.Collection(models.RoleUser{}.TableName()).DeleteOne(ctx, bson.M{
-		"user_id": payload.UserId,
-		"role_id": payload.RoleId,
-	})
-
-	return err
-}
-
 func (x *RoleUserRepository) DeleteByRoleIds(ctx context.Context, ids []string) error {
 	_, err := x.db.Collection(models.RoleUser{}.TableName()).DeleteMany(ctx, bson.M{
 		"role_id": bson.D{{"$in", ids}},

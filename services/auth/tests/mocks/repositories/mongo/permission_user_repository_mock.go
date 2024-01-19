@@ -44,13 +44,3 @@ func (x *PermissionUserRepositoryMock) DeleteByPermissionIds(ctx context.Context
 
 	return
 }
-
-func (x *PermissionUserRepositoryMock) Delete(ctx context.Context, payload *entities.PermissionUser) (err error) {
-	args := x.Called(payload.UserId, payload.PermissionId)
-
-	if n, ok := args.Get(0).(error); ok {
-		err = n
-	}
-
-	return
-}

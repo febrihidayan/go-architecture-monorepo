@@ -54,13 +54,3 @@ func (x *PermissionRoleRepositoryMock) DeleteByPermissionIds(ctx context.Context
 
 	return
 }
-
-func (x *PermissionRoleRepositoryMock) DeleteByRoleId(ctx context.Context, roleId string) (err error) {
-	args := x.Called(roleId)
-
-	if n, ok := args.Get(0).(error); ok {
-		err = n
-	}
-
-	return
-}
