@@ -53,3 +53,19 @@ func (x *PermissionRoleRepository) Delete(ctx context.Context, payload *entities
 
 	return err
 }
+
+func (x *PermissionRoleRepository) DeleteByPermissionIds(ctx context.Context, ids []string) error {
+	_, err := x.db.Collection(models.PermissionRole{}.TableName()).DeleteMany(ctx, bson.M{
+		"permission_id": bson.D{{"$in", ids}},
+	})
+
+	return err
+}
+
+func (x *PermissionRoleRepository) DeleteByRoleId(ctx context.Context, roleId string) error {
+	_, err := x.db.Collection(models.PermissionRole{}.TableName()).DeleteMany(ctx, bson.M{
+		"role_id": roleId,
+	})
+
+	return err
+}

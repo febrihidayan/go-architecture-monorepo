@@ -410,6 +410,60 @@
             }
         },
         {
+            "endpoint": "/v1/auth/acl/permission/role/{id}",
+            "method": "GET",
+            "input_headers": ["Authorization"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/acl/permission/role/{id}",
+                    "host": [
+                        "http://auth-go:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "roles": ["superadministrator"],
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
+            "endpoint": "/v1/auth/acl/permission/role/{id}",
+            "method": "PUT",
+            "input_headers": ["Authorization"],
+            "output_encoding": "no-op",
+            "backend": [
+                {
+                    "url_pattern": "/v1/auth/acl/permission/role/{id}",
+                    "host": [
+                        "http://auth-go:8083"
+                    ],
+                    "extra_config": {
+                        "backend/http": {
+                            "return_error_code": true
+                        }
+                    }
+                }
+            ],
+            "extra_config": {
+                "auth/validator": {
+                    "alg": "HS256",
+                    "jwk_url": "http://fake_api:8080/jwk/symmetric.json",
+                    "roles": ["superadministrator"],
+                    "disable_jwk_security": true
+                }
+            }
+        },
+        {
             "endpoint": "/v1/auth/acl/roles",
             "method": "GET",
             "input_headers": ["Authorization"],

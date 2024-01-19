@@ -13,3 +13,8 @@ type AclUserDto struct {
 	Roles       []string
 	Permissions []string
 }
+
+type AclPermissionDto struct {
+	RoleId      string
+	Permissions []string
+}
