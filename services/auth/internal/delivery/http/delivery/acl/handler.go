@@ -27,7 +27,8 @@ func AclHttpHandler(
 		),
 	}
 
-	r.HandleFunc("/v1/auth/acl", handler.GetAll).Methods("GET")
+	r.HandleFunc("/v1/auth/acl/roles", handler.GetAllRole).Methods("GET")
+	r.HandleFunc("/v1/auth/acl/permissions", handler.GetAllPermission).Methods("GET")
 	r.HandleFunc("/v1/auth/acl/access", handler.Access).Methods("GET")
 	r.HandleFunc("/v1/auth/acl/user/{id}", handler.GetAllUser).Methods("GET")
 	r.HandleFunc("/v1/auth/acl/user/{id}", handler.UpdateUser).Methods("PUT")
