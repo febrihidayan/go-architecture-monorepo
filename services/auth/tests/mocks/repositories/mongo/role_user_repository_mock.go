@@ -35,6 +35,26 @@ func (x *RoleUserRepositoryMock) AllByUserId(ctx context.Context, userId string)
 	return
 }
 
+func (x *RoleUserRepositoryMock) DeleteByRoleIds(ctx context.Context, ids []string) (err error) {
+	args := x.Called(ids)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}
+
+func (x *RoleUserRepositoryMock) DeleteByUserId(ctx context.Context, userId string) (err error) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *RoleUserRepositoryMock) Delete(ctx context.Context, payload *entities.RoleUser) (err error) {
 	args := x.Called(payload.UserId, payload.RoleId)
 

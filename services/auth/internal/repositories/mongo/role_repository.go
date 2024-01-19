@@ -55,6 +55,21 @@ func (x *RoleRepository) FindByName(ctx context.Context, name string) (*entities
 	return mappers.ToDomainRole(&role), nil
 }
 
+func (x *RoleRepository) All(ctx context.Context) ([]*entities.Role, error) {
+	var roles []*models.Role
+
+	cursor, err := x.db.Collection(models.Role{}.TableName()).Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	if err := cursor.All(ctx, &roles); err != nil {
+		return nil, errors.New("roles not found")
+	}
+
+	return mappers.ToListDomainRole(roles), nil
+}
+
 func (x *RoleRepository) GetAll(ctx context.Context, params *entities.RoleQueryParams) ([]*entities.Role, int, error) {
 	var (
 		filter = mongo.Pipeline{}
@@ -139,6 +154,42 @@ func (x *RoleRepository) GetAll(ctx context.Context, params *entities.RoleQueryP
 	}
 
 	return mappers.ToListDomainRole(result.Data), result.Total, nil
+}
+
+func (x *RoleRepository) AllByUserId(ctx context.Context, userId string) ([]*entities.Role, error) {
+	var (
+		filter  = mongo.Pipeline{}
+		results []*models.Role
+	)
+
+	filter = append(filter, mongo.Pipeline{
+		bson.D{{
+			"$lookup", bson.D{
+				{"from", "role_user"},
+				{"localField", "_id"},
+				{"foreignField", "role_id"},
+				{"as", "role_user"},
+			},
+		}},
+		bson.D{{
+			"$match", bson.D{{
+				"role_user.user_id", userId,
+			}},
+		}},
+	}...)
+
+	cursor, err := x.db.Collection(models.Role{}.TableName()).Aggregate(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, &results); err != nil {
+		return nil, errors.New("roles not found")
+	}
+
+	return mappers.ToListDomainRole(results), nil
 }
 
 func (x *RoleRepository) Update(ctx context.Context, payload *entities.Role) error {

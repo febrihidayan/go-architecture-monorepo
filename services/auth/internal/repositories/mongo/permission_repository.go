@@ -55,6 +55,21 @@ func (x *PermissionRepository) FindByName(ctx context.Context, name string) (*en
 	return mappers.ToDomainPermission(&permission), nil
 }
 
+func (x *PermissionRepository) All(ctx context.Context) ([]*entities.Permission, error) {
+	var roles []*models.Permission
+
+	cursor, err := x.db.Collection(models.Permission{}.TableName()).Find(ctx, bson.M{})
+	if err != nil {
+		return nil, err
+	}
+
+	if err := cursor.All(ctx, &roles); err != nil {
+		return nil, errors.New("permissions not found")
+	}
+
+	return mappers.ToListDomainPermission(roles), nil
+}
+
 func (x *PermissionRepository) GetAll(ctx context.Context, params *entities.PermissionQueryParams) ([]*entities.Permission, int, error) {
 	var (
 		filter = mongo.Pipeline{}
@@ -139,6 +154,79 @@ func (x *PermissionRepository) GetAll(ctx context.Context, params *entities.Perm
 	}
 
 	return mappers.ToListDomainPermission(result.Data), result.Total, nil
+}
+
+func (x *PermissionRepository) AllByUserId(ctx context.Context, userId string) ([]*entities.Permission, error) {
+	var (
+		filter  = mongo.Pipeline{}
+		results []*models.Permission
+	)
+
+	filter = append(filter, mongo.Pipeline{
+		bson.D{{
+			"$lookup", bson.D{
+				{"from", "permission_role"},
+				{"localField", "_id"},
+				{"foreignField", "permission_id"},
+				{"as", "permission_role"},
+			},
+		}},
+		bson.D{{
+			"$lookup", bson.D{
+				{"from", "role_user"},
+				{"localField", "permission_role.role_id"},
+				{"foreignField", "role_id"},
+				{"as", "role_user"},
+				{"pipeline", bson.A{
+					bson.D{{
+						"$match", bson.D{
+							{"user_id", userId},
+						},
+					}},
+				}},
+			},
+		}},
+		bson.D{{
+			"$lookup", bson.D{
+				{"from", "permission_user"},
+				{"localField", "_id"},
+				{"foreignField", "permission_id"},
+				{"as", "permission_user"},
+				{"pipeline", bson.A{
+					bson.D{{
+						"$match", bson.D{
+							{"user_id", userId},
+						},
+					}},
+				}},
+			},
+		}},
+		bson.D{{
+			"$match", bson.D{{
+				"$or", bson.A{
+					bson.D{{
+						"permission_user.user_id", userId,
+					}},
+					bson.D{{
+						"role_user.user_id", userId,
+					}},
+				},
+			}},
+		}},
+	}...)
+
+	cursor, err := x.db.Collection(models.Permission{}.TableName()).Aggregate(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, &results); err != nil {
+		return nil, errors.New("permissions not found")
+	}
+
+	return mappers.ToListDomainPermission(results), nil
 }
 
 func (x *PermissionRepository) Update(ctx context.Context, payload *entities.Permission) error {

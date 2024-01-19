@@ -35,6 +35,16 @@ func (x *PermissionUserRepositoryMock) AllByUserId(ctx context.Context, userId s
 	return
 }
 
+func (x *PermissionUserRepositoryMock) DeleteByPermissionIds(ctx context.Context, ids []string) (err error) {
+	args := x.Called(ids)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *PermissionUserRepositoryMock) Delete(ctx context.Context, payload *entities.PermissionUser) (err error) {
 	args := x.Called(payload.UserId, payload.PermissionId)
 

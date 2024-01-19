@@ -39,7 +39,7 @@ func (x *PermissionRoleRepository) AllByRoleId(ctx context.Context, roleId strin
 	}
 
 	if err := cursor.All(ctx, &roles); err != nil {
-		return nil, errors.New("role not found")
+		return nil, errors.New("permission role not found")
 	}
 
 	return mappers.ToListDomainPermissionRole(roles), nil

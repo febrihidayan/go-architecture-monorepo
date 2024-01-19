@@ -49,6 +49,20 @@ func (x *RoleRepositoryMock) FindByName(ctx context.Context, name string) (resul
 	return
 }
 
+func (x *RoleRepositoryMock) All(ctx context.Context) (result []*entities.Role, err error) {
+	args := x.Called()
+
+	if n, ok := args.Get(0).([]*entities.Role); ok {
+		result = n
+	}
+
+	if n, ok := args.Get(1).(error); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *RoleRepositoryMock) GetAll(ctx context.Context, params *entities.RoleQueryParams) (result []*entities.Role, total int, err error) {
 	args := x.Called(params)
 
@@ -61,6 +75,20 @@ func (x *RoleRepositoryMock) GetAll(ctx context.Context, params *entities.RoleQu
 	}
 
 	if n, ok := args.Get(2).(error); ok {
+		err = n
+	}
+
+	return
+}
+
+func (x *RoleRepositoryMock) AllByUserId(ctx context.Context, userId string) (result []*entities.Role, err error) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).([]*entities.Role); ok {
+		result = n
+	}
+
+	if n, ok := args.Get(1).(error); ok {
 		err = n
 	}
 

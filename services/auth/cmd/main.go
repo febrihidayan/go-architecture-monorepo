@@ -13,6 +13,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/grpc_client"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/grpc_server"
+	acl_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/acl"
 	auth_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/auth"
 	permision_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/permission"
 	role_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/role"
@@ -98,4 +99,5 @@ func initHandler(
 	auth_handler.AuthHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
 	permision_handler.PermissionHttpHandler(router, cfg, mongoFactory)
 	role_handler.RoleHttpHandler(router, cfg, mongoFactory)
+	acl_handler.AclHttpHandler(router, cfg, mongoFactory)
 }

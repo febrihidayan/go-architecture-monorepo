@@ -53,3 +53,19 @@ func (x *RoleUserRepository) Delete(ctx context.Context, payload *entities.RoleU
 
 	return err
 }
+
+func (x *RoleUserRepository) DeleteByRoleIds(ctx context.Context, ids []string) error {
+	_, err := x.db.Collection(models.RoleUser{}.TableName()).DeleteMany(ctx, bson.M{
+		"role_id": bson.D{{"$in", ids}},
+	})
+
+	return err
+}
+
+func (x *RoleUserRepository) DeleteByUserId(ctx context.Context, userId string) error {
+	_, err := x.db.Collection(models.RoleUser{}.TableName()).DeleteMany(ctx, bson.M{
+		"user_id": userId,
+	})
+
+	return err
+}
