@@ -35,8 +35,8 @@ func (x *PermissionRoleRepositoryMock) AllByRoleId(ctx context.Context, roleId s
 	return
 }
 
-func (x *PermissionRoleRepositoryMock) Delete(ctx context.Context, payload *entities.PermissionRole) (err error) {
-	args := x.Called(payload.RoleId, payload.PermissionId)
+func (x *PermissionRoleRepositoryMock) DeleteByPermissionIds(ctx context.Context, ids []string) (err error) {
+	args := x.Called(ids)
 
 	if n, ok := args.Get(0).(error); ok {
 		err = n
@@ -45,8 +45,9 @@ func (x *PermissionRoleRepositoryMock) Delete(ctx context.Context, payload *enti
 	return
 }
 
-func (x *PermissionRoleRepositoryMock) DeleteByPermissionIds(ctx context.Context, ids []string) (err error) {
-	args := x.Called(ids)
+
+func (x *PermissionRoleRepositoryMock) DeleteByRoleId(ctx context.Context, roleId string) (err error) {
+	args := x.Called(roleId)
 
 	if n, ok := args.Get(0).(error); ok {
 		err = n

@@ -44,3 +44,13 @@ func (x *PermissionUserRepositoryMock) DeleteByPermissionIds(ctx context.Context
 
 	return
 }
+
+func (x *PermissionUserRepositoryMock) DeleteByUserId(ctx context.Context, userId string) (err error) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}
