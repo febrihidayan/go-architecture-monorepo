@@ -13,7 +13,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/response"
 )
 
-func (x *deviceTokenHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (x *DeviceTokenHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.DeviceTokenCreateRequest
@@ -41,7 +41,7 @@ func (x *deviceTokenHttpHandler) Create(w http.ResponseWriter, r *http.Request) 
 		OsName: payload.OsName,
 	}
 
-	result, err := x.deviceTokenUsecase.Create(ctx, data)
+	result, err := x.DeviceTokenUsecase.Create(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

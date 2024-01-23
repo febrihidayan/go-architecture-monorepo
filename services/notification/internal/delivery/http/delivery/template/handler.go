@@ -9,19 +9,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type templateHttpHandler struct {
-	cfg             *config.NotificationConfig
-	templateUsecase usecases.TemplateUsecase
+type TemplateHttpHandler struct {
+	Cfg             *config.NotificationConfig
+	TemplateUsecase usecases.TemplateUsecase
 }
 
-func TemplateHttpHandler(
+func NewTemplateHttpHandler(
 	r *mux.Router,
 	config *config.NotificationConfig,
 	mongoFactory *factories.MongoFactory,
 ) {
-	handler := &templateHttpHandler{
-		cfg: config,
-		templateUsecase: template.NewTemplateInteractor(
+	handler := &TemplateHttpHandler{
+		Cfg: config,
+		TemplateUsecase: template.NewTemplateInteractor(
 			config,
 			mongoFactory,
 		),

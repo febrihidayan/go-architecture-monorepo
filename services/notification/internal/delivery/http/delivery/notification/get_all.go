@@ -11,7 +11,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/response"
 )
 
-func (x *notificationHttpHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+func (x *NotificationHttpHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx   = context.Background()
 		query request.NotificationQueryParams
@@ -34,7 +34,7 @@ func (x *notificationHttpHandler) GetAll(w http.ResponseWriter, r *http.Request)
 		PerPage: query.PerPage,
 	}
 
-	results, err := x.notificationUsecase.GetAll(ctx, params)
+	results, err := x.NotificationUsecase.GetAll(ctx, params)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

@@ -97,7 +97,7 @@ func initHandler(
 
 	grpcClientFactory := factories.NewGrpcFactory(grpcClient)
 
-	notification_handler.NotificationHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
-	template_handler.TemplateHttpHandler(router, cfg, mongoFactory)
-	device_token_handler.DeviceTokenHttpHandler(router, cfg, mongoFactory)
+	notification_handler.NewNotificationHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
+	template_handler.NewTemplateHttpHandler(router, cfg, mongoFactory)
+	device_token_handler.NewDeviceTokenHttpHandler(router, cfg, mongoFactory)
 }

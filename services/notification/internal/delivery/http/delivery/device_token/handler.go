@@ -9,19 +9,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type deviceTokenHttpHandler struct {
-	cfg                *config.NotificationConfig
-	deviceTokenUsecase usecases.DeviceTokenUsecase
+type DeviceTokenHttpHandler struct {
+	Cfg                *config.NotificationConfig
+	DeviceTokenUsecase usecases.DeviceTokenUsecase
 }
 
-func DeviceTokenHttpHandler(
+func NewDeviceTokenHttpHandler(
 	r *mux.Router,
 	config *config.NotificationConfig,
 	mongoFactory *factories.MongoFactory,
 ) {
-	handler := &deviceTokenHttpHandler{
-		cfg: config,
-		deviceTokenUsecase: device_token.NewDeviceTokenInteractor(
+	handler := &DeviceTokenHttpHandler{
+		Cfg: config,
+		DeviceTokenUsecase: device_token.NewDeviceTokenInteractor(
 			config,
 			mongoFactory,
 		),

@@ -13,7 +13,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/response"
 )
 
-func (x *templateHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (x *TemplateHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.TemplateCreateRequest
@@ -40,7 +40,7 @@ func (x *templateHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 		Data: string(dataJson),
 	}
 
-	result, err := x.templateUsecase.Create(ctx, data)
+	result, err := x.TemplateUsecase.Create(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

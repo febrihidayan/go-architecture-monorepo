@@ -9,20 +9,20 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type notificationHttpHandler struct {
-	cfg                 *config.NotificationConfig
-	notificationUsecase usecases.NotificationUsecase
+type NotificationHttpHandler struct {
+	Cfg                 *config.NotificationConfig
+	NotificationUsecase usecases.NotificationUsecase
 }
 
-func NotificationHttpHandler(
+func NewNotificationHttpHandler(
 	r *mux.Router,
 	config *config.NotificationConfig,
 	mongoFactory *factories.MongoFactory,
 	grpcClientFactory *factories.GrpcClientFactory,
 ) {
-	handler := &notificationHttpHandler{
-		cfg: config,
-		notificationUsecase: notification.NewNotificationInteractor(
+	handler := &NotificationHttpHandler{
+		Cfg: config,
+		NotificationUsecase: notification.NewNotificationInteractor(
 			config,
 			mongoFactory,
 			grpcClientFactory,
