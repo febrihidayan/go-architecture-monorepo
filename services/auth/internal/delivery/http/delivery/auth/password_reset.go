@@ -12,7 +12,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/request"
 )
 
-func (x *authHttpHandler) PasswordReset(w http.ResponseWriter, r *http.Request) {
+func (x *AuthHttpHandler) PasswordReset(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.AuthPasswordResetRequest
@@ -34,7 +34,7 @@ func (x *authHttpHandler) PasswordReset(w http.ResponseWriter, r *http.Request) 
 		Password: payload.Password,
 	}
 
-	if err := x.authUsecase.PasswordReset(ctx, data); err != nil {
+	if err := x.AuthUsecase.PasswordReset(ctx, data); err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
 	}

@@ -96,8 +96,8 @@ func initHandler(
 
 	grpcClientFactory := factories.NewGrpcFactory(grpcClient)
 
-	auth_handler.AuthHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
-	permision_handler.PermissionHttpHandler(router, cfg, mongoFactory)
-	role_handler.RoleHttpHandler(router, cfg, mongoFactory)
-	acl_handler.AclHttpHandler(router, cfg, mongoFactory)
+	auth_handler.NewAuthHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
+	permision_handler.NewPermissionHttpHandler(router, cfg, mongoFactory)
+	role_handler.NewRoleHttpHandler(router, cfg, mongoFactory)
+	acl_handler.NewAclHttpHandler(router, cfg, mongoFactory)
 }

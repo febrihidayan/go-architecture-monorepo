@@ -14,7 +14,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (x *aclHttpHandler) UpdatePermissionByRole(w http.ResponseWriter, r *http.Request) {
+func (x *AclHttpHandler) UpdatePermissionByRole(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		vars    = mux.Vars(r)
@@ -43,7 +43,7 @@ func (x *aclHttpHandler) UpdatePermissionByRole(w http.ResponseWriter, r *http.R
 		Permissions: payload.Permissions,
 	}
 
-	if err := x.aclUsecase.UpdatePermissionByRole(ctx, data); err != nil {
+	if err := x.AclUsecase.UpdatePermissionByRole(ctx, data); err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
 	}

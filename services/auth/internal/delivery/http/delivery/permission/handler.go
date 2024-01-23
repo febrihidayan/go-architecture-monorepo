@@ -9,19 +9,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type permissionHttpHandler struct {
-	cfg               *config.AuthConfig
-	permissionUsecase usecases.PermissionUsecase
+type PermissionHttpHandler struct {
+	Cfg               *config.AuthConfig
+	PermissionUsecase usecases.PermissionUsecase
 }
 
-func PermissionHttpHandler(
+func NewPermissionHttpHandler(
 	r *mux.Router,
 	config *config.AuthConfig,
 	mongoFactory *factories.MongoFactory,
 ) {
-	handler := &permissionHttpHandler{
-		cfg: config,
-		permissionUsecase: permission.NewPermissionInteractor(
+	handler := &PermissionHttpHandler{
+		Cfg: config,
+		PermissionUsecase: permission.NewPermissionInteractor(
 			config,
 			mongoFactory,
 		),

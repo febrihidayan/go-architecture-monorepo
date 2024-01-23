@@ -9,12 +9,12 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/response"
 )
 
-func (x *aclHttpHandler) GetAllPermission(w http.ResponseWriter, r *http.Request) {
+func (x *AclHttpHandler) GetAllPermission(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx = context.Background()
 	)
 
-	results, err := x.aclUsecase.GetAllPermission(ctx)
+	results, err := x.AclUsecase.GetAllPermission(ctx)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

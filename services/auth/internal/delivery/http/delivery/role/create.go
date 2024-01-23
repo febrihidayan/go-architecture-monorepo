@@ -12,7 +12,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/request"
 )
 
-func (x *roleHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (x *RoleHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.RoleCreateRequest
@@ -35,7 +35,7 @@ func (x *roleHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 		Description: payload.Description,
 	}
 
-	_, err := x.roleUsecase.Create(ctx, data)
+	_, err := x.RoleUsecase.Create(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (x *aclHttpHandler) GetAllUser(w http.ResponseWriter, r *http.Request) {
+func (x *AclHttpHandler) GetAllUser(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx  = context.Background()
 		vars = mux.Vars(r)
@@ -29,7 +29,7 @@ func (x *aclHttpHandler) GetAllUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	results, err := x.aclUsecase.GetAllUser(ctx, id)
+	results, err := x.AclUsecase.GetAllUser(ctx, id)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

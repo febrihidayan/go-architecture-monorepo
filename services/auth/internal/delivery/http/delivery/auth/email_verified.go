@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (x *authHttpHandler) EmailVerified(w http.ResponseWriter, r *http.Request) {
+func (x *AuthHttpHandler) EmailVerified(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx   = context.Background()
 		vars  = mux.Vars(r)
@@ -22,7 +22,7 @@ func (x *authHttpHandler) EmailVerified(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	if err := x.authUsecase.EmailVerified(ctx, token); err != nil {
+	if err := x.AuthUsecase.EmailVerified(ctx, token); err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
 	}

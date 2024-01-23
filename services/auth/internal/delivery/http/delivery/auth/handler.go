@@ -9,20 +9,20 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type authHttpHandler struct {
-	cfg         *config.AuthConfig
-	authUsecase usecases.AuthUsecase
+type AuthHttpHandler struct {
+	Cfg         *config.AuthConfig
+	AuthUsecase usecases.AuthUsecase
 }
 
-func AuthHttpHandler(
+func NewAuthHttpHandler(
 	r *mux.Router,
 	config *config.AuthConfig,
 	mongoFactory *factories.MongoFactory,
 	grpcClientFactory *factories.GrpcClientFactory,
 ) {
-	handler := &authHttpHandler{
-		cfg: config,
-		authUsecase: auth.NewAuthInteractor(
+	handler := &AuthHttpHandler{
+		Cfg: config,
+		AuthUsecase: auth.NewAuthInteractor(
 			config,
 			mongoFactory,
 			grpcClientFactory,

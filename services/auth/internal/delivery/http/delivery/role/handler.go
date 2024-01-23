@@ -9,19 +9,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type roleHttpHandler struct {
-	cfg         *config.AuthConfig
-	roleUsecase usecases.RoleUsecase
+type RoleHttpHandler struct {
+	Cfg         *config.AuthConfig
+	RoleUsecase usecases.RoleUsecase
 }
 
-func RoleHttpHandler(
+func NewRoleHttpHandler(
 	r *mux.Router,
 	config *config.AuthConfig,
 	mongoFactory *factories.MongoFactory,
 ) {
-	handler := &roleHttpHandler{
-		cfg: config,
-		roleUsecase: role.NewRoleInteractor(
+	handler := &RoleHttpHandler{
+		Cfg: config,
+		RoleUsecase: role.NewRoleInteractor(
 			config,
 			mongoFactory,
 		),

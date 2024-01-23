@@ -13,7 +13,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/response"
 )
 
-func (x *authHttpHandler) Login(w http.ResponseWriter, r *http.Request) {
+func (x *AuthHttpHandler) Login(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.AuthLoginRequest
@@ -35,7 +35,7 @@ func (x *authHttpHandler) Login(w http.ResponseWriter, r *http.Request) {
 		Password: payload.Password,
 	}
 
-	login, err := x.authUsecase.Login(ctx, data)
+	login, err := x.AuthUsecase.Login(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

@@ -11,7 +11,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (x *roleHttpHandler) Find(w http.ResponseWriter, r *http.Request) {
+func (x *RoleHttpHandler) Find(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx  = context.Background()
 		vars = mux.Vars(r)
@@ -23,7 +23,7 @@ func (x *roleHttpHandler) Find(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := x.roleUsecase.Find(ctx, id)
+	result, err := x.RoleUsecase.Find(ctx, id)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

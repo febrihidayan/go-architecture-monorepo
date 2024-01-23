@@ -11,7 +11,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/request"
 )
 
-func (x *authHttpHandler) SendEmailVerified(w http.ResponseWriter, r *http.Request) {
+func (x *AuthHttpHandler) SendEmailVerified(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.AuthEmailRequest
@@ -28,7 +28,7 @@ func (x *authHttpHandler) SendEmailVerified(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	if err := x.authUsecase.SendEmailVerified(ctx, payload.Email); err != nil {
+	if err := x.AuthUsecase.SendEmailVerified(ctx, payload.Email); err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
 	}

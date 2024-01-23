@@ -9,19 +9,19 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type aclHttpHandler struct {
-	cfg        *config.AuthConfig
-	aclUsecase usecases.AclUsecase
+type AclHttpHandler struct {
+	Cfg        *config.AuthConfig
+	AclUsecase usecases.AclUsecase
 }
 
-func AclHttpHandler(
+func NewAclHttpHandler(
 	r *mux.Router,
 	config *config.AuthConfig,
 	mongoFactory *factories.MongoFactory,
 ) {
-	handler := &aclHttpHandler{
-		cfg: config,
-		aclUsecase: acl.NewAclInteractor(
+	handler := &AclHttpHandler{
+		Cfg: config,
+		AclUsecase: acl.NewAclInteractor(
 			config,
 			mongoFactory,
 		),

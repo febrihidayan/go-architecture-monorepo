@@ -14,7 +14,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (x *aclHttpHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
+func (x *AclHttpHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		vars    = mux.Vars(r)
@@ -44,7 +44,7 @@ func (x *aclHttpHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		Roles:       payload.Roles,
 	}
 
-	if err := x.aclUsecase.UpdateUser(ctx, data); err != nil {
+	if err := x.AclUsecase.UpdateUser(ctx, data); err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
 	}

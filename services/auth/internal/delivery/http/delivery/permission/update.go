@@ -15,7 +15,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (x *permissionHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (x *PermissionHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.PermissionUpdateRequest
@@ -42,7 +42,7 @@ func (x *permissionHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 		Description: payload.Description,
 	}
 
-	result, err := x.permissionUsecase.Update(ctx, data)
+	result, err := x.PermissionUsecase.Update(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

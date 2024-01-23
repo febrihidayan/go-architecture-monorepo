@@ -12,7 +12,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/request"
 )
 
-func (x *authHttpHandler) Register(w http.ResponseWriter, r *http.Request) {
+func (x *AuthHttpHandler) Register(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.AuthRegisterRequest
@@ -36,7 +36,7 @@ func (x *authHttpHandler) Register(w http.ResponseWriter, r *http.Request) {
 		ConfirmPassword: payload.ConfirmPassword,
 	}
 
-	_, err := x.authUsecase.Register(ctx, data)
+	_, err := x.AuthUsecase.Register(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
