@@ -9,21 +9,21 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type profileHttpHandler struct {
-	cfg            *config.UserConfig
-	profileUsecase usecases.ProfileUsecase
+type ProfileHttpHandler struct {
+	Cfg            *config.UserConfig
+	ProfileUsecase usecases.ProfileUsecase
 }
 
-func ProfileHttpHandler(
+func NewProfileHttpHandler(
 	r *mux.Router,
 	config *config.UserConfig,
 	mongoFactory *factories.MongoFactory,
 	grpcFactory *factories.GrpcClientFactory,
 
 	) {
-	handler := &profileHttpHandler{
-		cfg: config,
-		profileUsecase: profile.NewProfileInteractor(
+	handler := &ProfileHttpHandler{
+		Cfg: config,
+		ProfileUsecase: profile.NewProfileInteractor(
 			config,
 			mongoFactory,
 			grpcFactory,

@@ -11,7 +11,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/response"
 )
 
-func (x *userHttpHandler) GetAll(w http.ResponseWriter, r *http.Request) {
+func (x *UserHttpHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx   = context.Background()
 		query request.UserQueryParams
@@ -28,7 +28,7 @@ func (x *userHttpHandler) GetAll(w http.ResponseWriter, r *http.Request) {
 		PerPage: query.PerPage,
 	}
 
-	results, err := x.userUsecase.GetAll(ctx, params)
+	results, err := x.UserUsecase.GetAll(ctx, params)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

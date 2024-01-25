@@ -9,7 +9,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/response"
 )
 
-func (x *profileHttpHandler) Find(w http.ResponseWriter, r *http.Request) {
+func (x *ProfileHttpHandler) Find(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx = context.Background()
 	)
@@ -20,7 +20,7 @@ func (x *profileHttpHandler) Find(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := x.profileUsecase.Find(ctx, jwtToken.Subject)
+	result, err := x.ProfileUsecase.Find(ctx, jwtToken.Subject)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

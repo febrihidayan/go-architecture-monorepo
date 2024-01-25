@@ -15,7 +15,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func (x *userHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (x *UserHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.UserUpdateRequest
@@ -47,7 +47,7 @@ func (x *userHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	result, err := x.userUsecase.Update(ctx, data)
+	result, err := x.UserUsecase.Update(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

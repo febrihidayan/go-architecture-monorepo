@@ -13,7 +13,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/response"
 )
 
-func (x *userHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (x *UserHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.UserCreateRequest
@@ -38,7 +38,7 @@ func (x *userHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 		},
 	}
 
-	result, err := x.userUsecase.Create(ctx, data)
+	result, err := x.UserUsecase.Create(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

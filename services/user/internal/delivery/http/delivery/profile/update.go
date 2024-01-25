@@ -14,7 +14,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/response"
 )
 
-func (x *profileHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
+func (x *ProfileHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx     = context.Background()
 		payload request.UserUpdateRequest
@@ -48,7 +48,7 @@ func (x *profileHttpHandler) Update(w http.ResponseWriter, r *http.Request) {
 		LangCode: payload.LangCode,
 	}
 
-	result, err := x.profileUsecase.Update(ctx, data)
+	result, err := x.ProfileUsecase.Update(ctx, data)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return
