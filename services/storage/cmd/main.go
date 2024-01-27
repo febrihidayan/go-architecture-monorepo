@@ -82,5 +82,5 @@ func initHandler(
 	router *mux.Router,
 	cfg *config.StorageConfig) {
 
-	cloud_handler.CloudHttpHandler(router, cfg, mongoFactory, *awsService)
+	cloud_handler.NewCloudHttpHandler(router, cfg, mongoFactory, *awsService)
 }

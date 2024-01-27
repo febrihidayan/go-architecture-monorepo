@@ -10,20 +10,20 @@ import (
 	"github.com/gorilla/mux"
 )
 
-type cloudHttpHandler struct {
-	cfg          *config.StorageConfig
-	cloudUsecase usecases.CloudUsecase
+type CloudHttpHandler struct {
+	Cfg          *config.StorageConfig
+	CloudUsecase usecases.CloudUsecase
 }
 
-func CloudHttpHandler(
+func NewCloudHttpHandler(
 	r *mux.Router,
 	config *config.StorageConfig,
 	mongoFactory *factories.MongoFactory,
 	awsService services.AwsService,
 ) {
-	handler := &cloudHttpHandler{
-		cfg: config,
-		cloudUsecase: cloud.NewCloudInteractor(
+	handler := &CloudHttpHandler{
+		Cfg: config,
+		CloudUsecase: cloud.NewCloudInteractor(
 			config,
 			mongoFactory,
 			&awsService,

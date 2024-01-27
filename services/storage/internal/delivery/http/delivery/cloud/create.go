@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/exceptions"
 	"github.com/febrihidayan/go-architecture-monorepo/pkg/utils"
@@ -15,10 +17,10 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/http/response"
 )
 
-func (x *cloudHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
+func (x *CloudHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx       = context.Background()
-		maxUpload = int64(x.cfg.MaxUpload) * 1024 * 1024
+		maxUpload = int64(x.Cfg.MaxUpload) * 1024 * 1024
 	)
 
 	jwtToken, errJwt := utils.DecodeJwtToken(r.Header.Get("Authorization"))
@@ -34,7 +36,7 @@ func (x *cloudHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if handler.Size > maxUpload {
-		errMessageSize := fmt.Sprintf("max file size %vMB", x.cfg.MaxUpload)
+		errMessageSize := fmt.Sprintf("max file size %vMB", x.Cfg.MaxUpload)
 		utils.RespondWithError(w, http.StatusBadRequest, []error{errors.New(errMessageSize)})
 		return
 	}
@@ -45,7 +47,7 @@ func (x *cloudHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	tempFile, err := os.CreateTemp("temp-assets", "*."+mime.String())
+	tempFile, err := os.CreateTemp(filepath.Dir(handler.Filename)+"/temp-assets", "*."+mime.String())
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -67,11 +69,13 @@ func (x *cloudHttpHandler) Create(w http.ResponseWriter, r *http.Request) {
 			Size:        int(handler.Size),
 			MimeType:    mime.String(),
 			ContentType: mime.Type(),
-			Directory:   x.cfg.Aws.Directory,
+			Directory:   x.Cfg.Aws.Directory,
 		},
 	}
 
-	cloud, errCreate := x.cloudUsecase.Create(ctx, payload)
+	log.Println("payload:", payload)
+
+	cloud, errCreate := x.CloudUsecase.Create(ctx, payload)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(errCreate.Status), errCreate.Errors.Errors)
 		return
