@@ -5,3 +5,5 @@ tmp
 temp-assets/*
 !temp-assets/README.md
 vendor/*
+data/config/*.*
+!data/config/*.example

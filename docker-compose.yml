@@ -111,17 +111,7 @@ services:
       MONGODB_NAME: arch_notification
       MONGODB_HOST: 'mongo'
       MONGODB_PORT: '27017'
-      GOOGLE_FIREBASE_TYPE: "service_account"
-      GOOGLE_FIREBASE_PROJECT_ID: ""
-      GOOGLE_FIREBASE_PRIVATE_KEY_ID: ""
-      GOOGLE_FIREBASE_PRIVATE_KEY: ""
-      GOOGLE_FIREBASE_CLIENT_EMAIL: ""
-      GOOGLE_FIREBASE_CLIENT_ID: ""
-      GOOGLE_FIREBASE_AUTH_URI: "https://accounts.google.com/o/oauth2/auth"
-      GOOGLE_FIREBASE_TOKEN_URI: "https://oauth2.googleapis.com/token"
-      GOOGLE_FIREBASE_AUTH_PROVIDER_CERT_URL: "https://www.googleapis.com/oauth2/v1/certs"
-      GOOGLE_FIREBASE_CLIENT_CERT_URL: ""
-      GOOGLE_FIREBASE_UNIVERSE_DOMAIN: "googleapis.com"
+      GOOGLE_FIREBASE_PATH: "data/config/firebase_key.json"
       MAILGUN_FROM_DOMAIN: ""
       MAILGUN_FROM_NAME: ""
       MAILGUN_DOMAIN: ""

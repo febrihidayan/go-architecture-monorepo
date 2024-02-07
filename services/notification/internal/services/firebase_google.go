@@ -2,7 +2,7 @@ package services
 
 import (
 	"context"
-	"encoding/json"
+	"path/filepath"
 	"strings"
 
 	firebase "firebase.google.com/go"
@@ -17,26 +17,13 @@ type FirebaseGoogleService struct {
 }
 
 func NewFcmGoogleService(cfg *config.FirebaseGoogle) (*FirebaseGoogleService, error) {
-	config := map[string]string{
-		"type":                        cfg.Type,
-		"project_id":                  cfg.ProjectId,
-		"private_key_id":              cfg.PrivateKeyId,
-		"private_key":                 cfg.PrivateKey,
-		"client_email":                cfg.ClientEmail,
-		"client_id":                   cfg.ClientId,
-		"auth_uri":                    cfg.AuthUri,
-		"token_uri":                   cfg.TokenUri,
-		"auth_provider_x509_cert_url": cfg.AuthProviderCertUrl,
-		"client_x509_cert_url":        cfg.ClientCertUrl,
-		"universe_domain":             cfg.UniverseDomain,
-	}
-
-	configByte, err := json.Marshal(config)
+	path, err := filepath.Abs(cfg.Path)
 	if err != nil {
 		return nil, err
 	}
 
-	opt := option.WithCredentialsJSON(configByte)
+	opt := option.WithCredentialsFile(path)
+
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		return nil, err
