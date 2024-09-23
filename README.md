@@ -36,7 +36,7 @@ Started rest API with clean architecture monorepo golang
 ## Docs Services
 Here I will provide the information that the service needs to set some default configurations.
 
-You can see all endpoints at the following link: [Endpoints Go Architecture Monorepo](https://www.postman.com/aviation-geologist-28886159/workspace/go-architecture-monorepo)
+You can see all endpoints at the following link: [Endpoints Go Architecture Monorepo](https://www.postman.com/bold-trinity-430312/workspace/go-architecture-monorepo)
 
 ### Notification Service
 In the notification service you must save templates for email and FCM needs, here I will provide an example payload to save to the database. You can modify as you wish, you need to know that the use of email and FCM templates must be different. If they are the same then the concept of both should be the same as the welcome template.
