@@ -27,6 +27,18 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=root
+    ports:
+      - '27017:27017'
+
+  rabbitmq:
+    image: rabbitmq:4-management-alpine
+    container_name: arch_rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - '5672:5672'
+      - '15672:15672'
 
   auth-go:
     container_name: arch_auth_go
@@ -68,6 +80,11 @@ services:
       MONGODB_NAME: arch_user
       MONGODB_HOST: 'mongo'
       MONGODB_PORT: '27017'
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASSWORD: "guest"
+      RABBITMQ_EXCHANGE: "arch_monorepo"
     ports:
       - '8084:8084'
       - '9084:9084'
@@ -92,6 +109,11 @@ services:
       AWS_BUCKET: "bucket"
       AWS_DIRECTORY: "test"
       AWS_REGION: "ap-southeast-1"
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASSWORD: "guest"
+      RABBITMQ_EXCHANGE: "arch_monorepo"
     ports:
       - '8085:8085'
       - '9085:9085'

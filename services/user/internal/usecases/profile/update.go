@@ -39,7 +39,7 @@ func (x *profileInteractor) Update(ctx context.Context, payload entities.UserDto
 	}
 
 	if user.Avatar != "" && find.Avatar != user.Avatar {
-		if err := x.storageGrpcRepo.UpdateCloudApprove(ctx, []string{user.Avatar}); err != nil {
+		if err := x.rabbitmqRepo.CloudApprove([]string{user.Avatar}, entities.RABBITMQ_STORAGE_CLOUD_UPDATE); err != nil {
 			multilerr = multierror.Append(multilerr, err)
 			return nil, &exceptions.CustomError{
 				Status: exceptions.ERRREPOSITORY,
@@ -49,7 +49,7 @@ func (x *profileInteractor) Update(ctx context.Context, payload entities.UserDto
 	}
 
 	if find.Avatar != "" && find.Avatar != user.Avatar {
-		if err := x.storageGrpcRepo.DeleteCloudApprove(ctx, []string{find.Avatar}); err != nil {
+		if err := x.rabbitmqRepo.CloudApprove([]string{find.Avatar}, entities.RABBITMQ_STORAGE_CLOUD_DELETE); err != nil {
 			multilerr = multierror.Append(multilerr, err)
 			return nil, &exceptions.CustomError{
 				Status: exceptions.ERRREPOSITORY,

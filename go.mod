@@ -14,6 +14,7 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1
 	github.com/kmacute/golvalidator v0.0.0-20210528052904-5a0248be89be
 	github.com/mailgun/mailgun-go v2.0.0+incompatible
+	github.com/rabbitmq/amqp091-go v1.10.0
 	github.com/stretchr/testify v1.8.4
 	go.mongodb.org/mongo-driver v1.10.2
 	golang.org/x/crypto v0.17.0

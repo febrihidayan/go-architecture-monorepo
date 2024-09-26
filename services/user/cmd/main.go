@@ -10,11 +10,13 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/rabbitmq"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_client"
 	grpc_server "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_server"
 	profile_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/profile"
 	user_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/user"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/rabbitmq_server/publisher"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
@@ -43,8 +45,12 @@ func main() {
 	go RunGrpcServer()
 	// end run Grpc Server
 
+	// run rabbitMQ server
+	rabbitMQServer := RunRabbitMQServer()
+	rabbitMQPublisher := publisher.NewPublisherRabbitMQ(cfg, rabbitMQServer)
+
 	router := mux.NewRouter()
-	initHandler(router, cfg, grpcClient)
+	initHandler(router, cfg, grpcClient, rabbitMQPublisher)
 	http.Handle("/", router)
 
 	log.Println("Http Run on", cfg.HttpPort)
@@ -82,13 +88,32 @@ func RunGrpcServer() {
 	}()
 }
 
+func RunRabbitMQServer() *rabbitmq.RabbitMQ {
+	dns := fmt.Sprintf(
+		"amqp://%s:%s@%s:%s/",
+		cfg.RabbitMQ.User,
+		cfg.RabbitMQ.Password,
+		cfg.RabbitMQ.Host,
+		cfg.RabbitMQ.Port,
+	)
+
+	rmq, err := rabbitmq.NewRabbitMQ(dns)
+	if err != nil {
+		log.Fatalln("Failed to connect to RabbitMQ:", err)
+	}
+	// defer rmq.Close()
+
+	return rmq
+}
+
 func initHandler(
 	router *mux.Router,
 	cfg *config.UserConfig,
-	grpcClient *grpc_client.ServerClient) {
+	grpcClient *grpc_client.ServerClient,
+	rabbitmq *publisher.PublisherRabbitMQ) {
 
 	grpcFactory := factories.NewGrpcFactory(grpcClient)
 
-	profile_handler.NewProfileHttpHandler(router, cfg, mongoFactory, grpcFactory)
+	profile_handler.NewProfileHttpHandler(router, cfg, mongoFactory, rabbitmq)
 	user_handler.NewUserHttpHandler(router, cfg, mongoFactory, grpcFactory)
 }

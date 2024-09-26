@@ -14,6 +14,7 @@ type StorageConfig struct {
 	Timeout   time.Duration
 	MaxUpload int
 	Aws       AwsConfig
+	RabbitMQ  RabbitMQConfig
 }
 
 type AwsConfig struct {
@@ -23,6 +24,14 @@ type AwsConfig struct {
 	Bucket         string
 	RequestTimeout time.Duration
 	Directory      string
+}
+
+type RabbitMQConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Exchange string
 }
 
 func Storage() *StorageConfig {
@@ -37,6 +46,13 @@ func Storage() *StorageConfig {
 			Bucket:       os.Getenv("AWS_BUCKET"),
 			Region:       types.BucketLocationConstraint(os.Getenv("AWS_REGION")),
 			Directory:    os.Getenv("AWS_DIRECTORY"),
+		},
+		RabbitMQ: RabbitMQConfig{
+			Host:     os.Getenv("RABBITMQ_HOST"),
+			Port:     os.Getenv("RABBITMQ_PORT"),
+			User:     os.Getenv("RABBITMQ_USER"),
+			Password: os.Getenv("RABBITMQ_PASSWORD"),
+			Exchange: os.Getenv("RABBITMQ_EXCHANGE"),
 		},
 	}
 }

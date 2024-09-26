@@ -21,6 +21,6 @@ func HandlerUserServices(s *grpc.Server, db *mongo.Database, cfg config.UserConf
 
 	userPb.RegisterUserServicesServer(s, &server{
 		userUsecase:    user.NewUserInteractor(&cfg, mongoFactory, grpcClientFactory),
-		profileUsecase: profile.NewProfileInteractor(&cfg, mongoFactory, grpcClientFactory),
+		profileUsecase: profile.NewProfileInteractor(&cfg, mongoFactory, nil),
 	})
 }

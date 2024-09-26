@@ -3,6 +3,7 @@ package profile_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/rabbitmq_server/publisher"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/profile"
 
@@ -18,15 +19,13 @@ func NewProfileHttpHandler(
 	r *mux.Router,
 	config *config.UserConfig,
 	mongoFactory *factories.MongoFactory,
-	grpcFactory *factories.GrpcClientFactory,
-
-	) {
+	rabbitmq *publisher.PublisherRabbitMQ) {
 	handler := &ProfileHttpHandler{
 		Cfg: config,
 		ProfileUsecase: profile.NewProfileInteractor(
 			config,
 			mongoFactory,
-			grpcFactory,
+			rabbitmq,
 		),
 	}
 

@@ -10,10 +10,12 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/rabbitmq"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/cron_job"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/grpc_server"
 	cloud_handler "github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/http/delivery/cloud"
+	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/rabbitmq_server"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/services"
 	"github.com/gorilla/mux"
@@ -39,6 +41,10 @@ func main() {
 
 	// run cron job
 	go cron_job.HandlerJobService(cfg, db)
+
+	// Run RabbitMQ
+	go RunRabbitMQServer()
+	// end Run RabbitMQ
 
 	router := mux.NewRouter()
 	initHandler(router, cfg)
@@ -76,6 +82,27 @@ func RunGrpcServer() {
 		log.Println(fmt.Sprintf("Grpc Server listen to: %s", cfg.RpcPort))
 		log.Fatal(grpcServer.Serve(lis))
 	}()
+}
+
+func RunRabbitMQServer() {
+	dns := fmt.Sprintf(
+		"amqp://%s:%s@%s:%s/",
+		cfg.RabbitMQ.User,
+		cfg.RabbitMQ.Password,
+		cfg.RabbitMQ.Host,
+		cfg.RabbitMQ.Port,
+	)
+
+	rmq, err := rabbitmq.NewRabbitMQ(dns)
+	if err != nil {
+		log.Fatalln("Failed to connect to RabbitMQ:", err)
+	}
+
+	defer rmq.Close()
+
+	server := rabbitmq_server.HandlerRabbitMQServices(cfg, rmq, db)
+
+	server.Worker()
 }
 
 func initHandler(
