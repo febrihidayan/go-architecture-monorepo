@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/mongoqb"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/mappers"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/models"
@@ -13,15 +14,17 @@ import (
 )
 
 type PermissionRoleRepository struct {
-	db *mongo.Database
+	db *mongoqb.MongoQueryBuilder
 }
 
 func NewPermissionRoleRepository(db *mongo.Database) PermissionRoleRepository {
-	return PermissionRoleRepository{db: db}
+	return PermissionRoleRepository{
+		db: mongoqb.NewMongoQueryBuilder(db.Collection(models.PermissionRole{}.TableName())),
+	}
 }
 
 func (x *PermissionRoleRepository) CreateMany(ctx context.Context, payloads []*entities.PermissionRole) error {
-	_, err := x.db.Collection(models.PermissionRole{}.TableName()).InsertMany(ctx, mappers.ToListModelPermissionRole(payloads))
+	_, err := x.db.InsertMany(ctx, mappers.ToListModelPermissionRole(payloads))
 
 	if err != nil {
 		return err
@@ -33,7 +36,7 @@ func (x *PermissionRoleRepository) CreateMany(ctx context.Context, payloads []*e
 func (x *PermissionRoleRepository) AllByRoleId(ctx context.Context, roleId string) ([]*entities.PermissionRole, error) {
 	var roles []*models.PermissionRole
 
-	cursor, err := x.db.Collection(models.PermissionRole{}.TableName()).Find(ctx, bson.M{"role_id": roleId})
+	cursor, err := x.db.Find(ctx, bson.M{"role_id": roleId})
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +49,7 @@ func (x *PermissionRoleRepository) AllByRoleId(ctx context.Context, roleId strin
 }
 
 func (x *PermissionRoleRepository) DeleteByPermissionIds(ctx context.Context, ids []string) error {
-	_, err := x.db.Collection(models.PermissionRole{}.TableName()).DeleteMany(ctx, bson.M{
+	_, err := x.db.DeleteMany(ctx, bson.M{
 		"permission_id": bson.D{{"$in", ids}},
 	})
 
@@ -54,7 +57,7 @@ func (x *PermissionRoleRepository) DeleteByPermissionIds(ctx context.Context, id
 }
 
 func (x *PermissionRoleRepository) DeleteByRoleId(ctx context.Context, roleId string) error {
-	_, err := x.db.Collection(models.PermissionRole{}.TableName()).DeleteMany(ctx, bson.M{
+	_, err := x.db.DeleteMany(ctx, bson.M{
 		"role_id": roleId,
 	})
 

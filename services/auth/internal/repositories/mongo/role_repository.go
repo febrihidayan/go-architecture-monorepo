@@ -4,25 +4,27 @@ import (
 	"context"
 	"errors"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/mongoqb"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/mappers"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/models"
 
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type RoleRepository struct {
-	db *mongo.Database
+	db *mongoqb.MongoQueryBuilder
 }
 
 func NewRoleRepository(db *mongo.Database) RoleRepository {
-	return RoleRepository{db: db}
+	return RoleRepository{
+		db: mongoqb.NewMongoQueryBuilder(db.Collection(models.Role{}.TableName())),
+	}
 }
 
 func (x *RoleRepository) Create(ctx context.Context, payload *entities.Role) error {
-	_, err := x.db.Collection(models.Role{}.TableName()).InsertOne(ctx, mappers.ToModelRole(payload))
+	_, err := x.db.InsertOne(ctx, mappers.ToModelRole(payload))
 
 	if err != nil {
 		return err
@@ -34,7 +36,7 @@ func (x *RoleRepository) Create(ctx context.Context, payload *entities.Role) err
 func (x *RoleRepository) Find(ctx context.Context, id string) (*entities.Role, error) {
 	var role models.Role
 
-	err := x.db.Collection(models.Role{}.TableName()).FindOne(ctx, bson.M{"_id": id}).Decode(&role)
+	err := x.db.FindOne(ctx, bson.M{"_id": id}).Decode(&role)
 
 	if err != nil {
 		return nil, errors.New("role not found")
@@ -46,7 +48,7 @@ func (x *RoleRepository) Find(ctx context.Context, id string) (*entities.Role, e
 func (x *RoleRepository) FindByName(ctx context.Context, name string) (*entities.Role, error) {
 	var role models.Role
 
-	err := x.db.Collection(models.Role{}.TableName()).FindOne(ctx, bson.M{"name": name}).Decode(&role)
+	err := x.db.FindOne(ctx, bson.M{"name": name}).Decode(&role)
 
 	if err != nil {
 		return nil, errors.New("role not found")
@@ -58,7 +60,7 @@ func (x *RoleRepository) FindByName(ctx context.Context, name string) (*entities
 func (x *RoleRepository) All(ctx context.Context) ([]*entities.Role, error) {
 	var roles []*models.Role
 
-	cursor, err := x.db.Collection(models.Role{}.TableName()).Find(ctx, bson.M{})
+	cursor, err := x.db.Find(ctx, bson.M{})
 	if err != nil {
 		return nil, err
 	}
@@ -71,75 +73,19 @@ func (x *RoleRepository) All(ctx context.Context) ([]*entities.Role, error) {
 }
 
 func (x *RoleRepository) GetAll(ctx context.Context, params *entities.RoleQueryParams) ([]*entities.Role, int, error) {
-	var (
-		filter = mongo.Pipeline{}
-		match  bson.D
-		skip   = (params.Page - 1) * params.PerPage
-	)
+	query := x.db.NewPipeline()
 
 	if params.Search != "" {
-		match = append(match, bson.D{{"name", primitive.Regex{
-			Pattern: params.Search,
-			Options: "i",
-		}}}...)
+		query.SearchSingleField("name", params.Search)
 	}
 
-	if len(match) > 0 {
-		filter = append(filter, mongo.Pipeline{
-			bson.D{{
-				"$match", match,
-			}},
-		}...)
-	}
+	query.
+		Sort("created_at", false).
+		CountFacet().
+		Unwind("$total").
+		Paginate(params.Page, params.PerPage)
 
-	filter = append(filter, mongo.Pipeline{
-		bson.D{{
-			"$sort", bson.D{
-				{"created_at", -1},
-			},
-		}},
-		bson.D{{
-			"$facet", bson.D{
-				{"total", bson.A{
-					bson.D{{
-						"$count", "count",
-					}},
-				}},
-				{"data", bson.A{
-					bson.D{{
-						"$addFields", bson.D{
-							{"_id", "$_id"},
-						},
-					}},
-				}},
-			},
-		}},
-		bson.D{{
-			"$unwind", "$total",
-		}},
-		bson.D{{
-			"$project", bson.D{
-				{"data", bson.D{
-					{"$slice", bson.A{
-						"$data", skip, bson.D{
-							{"$ifNull", bson.A{
-								params.PerPage, "$total.count",
-							}},
-						},
-					}},
-				}},
-				{"page", bson.D{
-					{"$literal", skip/params.PerPage + 1},
-				}},
-				{"per_page", bson.D{
-					{"$literal", params.PerPage},
-				}},
-				{"total", "$total.count"},
-			},
-		}},
-	}...)
-
-	cursor, err := x.db.Collection(models.Role{}.TableName()).Aggregate(ctx, filter)
+	cursor, err := query.Execute(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -158,27 +104,17 @@ func (x *RoleRepository) GetAll(ctx context.Context, params *entities.RoleQueryP
 
 func (x *RoleRepository) AllByUserId(ctx context.Context, userId string) ([]*entities.Role, error) {
 	var (
-		filter  = mongo.Pipeline{}
+		query   = x.db.NewPipeline()
 		results []*models.Role
 	)
 
-	filter = append(filter, mongo.Pipeline{
-		bson.D{{
-			"$lookup", bson.D{
-				{"from", "role_user"},
-				{"localField", "_id"},
-				{"foreignField", "role_id"},
-				{"as", "role_user"},
-			},
-		}},
-		bson.D{{
-			"$match", bson.D{{
-				"role_user.user_id", userId,
-			}},
-		}},
-	}...)
+	query.
+		Lookup("role_user", "_id", "role_id", "role_user").
+		Match(bson.D{{
+			"role_user.user_id", userId,
+		}})
 
-	cursor, err := x.db.Collection(models.Role{}.TableName()).Aggregate(ctx, filter)
+	cursor, err := query.Execute(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -193,7 +129,7 @@ func (x *RoleRepository) AllByUserId(ctx context.Context, userId string) ([]*ent
 }
 
 func (x *RoleRepository) Update(ctx context.Context, payload *entities.Role) error {
-	_, err := x.db.Collection(models.Role{}.TableName()).ReplaceOne(ctx, bson.M{
+	_, err := x.db.ReplaceOne(ctx, bson.M{
 		"_id": payload.ID.String(),
 	}, mappers.ToModelRole(payload))
 

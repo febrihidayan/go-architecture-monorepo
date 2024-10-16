@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/mongoqb"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/mappers"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo/models"
@@ -13,15 +14,17 @@ import (
 )
 
 type AuthRepository struct {
-	db *mongo.Database
+	db *mongoqb.MongoQueryBuilder
 }
 
 func NewAuthRepository(db *mongo.Database) AuthRepository {
-	return AuthRepository{db: db}
+	return AuthRepository{
+		db: mongoqb.NewMongoQueryBuilder(db.Collection(models.Auth{}.TableName())),
+	}
 }
 
 func (x *AuthRepository) Create(ctx context.Context, payload *entities.Auth) error {
-	_, err := x.db.Collection(models.Auth{}.TableName()).InsertOne(ctx, mappers.ToModelAuth(payload))
+	_, err := x.db.InsertOne(ctx, mappers.ToModelAuth(payload))
 
 	if err != nil {
 		return err
@@ -33,7 +36,7 @@ func (x *AuthRepository) Create(ctx context.Context, payload *entities.Auth) err
 func (x *AuthRepository) Find(ctx context.Context, id string) (*entities.Auth, error) {
 	var auth models.Auth
 
-	err := x.db.Collection(models.Auth{}.TableName()).FindOne(ctx, bson.M{"_id": id}).Decode(&auth)
+	err := x.db.FindByID(ctx, id).Decode(&auth)
 
 	if err != nil {
 		return nil, errors.New("auth not found")
@@ -45,7 +48,7 @@ func (x *AuthRepository) Find(ctx context.Context, id string) (*entities.Auth, e
 func (x *AuthRepository) FindByEmail(ctx context.Context, email string) (*entities.Auth, error) {
 	var auth models.Auth
 
-	err := x.db.Collection(models.Auth{}.TableName()).FindOne(ctx, bson.M{"email": email}).Decode(&auth)
+	err := x.db.FindOne(ctx, bson.M{"email": email}).Decode(&auth)
 
 	if err != nil {
 		return nil, errors.New("auth not found")
@@ -57,7 +60,7 @@ func (x *AuthRepository) FindByEmail(ctx context.Context, email string) (*entiti
 func (x *AuthRepository) FindByUserId(ctx context.Context, userId string) (*entities.Auth, error) {
 	var auth models.Auth
 
-	err := x.db.Collection(models.Auth{}.TableName()).FindOne(ctx, bson.M{"user_id": userId}).Decode(&auth)
+	err := x.db.FindOne(ctx, bson.M{"user_id": userId}).Decode(&auth)
 
 	if err != nil {
 		return nil, errors.New("auth not found")
@@ -67,7 +70,7 @@ func (x *AuthRepository) FindByUserId(ctx context.Context, userId string) (*enti
 }
 
 func (x *AuthRepository) Update(ctx context.Context, payload *entities.Auth) error {
-	_, err := x.db.Collection(models.Auth{}.TableName()).ReplaceOne(ctx, bson.M{
+	_, err := x.db.ReplaceOne(ctx, bson.M{
 		"_id": payload.ID.String(),
 	}, mappers.ToModelAuth(payload))
 

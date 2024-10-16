@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/mongoqb"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/mongo/mappers"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/mongo/models"
@@ -14,15 +15,17 @@ import (
 )
 
 type CloudRepository struct {
-	db *mongo.Database
+	db *mongoqb.MongoQueryBuilder
 }
 
 func NewCloudRepository(db *mongo.Database) CloudRepository {
-	return CloudRepository{db: db}
+	return CloudRepository{
+		db: mongoqb.NewMongoQueryBuilder(db.Collection(models.Cloud{}.TableName())),
+	}
 }
 
 func (x *CloudRepository) Create(ctx context.Context, payload *entities.Cloud) error {
-	_, err := x.db.Collection(models.Cloud{}.TableName()).InsertOne(ctx, mappers.ToModelCloud(payload))
+	_, err := x.db.InsertOne(ctx, mappers.ToModelCloud(payload))
 
 	if err != nil {
 		return err
@@ -34,31 +37,23 @@ func (x *CloudRepository) Create(ctx context.Context, payload *entities.Cloud) e
 func (x *CloudRepository) All(ctx context.Context, params *entities.CloudQueryParams) ([]*entities.Cloud, error) {
 	var (
 		results []*entities.Cloud
-		filter  = mongo.Pipeline{}
-		match   bson.D
+		query   = x.db.NewPipeline()
 	)
 
-	if params.Status != "" {
-		match = append(match, bson.D{{"status", params.Status}}...)
-	}
+	query.
+		AddConditions(func(builder *mongoqb.MongoQueryBuilder) {
+			builder.Match(builder.WhereGroup(func(condition *bson.D) {
+				if params.Status != "" {
+					builder.Where(condition, "status", "=", params.Status)
+				}
 
-	if !params.CreatedAt.IsZero() {
-		match = append(match, bson.D{{
-			"created_at", bson.D{
-				{"$gte", primitive.NewDateTimeFromTime(params.CreatedAt.Local())},
-			},
-		}}...)
-	}
+				if !params.CreatedAt.IsZero() {
+					builder.Where(condition, "status", ">=", primitive.NewDateTimeFromTime(params.CreatedAt.Local()))
+				}
+			}))
+		})
 
-	if len(match) > 0 {
-		filter = append(filter, mongo.Pipeline{
-			bson.D{{
-				"$match", match,
-			}},
-		}...)
-	}
-
-	cursor, err := x.db.Collection(models.Cloud{}.TableName()).Aggregate(ctx, filter)
+	cursor, err := query.Execute(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +75,7 @@ func (x *CloudRepository) All(ctx context.Context, params *entities.CloudQueryPa
 func (x *CloudRepository) Find(ctx context.Context, id string) (*entities.Cloud, error) {
 	var item models.Cloud
 
-	err := x.db.Collection(models.Cloud{}.TableName()).FindOne(ctx, bson.M{"_id": id}).Decode(&item)
+	err := x.db.FindOne(ctx, bson.M{"_id": id}).Decode(&item)
 
 	if err != nil {
 		return nil, errors.New("cloud not found")
@@ -92,7 +87,7 @@ func (x *CloudRepository) Find(ctx context.Context, id string) (*entities.Cloud,
 func (x *CloudRepository) FindByUrl(ctx context.Context, url string) (*entities.Cloud, error) {
 	var item models.Cloud
 
-	err := x.db.Collection(models.Cloud{}.TableName()).FindOne(ctx, bson.M{"url": url}).Decode(&item)
+	err := x.db.FindOne(ctx, bson.M{"url": url}).Decode(&item)
 	if err != nil {
 		return nil, errors.New("cloud not found")
 	}
@@ -101,7 +96,7 @@ func (x *CloudRepository) FindByUrl(ctx context.Context, url string) (*entities.
 }
 
 func (x *CloudRepository) Update(ctx context.Context, payload *entities.Cloud) error {
-	_, err := x.db.Collection(models.Cloud{}.TableName()).ReplaceOne(ctx, bson.M{
+	_, err := x.db.ReplaceOne(ctx, bson.M{
 		"_id": payload.ID.String(),
 	}, mappers.ToModelCloud(payload))
 
@@ -113,7 +108,7 @@ func (x *CloudRepository) Update(ctx context.Context, payload *entities.Cloud) e
 }
 
 func (x *CloudRepository) Delete(ctx context.Context, id string) error {
-	_, err := x.db.Collection(models.Cloud{}.TableName()).DeleteOne(ctx, bson.M{
+	_, err := x.db.DeleteOne(ctx, bson.M{
 		"_id": id,
 	})
 

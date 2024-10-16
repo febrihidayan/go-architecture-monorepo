@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/mongoqb"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/mongo/mappers"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/mongo/models"
@@ -11,15 +12,17 @@ import (
 )
 
 type DeviceTokenRepository struct {
-	db *mongo.Database
+	db *mongoqb.MongoQueryBuilder
 }
 
 func NewDeviceTokenRepository(db *mongo.Database) DeviceTokenRepository {
-	return DeviceTokenRepository{db: db}
+	return DeviceTokenRepository{
+		db: mongoqb.NewMongoQueryBuilder(db.Collection(models.DeviceToken{}.TableName())),
+	}
 }
 
 func (x *DeviceTokenRepository) Create(ctx context.Context, payload *entities.DeviceToken) error {
-	_, err := x.db.Collection(models.DeviceToken{}.TableName()).InsertOne(ctx, mappers.ToModelDeviceToken(payload))
+	_, err := x.db.InsertOne(ctx, mappers.ToModelDeviceToken(payload))
 
 	if err != nil {
 		return err
@@ -31,23 +34,18 @@ func (x *DeviceTokenRepository) Create(ctx context.Context, payload *entities.De
 func (x *DeviceTokenRepository) All(ctx context.Context, params *entities.DeviceTokenQueryParams) ([]*entities.DeviceToken, error) {
 	var (
 		results []*entities.DeviceToken
-		filter  = mongo.Pipeline{}
-		match   bson.D
+		query   = x.db.NewPipeline()
 	)
 
-	if params.UserId != "" {
-		match = append(match, bson.D{{"user_id", params.UserId}}...)
-	}
+	query.AddConditions(func(builder *mongoqb.MongoQueryBuilder) {
+		builder.Match(builder.WhereGroup(func(condition *bson.D) {
+			if params.UserId != "" {
+				builder.Where(condition, "user_id", "=", params.UserId)
+			}
+		}))
+	})
 
-	if len(match) > 0 {
-		filter = append(filter, mongo.Pipeline{
-			bson.D{{
-				"$match", match,
-			}},
-		}...)
-	}
-
-	cursor, err := x.db.Collection(models.DeviceToken{}.TableName()).Aggregate(ctx, filter)
+	cursor, err := query.Execute(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +65,7 @@ func (x *DeviceTokenRepository) All(ctx context.Context, params *entities.Device
 }
 
 func (x *DeviceTokenRepository) Delete(ctx context.Context, id string) error {
-	_, err := x.db.Collection(models.DeviceToken{}.TableName()).DeleteOne(ctx, bson.M{
+	_, err := x.db.DeleteOne(ctx, bson.M{
 		"_id": id,
 	})
 

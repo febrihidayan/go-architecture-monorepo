@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/mongoqb"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/mongo/mappers"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/mongo/models"
@@ -12,15 +13,17 @@ import (
 )
 
 type TemplateRepository struct {
-	db *mongo.Database
+	db *mongoqb.MongoQueryBuilder
 }
 
 func NewTemplateRepository(db *mongo.Database) TemplateRepository {
-	return TemplateRepository{db: db}
+	return TemplateRepository{
+		db: mongoqb.NewMongoQueryBuilder(db.Collection(models.Template{}.TableName())),
+	}
 }
 
 func (x *TemplateRepository) Create(ctx context.Context, payload *entities.Template) error {
-	_, err := x.db.Collection(models.Template{}.TableName()).InsertOne(ctx, mappers.ToModelTemplate(payload))
+	_, err := x.db.InsertOne(ctx, mappers.ToModelTemplate(payload))
 
 	if err != nil {
 		return err
@@ -32,7 +35,7 @@ func (x *TemplateRepository) Create(ctx context.Context, payload *entities.Templ
 func (x *TemplateRepository) Find(ctx context.Context, id string) (*entities.Template, error) {
 	var item models.Template
 
-	err := x.db.Collection(models.Template{}.TableName()).FindOne(ctx, bson.M{"_id": id}).Decode(&item)
+	err := x.db.FindOne(ctx, bson.M{"_id": id}).Decode(&item)
 
 	if err != nil {
 		return nil, errors.New("template not found")
@@ -44,7 +47,7 @@ func (x *TemplateRepository) Find(ctx context.Context, id string) (*entities.Tem
 func (x *TemplateRepository) FindByName(ctx context.Context, name string) (*entities.Template, error) {
 	var item models.Template
 
-	err := x.db.Collection(models.Template{}.TableName()).FindOne(ctx, bson.M{"name": name}).Decode(&item)
+	err := x.db.FindOne(ctx, bson.M{"name": name}).Decode(&item)
 
 	if err != nil {
 		return nil, errors.New("template not found")
@@ -54,7 +57,7 @@ func (x *TemplateRepository) FindByName(ctx context.Context, name string) (*enti
 }
 
 func (x *TemplateRepository) Update(ctx context.Context, payload *entities.Template) error {
-	_, err := x.db.Collection(models.Template{}.TableName()).ReplaceOne(ctx, bson.M{
+	_, err := x.db.ReplaceOne(ctx, bson.M{
 		"_id": payload.ID.String(),
 	}, mappers.ToModelTemplate(payload))
 
@@ -66,7 +69,7 @@ func (x *TemplateRepository) Update(ctx context.Context, payload *entities.Templ
 }
 
 func (x *TemplateRepository) Delete(ctx context.Context, id string) error {
-	_, err := x.db.Collection(models.Template{}.TableName()).DeleteOne(ctx, bson.M{
+	_, err := x.db.DeleteOne(ctx, bson.M{
 		"_id": id,
 	})
 

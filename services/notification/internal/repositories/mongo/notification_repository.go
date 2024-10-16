@@ -3,6 +3,7 @@ package repositories
 import (
 	"context"
 
+	"github.com/febrihidayan/go-architecture-monorepo/pkg/mongoqb"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/mongo/mappers"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/mongo/models"
@@ -11,15 +12,17 @@ import (
 )
 
 type NotificationRepository struct {
-	db *mongo.Database
+	db *mongoqb.MongoQueryBuilder
 }
 
 func NewNotificationRepository(db *mongo.Database) NotificationRepository {
-	return NotificationRepository{db: db}
+	return NotificationRepository{
+		db: mongoqb.NewMongoQueryBuilder(db.Collection(models.Notification{}.TableName())),
+	}
 }
 
 func (x *NotificationRepository) Create(ctx context.Context, payload *entities.Notification) error {
-	_, err := x.db.Collection(models.Notification{}.TableName()).InsertOne(ctx, mappers.ToModelNotification(payload))
+	_, err := x.db.InsertOne(ctx, mappers.ToModelNotification(payload))
 
 	if err != nil {
 		return err
@@ -29,72 +32,22 @@ func (x *NotificationRepository) Create(ctx context.Context, payload *entities.N
 }
 
 func (x *NotificationRepository) GetAll(ctx context.Context, params *entities.NotificationQueryParams) ([]*entities.Notification, int, error) {
-	var (
-		filter = mongo.Pipeline{}
-		match  bson.D
-		skip   = (params.Page - 1) * params.PerPage
-	)
+	query := x.db.NewPipeline()
 
-	if params.UserId != "" {
-		match = append(match, bson.D{{"user_id", params.UserId}}...)
-	}
+	query.
+		AddConditions(func(builder *mongoqb.MongoQueryBuilder) {
+			builder.Match(builder.WhereGroup(func(condition *bson.D) {
+				if params.UserId != "" {
+					builder.Where(condition, "user_id", "=", params.UserId)
+				}
+			}))
+		}).
+		Sort("created_at", false).
+		CountFacet().
+		Unwind("$total").
+		Paginate(params.Page, params.PerPage)
 
-	if len(match) > 0 {
-		filter = append(filter, mongo.Pipeline{
-			bson.D{{
-				"$match", match,
-			}},
-		}...)
-	}
-
-	filter = append(filter, mongo.Pipeline{
-		bson.D{{
-			"$sort", bson.D{
-				{"created_at", -1},
-			},
-		}},
-		bson.D{{
-			"$facet", bson.D{
-				{"total", bson.A{
-					bson.D{{
-						"$count", "count",
-					}},
-				}},
-				{"data", bson.A{
-					bson.D{{
-						"$addFields", bson.D{
-							{"_id", "$_id"},
-						},
-					}},
-				}},
-			},
-		}},
-		bson.D{{
-			"$unwind", "$total",
-		}},
-		bson.D{{
-			"$project", bson.D{
-				{"data", bson.D{
-					{"$slice", bson.A{
-						"$data", skip, bson.D{
-							{"$ifNull", bson.A{
-								params.PerPage, "$total.count",
-							}},
-						},
-					}},
-				}},
-				{"page", bson.D{
-					{"$literal", skip/params.PerPage + 1},
-				}},
-				{"per_page", bson.D{
-					{"$literal", params.PerPage},
-				}},
-				{"total", "$total.count"},
-			},
-		}},
-	}...)
-
-	cursor, err := x.db.Collection(models.Notification{}.TableName()).Aggregate(ctx, filter)
+	cursor, err := query.Execute(ctx)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -112,7 +65,7 @@ func (x *NotificationRepository) GetAll(ctx context.Context, params *entities.No
 }
 
 func (x *NotificationRepository) Delete(ctx context.Context, id string) error {
-	_, err := x.db.Collection(models.Notification{}.TableName()).DeleteOne(ctx, bson.M{
+	_, err := x.db.DeleteOne(ctx, bson.M{
 		"_id": id,
 	})
 
