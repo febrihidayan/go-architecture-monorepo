@@ -59,7 +59,7 @@ func (x *AclHandlerSuite) TestGetAllUser() {
 			re := mux.SetURLVars(req, map[string]string{"id": id})
 
 			tc.mock(tc.param)
-			http.HandlerFunc(x.Http.Access).ServeHTTP(x.Response, re)
+			http.HandlerFunc(x.Http.GetAllUser).ServeHTTP(x.Response, re)
 			x.Equal(tc.param.expected, x.Response.Result().StatusCode)
 		})
 	}

@@ -81,6 +81,20 @@ func (x *PermissionRepositoryMock) GetAll(ctx context.Context, params *entities.
 	return
 }
 
+func (x *PermissionRepositoryMock) AllPermissionByUserId(ctx context.Context, userId string) (result []*entities.Permission, err error) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).([]*entities.Permission); ok {
+		result = n
+	}
+
+	if n, ok := args.Get(1).(error); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *PermissionRepositoryMock) AllByUserId(ctx context.Context, userId string) (result []*entities.Permission, err error) {
 	args := x.Called(userId)
 

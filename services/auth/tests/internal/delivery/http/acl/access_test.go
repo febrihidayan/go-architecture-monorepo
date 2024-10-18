@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/mock"
 )
 
-func (x *AclHandlerSuite) TestGetAll() {
+func (x *AclHandlerSuite) TestAccessUserLogin() {
 	testCases := []struct {
 		name  string
 		param HandlerParams
@@ -25,7 +25,7 @@ func (x *AclHandlerSuite) TestGetAll() {
 				expected: 200,
 			},
 			mock: func(m HandlerParams) {
-				x.AclUsecase.On("GetAllUser", mock.Anything, mock.Anything).Return(&entities.AclMeta{}, nil)
+				x.AclUsecase.On("AccessUserLogin", mock.Anything, mock.Anything).Return(&entities.AclMeta{}, nil)
 			},
 		},
 		{
@@ -39,7 +39,7 @@ func (x *AclHandlerSuite) TestGetAll() {
 				expected: 400,
 			},
 			mock: func(m HandlerParams) {
-				x.AclUsecase.On("GetAllUser", mock.Anything, mock.Anything).Return(nil, x.Error)
+				x.AclUsecase.On("AccessUserLogin", mock.Anything, mock.Anything).Return(nil, x.Error)
 			},
 		},
 	}
@@ -54,7 +54,7 @@ func (x *AclHandlerSuite) TestGetAll() {
 			req.Header.Set("Authorization", token)
 
 			tc.mock(tc.param)
-			http.HandlerFunc(x.Http.Access).ServeHTTP(x.Response, req)
+			http.HandlerFunc(x.Http.AccessUserLogin).ServeHTTP(x.Response, req)
 			x.Equal(tc.param.expected, x.Response.Result().StatusCode)
 		})
 	}

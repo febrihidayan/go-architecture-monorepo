@@ -102,7 +102,7 @@ func (x *PermissionRepository) GetAll(ctx context.Context, params *entities.Perm
 	return mappers.ToListDomainPermission(result.Data), result.Total, nil
 }
 
-func (x *PermissionRepository) AllByUserId(ctx context.Context, userId string) ([]*entities.Permission, error) {
+func (x *PermissionRepository) AllPermissionByUserId(ctx context.Context, userId string) ([]*entities.Permission, error) {
 	var (
 		results []*models.Permission
 		query   = x.db.NewPipeline()
@@ -130,6 +130,34 @@ func (x *PermissionRepository) AllByUserId(ctx context.Context, userId string) (
 				bson.D{{"role_user.user_id", userId}},
 			},
 		}})
+
+	cursor, err := query.Execute(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	defer cursor.Close(ctx)
+
+	if err := cursor.All(ctx, &results); err != nil {
+		return nil, errors.New("permissions not found")
+	}
+
+	return mappers.ToListDomainPermission(results), nil
+}
+
+func (x *PermissionRepository) AllByUserId(ctx context.Context, userId string) ([]*entities.Permission, error) {
+	var (
+		results []*models.Permission
+		query   = x.db.NewPipeline()
+	)
+
+	query.
+		Lookup("permission_user", "_id", "permission_id", "permission_user", bson.A{
+			bson.D{{
+				"$match", bson.D{{"user_id", userId}},
+			}},
+		}).
+		Match(bson.D{{"permission_user.user_id", userId}})
 
 	cursor, err := query.Execute(ctx)
 	if err != nil {

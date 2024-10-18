@@ -8,6 +8,7 @@ import (
 )
 
 type AclUsecase interface {
+	AccessUserLogin(ctx context.Context, userId string) (*entities.AclMeta, *exceptions.CustomError)
 	GetAllRole(ctx context.Context) ([]*entities.Role, *exceptions.CustomError)
 	GetAllPermission(ctx context.Context) ([]*entities.Permission, *exceptions.CustomError)
 	GetAllPermissionByRole(ctx context.Context, roleId string) ([]*entities.Permission, *exceptions.CustomError)

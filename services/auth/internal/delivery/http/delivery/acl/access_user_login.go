@@ -9,7 +9,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/response"
 )
 
-func (x *AclHttpHandler) Access(w http.ResponseWriter, r *http.Request) {
+func (x *AclHttpHandler) AccessUserLogin(w http.ResponseWriter, r *http.Request) {
 	var (
 		ctx = context.Background()
 	)
@@ -20,7 +20,7 @@ func (x *AclHttpHandler) Access(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	results, err := x.AclUsecase.GetAllUser(ctx, jwtToken.Subject)
+	results, err := x.AclUsecase.AccessUserLogin(ctx, jwtToken.Subject)
 	if err != nil {
 		utils.RespondWithError(w, exceptions.MapToHttpStatusCode(err.Status), err.Errors.Errors)
 		return

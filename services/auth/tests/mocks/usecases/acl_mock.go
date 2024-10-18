@@ -54,6 +54,20 @@ func (x *AclUsecaseMock) GetAllRole(ctx context.Context) (result []*entities.Rol
 	return
 }
 
+func (x *AclUsecaseMock) AccessUserLogin(ctx context.Context, userId string) (result *entities.AclMeta, err *exceptions.CustomError) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).(*entities.AclMeta); ok {
+		result = n
+	}
+
+	if n, ok := args.Get(1).(*exceptions.CustomError); ok {
+		err = n
+	}
+
+	return
+}
+
 func (x *AclUsecaseMock) GetAllUser(ctx context.Context, userId string) (result *entities.AclMeta, err *exceptions.CustomError) {
 	args := x.Called(userId)
 
