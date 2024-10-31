@@ -11,6 +11,8 @@ type UserUsecase interface {
 	Create(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
 	CreateAuth(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
 	GetAll(ctx context.Context, params entities.UserQueryParams) (*entities.UserMeta, *exceptions.CustomError)
+	Find(ctx context.Context, id string) (*entities.User, *exceptions.CustomError)
 	Update(ctx context.Context, payload entities.UserDto) (*entities.User, *exceptions.CustomError)
 	UpdateEmailVerified(ctx context.Context, payload entities.UserDto) *exceptions.CustomError
+	Delete(ctx context.Context, id string) *exceptions.CustomError
 }

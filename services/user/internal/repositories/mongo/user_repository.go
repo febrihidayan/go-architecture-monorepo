@@ -98,3 +98,15 @@ func (x *UserRepository) Update(ctx context.Context, payload *entities.User) err
 
 	return nil
 }
+
+func (x *UserRepository) Delete(ctx context.Context, id string) error {
+	_, err := x.db.DeleteOne(ctx, bson.M{
+		"_id": id,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

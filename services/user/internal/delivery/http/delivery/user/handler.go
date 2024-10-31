@@ -31,5 +31,7 @@ func NewUserHttpHandler(
 
 	r.HandleFunc("/v1/users", handler.GetAll).Methods("GET")
 	r.HandleFunc("/v1/user", handler.Create).Methods("POST")
+	r.HandleFunc("/v1/user/{id}", handler.Find).Methods("GET")
 	r.HandleFunc("/v1/user/{id}", handler.Update).Methods("PUT")
+	r.HandleFunc("/v1/user/{id}", handler.Delete).Methods("DELETE")
 }

@@ -76,3 +76,13 @@ func (x *UserRepositoryMock) Update(ctx context.Context, payload *entities.User)
 
 	return
 }
+
+func (x *UserRepositoryMock) Delete(ctx context.Context, id string) (err error) {
+	args := x.Called(id)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}
