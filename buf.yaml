@@ -1,4 +1,9 @@
-version: v1
-name: buf.build/github.com/febrihidayan/go-architecture-monorepo
-deps:
-  - buf.build/googleapis/googleapis
+version: v2
+modules:
+  - path: proto
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - FILE

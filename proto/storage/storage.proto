@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package storage;
 
+option go_package = "github.com/febrihidayan/go-architecture-monorepo/proto/storage;storage";
+
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 

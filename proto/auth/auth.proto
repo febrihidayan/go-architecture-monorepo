@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package auth;
 
+option go_package = "github.com/febrihidayan/go-architecture-monorepo/proto/auth;auth";
+
 import "google/protobuf/timestamp.proto";
 
 service AuthServices {
