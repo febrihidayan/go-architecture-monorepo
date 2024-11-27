@@ -10,94 +10,69 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/grpc_client"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/grpc_server"
 	device_token_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/device_token"
 	notification_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/notification"
 	template_handler "github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/delivery/http/delivery/template"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/services"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/factories"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )
 
 var (
-	cfg          = config.Notification()
-	ctx, cancel  = context.WithCancel(context.Background())
-	db           = config.InitDatabaseMongodb()
-	mongoFactory = factories.NewMongoFactory(db)
+	ctx, cancel = context.WithCancel(context.Background())
 )
 
 func main() {
-	defer func() {
-		db.Client().Disconnect(ctx)
-	}()
+	defer cancel()
 
-	// run rpc client
-	grpcClient, errs := grpc_client.NewGrpcClient(&cfg.GrpcClient)
-	if len(errs) > 0 {
-		cancel()
-		log.Fatalf("did not connect grpc client: %v", errs)
-	}
+	// Initialize dependencies
+	deps := factories.InitializeDependencies()
+	defer deps.Close()
 
-	// run firebase google service
-	clientService := services.NewServiceHandler(cfg)
+	// Run HTTP Server
+	go RunHTTPServer(deps)
 
-	// run Grpc Server
-	go RunGrpcServer(grpcClient, clientService)
-	// end run Grpc Server
+	// Run gRPC Server
+	go RunGrpcServer(deps)
 
-	router := mux.NewRouter()
-	initHandler(router, cfg, grpcClient)
-	http.Handle("/", router)
-
-	log.Println("Http Run on", cfg.HttpPort)
-	err := http.ListenAndServe(cfg.HttpPort, router)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
-
-	select {
-	case v := <-quit:
-		log.Fatal(fmt.Sprintf("signal.Notify: %v", v))
-	case done := <-ctx.Done():
-		log.Fatal(fmt.Sprintf("ctx.Done: %v", done))
-	}
-
-	log.Println("Server Exited Properly")
+	// Handle graceful shutdown
+	HandleGracefulShutdown()
 }
 
-func RunGrpcServer(
-	grpcClient *grpc_client.ServerClient,
-	clientService *services.ClientService) {
-
+func RunGrpcServer(deps *factories.Dependencies) {
 	grpcServer := grpc.NewServer()
-	grpc_server.HandlerNotificationServices(grpcServer, db, grpcClient, clientService, *cfg)
+	grpc_server.HandlerNotificationServices(grpcServer, deps)
 
-	lis, err := net.Listen("tcp", cfg.RpcPort)
+	lis, err := net.Listen("tcp", deps.Config.RpcPort)
 	if err != nil {
-		cancel()
 		log.Fatalln("Failed to listen:", err)
 	}
 
 	go func() {
-		log.Println(fmt.Sprintf("Grpc Server listen to: %s", cfg.RpcPort))
+		log.Println(fmt.Sprintf("Grpc Server listen to: %v", deps.Config.RpcPort))
 		log.Fatal(grpcServer.Serve(lis))
 	}()
 }
 
-func initHandler(
-	router *mux.Router,
-	cfg *config.NotificationConfig,
-	grpcClient *grpc_client.ServerClient) {
+func RunHTTPServer(deps *factories.Dependencies) {
+	router := mux.NewRouter()
 
-	grpcClientFactory := factories.NewGrpcFactory(grpcClient)
+	notification_handler.NewNotificationHttpHandler(router, deps)
+	template_handler.NewTemplateHttpHandler(router, deps)
+	device_token_handler.NewDeviceTokenHttpHandler(router, deps)
 
-	notification_handler.NewNotificationHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
-	template_handler.NewTemplateHttpHandler(router, cfg, mongoFactory)
-	device_token_handler.NewDeviceTokenHttpHandler(router, cfg, mongoFactory)
+	log.Printf("HTTP Server running on %s", deps.Config.HttpPort)
+	if err := http.ListenAndServe(deps.Config.HttpPort, router); err != nil {
+		log.Fatalf("HTTP Server stopped: %v", err)
+	}
+}
+
+func HandleGracefulShutdown() {
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
+	<-quit
+	log.Println("Shutting down gracefully...")
+	cancel() // Cancel the context for all components
 }

@@ -4,7 +4,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/repositories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/rabbitmq_server/publisher"
-	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/factories"
 )
 
 type profileInteractor struct {

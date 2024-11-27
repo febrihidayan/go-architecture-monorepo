@@ -7,7 +7,7 @@ import (
 	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/profile"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/user/tests/mocks/repositories/mongo"
 	"github.com/stretchr/testify/suite"

@@ -8,7 +8,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
 	customer "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/rabbitmq_server/consumer"
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/factories"
 )
 
 type RabbitMQServer struct {

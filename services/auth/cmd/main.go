@@ -16,7 +16,7 @@ import (
 	permision_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/permission"
 	role_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/role"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/rabbitmq_server"
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/factories"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )

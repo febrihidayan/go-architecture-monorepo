@@ -17,7 +17,7 @@ import (
 	profile_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/profile"
 	user_handler "github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/http/delivery/user"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/rabbitmq_server/publisher"
-	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/factories"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )

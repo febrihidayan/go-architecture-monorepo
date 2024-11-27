@@ -4,7 +4,7 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/rabbitmq_server/publisher"
-	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/profile"
 
 	"github.com/gorilla/mux"

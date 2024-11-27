@@ -3,7 +3,7 @@ package role_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/role"
 
 	"github.com/gorilla/mux"

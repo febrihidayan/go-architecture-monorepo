@@ -3,7 +3,7 @@ package template_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/usecases/template"
 
 	"github.com/gorilla/mux"
@@ -16,15 +16,11 @@ type TemplateHttpHandler struct {
 
 func NewTemplateHttpHandler(
 	r *mux.Router,
-	config *config.NotificationConfig,
-	mongoFactory *factories.MongoFactory,
+	deps *factories.Dependencies,
 ) {
 	handler := &TemplateHttpHandler{
-		Cfg: config,
-		TemplateUsecase: template.NewTemplateInteractor(
-			config,
-			mongoFactory,
-		),
+		Cfg:             deps.Config,
+		TemplateUsecase: template.NewTemplateInteractor(deps),
 	}
 
 	r.HandleFunc("/v1/notification/template", handler.Create).Methods("POST")

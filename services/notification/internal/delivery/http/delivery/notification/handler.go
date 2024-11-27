@@ -3,7 +3,7 @@ package notification_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/usecases/notification"
 
 	"github.com/gorilla/mux"
@@ -16,19 +16,11 @@ type NotificationHttpHandler struct {
 
 func NewNotificationHttpHandler(
 	r *mux.Router,
-	config *config.NotificationConfig,
-	mongoFactory *factories.MongoFactory,
-	grpcClientFactory *factories.GrpcClientFactory,
+	deps *factories.Dependencies,
 ) {
 	handler := &NotificationHttpHandler{
-		Cfg: config,
-		NotificationUsecase: notification.NewNotificationInteractor(
-			config,
-			mongoFactory,
-			grpcClientFactory,
-			nil,
-			nil,
-		),
+		Cfg:                 deps.Config,
+		NotificationUsecase: notification.NewNotificationInteractor(deps),
 	}
 
 	r.HandleFunc("/v1/notifications", handler.GetAll).Methods("GET")

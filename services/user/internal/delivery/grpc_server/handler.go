@@ -5,7 +5,7 @@ import (
 
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/grpc_client"
-	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/profile"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/user"
 	"go.mongodb.org/mongo-driver/mongo"

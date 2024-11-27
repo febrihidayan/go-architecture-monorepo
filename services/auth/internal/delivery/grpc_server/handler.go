@@ -3,7 +3,7 @@ package grpc_server
 import (
 	authPb "github.com/febrihidayan/go-architecture-monorepo/proto/_generated/auth"
 
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/auth"
 	"google.golang.org/grpc"
 )

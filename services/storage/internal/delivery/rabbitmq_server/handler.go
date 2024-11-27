@@ -8,27 +8,22 @@ import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/domain/entities"
 	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/config"
 	customer "github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/delivery/rabbitmq_server/consumer"
-	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/repositories/factories"
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/febrihidayan/go-architecture-monorepo/services/storage/internal/factories"
 )
 
 type RabbitMQServer struct {
-	ctx           context.Context
-	cfg           *config.StorageConfig
-	rmq           *rabbitmq.RabbitMQ
-	mongoFacttory *factories.MongoFactory
-	customer      *customer.CustomerRabbitMQ
+	ctx      context.Context
+	cfg      *config.StorageConfig
+	rmq      *rabbitmq.RabbitMQ
+	customer *customer.CustomerRabbitMQ
 }
 
-func HandlerRabbitMQServices(cfg *config.StorageConfig, rmq *rabbitmq.RabbitMQ, db *mongo.Database) *RabbitMQServer {
-	mongoFactory := factories.NewMongoFactory(db)
-
+func HandlerRabbitMQServices(deps *factories.Dependencies) *RabbitMQServer {
 	return &RabbitMQServer{
-		ctx:           context.Background(),
-		cfg:           cfg,
-		rmq:           rmq,
-		mongoFacttory: mongoFactory,
-		customer:      customer.NewCustomerRabbitMQ(cfg, rmq, mongoFactory),
+		ctx:      context.Background(),
+		cfg:      deps.Config,
+		rmq:      deps.RabbitMQConn,
+		customer: customer.NewCustomerRabbitMQ(deps),
 	}
 }
 

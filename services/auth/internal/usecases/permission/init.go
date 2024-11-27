@@ -3,7 +3,7 @@ package permission
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/repositories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/factories"
 )
 
 type permissionInteractor struct {

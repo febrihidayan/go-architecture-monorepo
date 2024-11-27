@@ -3,7 +3,7 @@ package auth_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/usecases/auth"
 
 	"github.com/gorilla/mux"
@@ -19,7 +19,7 @@ func NewAuthHttpHandler(
 	deps *factories.Dependencies,
 ) {
 	handler := &AuthHttpHandler{
-		Cfg: deps.Config,
+		Cfg:         deps.Config,
 		AuthUsecase: auth.NewAuthInteractor(deps),
 	}
 

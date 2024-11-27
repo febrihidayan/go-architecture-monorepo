@@ -7,7 +7,7 @@ import (
 	"bou.ke/monkey"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/usecases/notification"
 	grpc_repositories "github.com/febrihidayan/go-architecture-monorepo/services/notification/tests/mocks/repositories/grpc"
 	mongo_repositories "github.com/febrihidayan/go-architecture-monorepo/services/notification/tests/mocks/repositories/mongo"
@@ -17,6 +17,7 @@ import (
 type NotificationUsecaseSuite struct {
 	suite.Suite
 	cfg                 *config.NotificationConfig
+	deps                *factories.Dependencies
 	mongoFactory        *factories.MongoFactory
 	grpcClientFactory   *factories.GrpcClientFactory
 	templateRepo        *mongo_repositories.TemplateRepositoryMock
@@ -41,7 +42,13 @@ func (x *NotificationUsecaseSuite) SetupTest() {
 		UserRepo: x.userGrpcRepo,
 	}
 
-	x.notificationUsecase = notification.NewNotificationInteractor(x.cfg, x.mongoFactory, x.grpcClientFactory, nil, nil)
+	x.deps = &factories.Dependencies{
+		Config:            x.cfg,
+		MongoFactory:      x.mongoFactory,
+		GrpcClientFactory: x.grpcClientFactory,
+	}
+
+	x.notificationUsecase = notification.NewNotificationInteractor(x.deps)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

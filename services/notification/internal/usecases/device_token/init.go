@@ -3,7 +3,7 @@ package device_token
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/domain/repositories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/repositories/factories"
+	"github.com/febrihidayan/go-architecture-monorepo/services/notification/internal/factories"
 )
 
 type deviceTokenInteractor struct {
@@ -11,13 +11,9 @@ type deviceTokenInteractor struct {
 	deviceTokenRepo repositories.DeviceTokenRepository
 }
 
-func NewDeviceTokenInteractor(
-	config *config.NotificationConfig,
-	mongoFactory *factories.MongoFactory,
-) *deviceTokenInteractor {
-
+func NewDeviceTokenInteractor(deps *factories.Dependencies) *deviceTokenInteractor {
 	return &deviceTokenInteractor{
-		cfg:             config,
-		deviceTokenRepo: mongoFactory.DeviceTokenRepo,
+		cfg:             deps.Config,
+		deviceTokenRepo: deps.MongoFactory.DeviceTokenRepo,
 	}
 }
