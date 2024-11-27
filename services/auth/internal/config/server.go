@@ -16,11 +16,20 @@ type AuthConfig struct {
 	AppSecretKey string
 	Timeout      time.Duration
 	GrpcClient   GrpcClient
+	RabbitMQ     RabbitMQConfig
 }
 
 type GrpcClient struct {
 	User         string
 	Notification string
+}
+
+type RabbitMQConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	Exchange string
 }
 
 func Auth() *AuthConfig {
@@ -35,6 +44,13 @@ func Auth() *AuthConfig {
 		GrpcClient: GrpcClient{
 			User:         os.Getenv("RPC_USER"),
 			Notification: os.Getenv("RPC_NOTIFICATION"),
+		},
+		RabbitMQ: RabbitMQConfig{
+			Host:     os.Getenv("RABBITMQ_HOST"),
+			Port:     os.Getenv("RABBITMQ_PORT"),
+			User:     os.Getenv("RABBITMQ_USER"),
+			Password: os.Getenv("RABBITMQ_PASSWORD"),
+			Exchange: os.Getenv("RABBITMQ_EXCHANGE"),
 		},
 	}
 }

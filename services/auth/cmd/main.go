@@ -10,94 +10,81 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/config"
-	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/grpc_client"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/grpc_server"
 	acl_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/acl"
 	auth_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/auth"
 	permision_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/permission"
 	role_handler "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/http/delivery/role"
+	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/delivery/rabbitmq_server"
 	"github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/factories"
-	repository_mongo "github.com/febrihidayan/go-architecture-monorepo/services/auth/internal/repositories/mongo"
 	"github.com/gorilla/mux"
 	"google.golang.org/grpc"
 )
 
 var (
-	cfg            = config.Auth()
-	ctx, cancel    = context.WithCancel(context.Background())
-	db             = config.InitDatabaseMongodb()
-	authRepo       = repository_mongo.NewAuthRepository(db)
-	permissionRepo = repository_mongo.NewPermissionRepository(db)
-	roleRepo       = repository_mongo.NewRoleRepository(db)
-	roleUserRepo   = repository_mongo.NewRoleUserRepository(db)
-	mongoFactory   = factories.NewMongoFactory(db)
+	ctx, cancel = context.WithCancel(context.Background())
 )
 
 func main() {
-	defer func() {
-		db.Client().Disconnect(ctx)
-	}()
+	defer cancel()
 
-	// run rpc client
-	grpcClient, errs := grpc_client.NewGrpcClient(&cfg.GrpcClient)
-	if len(errs) > 0 {
-		cancel()
-		log.Fatalf("did not connect grpc client: %v", errs)
-	}
+	// Initialize dependencies
+	deps := factories.InitializeDependencies()
+	defer deps.Close()
 
-	// run Grpc Server
-	go RunGrpcServer()
-	// end run Grpc Server
+	// Run HTTP Server
+	go RunHTTPServer(deps)
 
-	router := mux.NewRouter()
-	initHandler(router, cfg, grpcClient)
-	http.Handle("/", router)
+	// Run gRPC Server
+	go RunGrpcServer(deps)
 
-	log.Println("Http Run on", cfg.HttpPort)
-	err := http.ListenAndServe(cfg.HttpPort, router)
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Run RabbitMQ Worker
+	go RunRabbitMQWorker(deps)
 
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
-
-	select {
-	case v := <-quit:
-		log.Fatal(fmt.Sprintf("signal.Notify: %v", v))
-	case done := <-ctx.Done():
-		log.Fatal(fmt.Sprintf("ctx.Done: %v", done))
-	}
-
-	log.Println("Server Exited Properly")
+	// Handle graceful shutdown
+	HandleGracefulShutdown()
 }
 
-func RunGrpcServer() {
-
+func RunGrpcServer(deps *factories.Dependencies) {
 	grpcServer := grpc.NewServer()
-	grpc_server.HandlerAuthServices(grpcServer, db, *cfg)
+	grpc_server.HandlerAuthServices(grpcServer, deps)
 
-	lis, err := net.Listen("tcp", cfg.RpcPort)
+	lis, err := net.Listen("tcp", deps.Config.RpcPort)
 	if err != nil {
 		log.Fatalln("Failed to listen:", err)
 	}
 
 	go func() {
-		log.Println(fmt.Sprintf("Grpc Server listen to: %v", cfg.RpcPort))
+		log.Println(fmt.Sprintf("Grpc Server listen to: %v", deps.Config.RpcPort))
 		log.Fatal(grpcServer.Serve(lis))
 	}()
 }
 
-func initHandler(
-	router *mux.Router,
-	cfg *config.AuthConfig,
-	grpcClient *grpc_client.ServerClient) {
+func RunRabbitMQWorker(deps *factories.Dependencies) {
+	server := rabbitmq_server.HandlerRabbitMQServices(deps, deps.RabbitMQConn)
+	server.Worker()
+	log.Println("RabbitMQ Worker started")
+}
 
-	grpcClientFactory := factories.NewGrpcFactory(grpcClient)
+func RunHTTPServer(deps *factories.Dependencies) {
+	router := mux.NewRouter()
 
-	auth_handler.NewAuthHttpHandler(router, cfg, mongoFactory, grpcClientFactory)
-	permision_handler.NewPermissionHttpHandler(router, cfg, mongoFactory)
-	role_handler.NewRoleHttpHandler(router, cfg, mongoFactory)
-	acl_handler.NewAclHttpHandler(router, cfg, mongoFactory)
+	auth_handler.NewAuthHttpHandler(router, deps)
+	permision_handler.NewPermissionHttpHandler(router, deps)
+	role_handler.NewRoleHttpHandler(router, deps)
+	acl_handler.NewAclHttpHandler(router, deps)
+
+	log.Printf("HTTP Server running on %s", deps.Config.HttpPort)
+	if err := http.ListenAndServe(deps.Config.HttpPort, router); err != nil {
+		log.Fatalf("HTTP Server stopped: %v", err)
+	}
+}
+
+func HandleGracefulShutdown() {
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt, syscall.SIGTERM)
+
+	<-quit
+	log.Println("Shutting down gracefully...")
+	cancel() // Cancel the context for all components
 }

@@ -16,6 +16,7 @@ import (
 type PermissionUsecaseSuite struct {
 	suite.Suite
 	cfg               *config.AuthConfig
+	deps              *factories.Dependencies
 	mongoFactory      *factories.MongoFactory
 	permissionRepo    *mongo_repositories.PermissionRepositoryMock
 	permissionUsecase usecases.PermissionUsecase
@@ -30,7 +31,13 @@ func (x *PermissionUsecaseSuite) SetupTest() {
 		PermissionRepo: x.permissionRepo,
 	}
 
-	x.permissionUsecase = permission.NewPermissionInteractor(x.cfg, x.mongoFactory)
+	// Initialize dependencies
+	x.deps = &factories.Dependencies{
+		Config:       x.cfg,
+		MongoFactory: x.mongoFactory,
+	}
+
+	x.permissionUsecase = permission.NewPermissionInteractor(x.deps)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

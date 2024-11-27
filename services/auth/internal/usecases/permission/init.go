@@ -11,13 +11,9 @@ type permissionInteractor struct {
 	permissionRepo repositories.PermissionRepository
 }
 
-func NewPermissionInteractor(
-	config *config.AuthConfig,
-	mongoFactory *factories.MongoFactory,
-) *permissionInteractor {
-
+func NewPermissionInteractor(deps *factories.Dependencies) *permissionInteractor {
 	return &permissionInteractor{
-		cfg:            config,
-		permissionRepo: mongoFactory.PermissionRepo,
+		cfg:            deps.Config,
+		permissionRepo: deps.MongoFactory.PermissionRepo,
 	}
 }

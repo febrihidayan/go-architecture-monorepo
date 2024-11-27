@@ -16,18 +16,15 @@ type aclInteractor struct {
 	permissionUserRepo repositories.PermissionUserRepository
 }
 
-func NewAclInteractor(
-	config *config.AuthConfig,
-	mongoFactory *factories.MongoFactory,
-) *aclInteractor {
+func NewAclInteractor(deps *factories.Dependencies) *aclInteractor {
 
 	return &aclInteractor{
-		cfg:                config,
-		authRepo:           mongoFactory.AuthRepo,
-		roleRepo:           mongoFactory.RoleRepo,
-		roleUserRepo:       mongoFactory.RoleUserRepo,
-		permissionRepo:     mongoFactory.PermissionRepo,
-		permissionRoleRepo: mongoFactory.PermissionRoleRepo,
-		permissionUserRepo: mongoFactory.PermissionUserRepo,
+		cfg:                deps.Config,
+		authRepo:           deps.MongoFactory.AuthRepo,
+		roleRepo:           deps.MongoFactory.RoleRepo,
+		roleUserRepo:       deps.MongoFactory.RoleUserRepo,
+		permissionRepo:     deps.MongoFactory.PermissionRepo,
+		permissionRoleRepo: deps.MongoFactory.PermissionRoleRepo,
+		permissionUserRepo: deps.MongoFactory.PermissionUserRepo,
 	}
 }

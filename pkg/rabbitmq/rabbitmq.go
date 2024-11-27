@@ -2,6 +2,7 @@ package rabbitmq
 
 import (
 	"fmt"
+	"log"
 
 	"github.com/rabbitmq/amqp091-go"
 )
@@ -11,15 +12,17 @@ type RabbitMQ struct {
 	Channel *amqp091.Channel
 }
 
+// NewRabbitMQ initializes a RabbitMQ connection and channel
 func NewRabbitMQ(url string) (*RabbitMQ, error) {
 	conn, err := amqp091.Dial(url)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to RabbitMQ: %w", err)
 	}
 
 	ch, err := conn.Channel()
 	if err != nil {
-		return nil, err
+		conn.Close()
+		return nil, fmt.Errorf("failed to open a channel: %w", err)
 	}
 
 	return &RabbitMQ{
@@ -28,39 +31,54 @@ func NewRabbitMQ(url string) (*RabbitMQ, error) {
 	}, nil
 }
 
+// Close closes the RabbitMQ connection and channel
 func (x *RabbitMQ) Close() {
-	x.Channel.Close()
-	x.Conn.Close()
+	if x.Channel != nil {
+		if err := x.Channel.Close(); err != nil {
+			log.Printf("failed to close channel: %v", err)
+		}
+	}
+	if x.Conn != nil {
+		if err := x.Conn.Close(); err != nil {
+			log.Printf("failed to close connection: %v", err)
+		}
+	}
 }
 
-// DeclareExchange for deklarasi exchange
+// DeclareExchange declares an exchange if it doesn't exist
 func (x *RabbitMQ) DeclareExchange(exchangeName, exchangeType string) error {
 	return x.Channel.ExchangeDeclare(
-		exchangeName, exchangeType, true, false, false, false, nil,
+		exchangeName, // Exchange name
+		exchangeType, // Exchange type (e.g., "direct", "topic", "fanout")
+		true,      // Durable
+		false,        // Auto-deleted
+		false,        // Internal
+		false,        // No-wait
+		nil,          // Arguments
 	)
 }
 
-// Publish for publish message
+// Publish sends a message to the specified exchange and routing key
 func (x *RabbitMQ) Publish(exchange, routingKey string, body []byte) error {
 	return x.Channel.Publish(
-		exchange,
-		routingKey,
-		false,
-		false,
+		exchange,   // Exchange name
+		routingKey, // Routing key
+		false,      // Mandatory
+		false,      // Immediate
 		amqp091.Publishing{
-			ContentType: "application/protobuf",
+			ContentType: "application/protobuf", // You can change this if needed
 			Body:        body,
 		},
 	)
 }
 
-// SetupQueue binds multiple routing keys to a single queue using a slice
+// SetupQueue declares a queue and binds it to multiple routing keys
 func (x *RabbitMQ) SetupQueue(queueName, exchangeName string, routingKeys []string) error {
-	// Declare queue
+	// Declare the queue
 	_, err := x.Channel.QueueDeclare(
-		queueName, // Nama queue
-		true,      // Durable
-		false,     // Delete when unused
+		queueName, // Queue name
+		true,   // Durable
+		false,     // Auto-deleted
 		false,     // Exclusive
 		false,     // No-wait
 		nil,       // Arguments
@@ -69,24 +87,32 @@ func (x *RabbitMQ) SetupQueue(queueName, exchangeName string, routingKeys []stri
 		return fmt.Errorf("failed to declare queue: %w", err)
 	}
 
-	// Looping routing keys dan binding ke queue
+	// Bind each routing key to the queue
 	for _, routingKey := range routingKeys {
-		err = x.Channel.QueueBind(
-			queueName,    // Nama queue
+		err := x.Channel.QueueBind(
+			queueName,    // Queue name
 			routingKey,   // Routing key
-			exchangeName, // Nama exchange
+			exchangeName, // Exchange name
 			false,        // No-wait
 			nil,          // Arguments
 		)
 		if err != nil {
-			return fmt.Errorf("failed to bind queue: %w", err)
+			return fmt.Errorf("failed to bind queue to exchange: %w", err)
 		}
 	}
 
 	return nil
 }
 
-// Consume for start consumer
+// Consume starts consuming messages from the specified queue
 func (x *RabbitMQ) Consume(queueName string) (<-chan amqp091.Delivery, error) {
-	return x.Channel.Consume(queueName, "", true, false, false, false, nil)
+	return x.Channel.Consume(
+		queueName, // Queue name
+		"",        // Consumer tag
+		true,   // Auto-acknowledge
+		false,     // Exclusive
+		false,     // No-local
+		false,     // No-wait
+		nil,       // Arguments
+	)
 }

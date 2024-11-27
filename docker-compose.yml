@@ -56,6 +56,11 @@ services:
       MONGODB_NAME: arch_auth
       MONGODB_HOST: 'mongo'
       MONGODB_PORT: '27017'
+      RABBITMQ_HOST: "rabbitmq"
+      RABBITMQ_PORT: "5672"
+      RABBITMQ_USER: "guest"
+      RABBITMQ_PASSWORD: "guest"
+      RABBITMQ_EXCHANGE: "arch_monorepo"
       JWT_TOKEN_JTI: mnb23vcsrt756yuiomnbvcx98ertyuiop
       JWT_EXPIRED: 60
       APP_URL: "http://domain.com"

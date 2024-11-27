@@ -11,13 +11,9 @@ type roleInteractor struct {
 	roleRepo repositories.RoleRepository
 }
 
-func NewRoleInteractor(
-	config *config.AuthConfig,
-	mongoFactory *factories.MongoFactory,
-) *roleInteractor {
-
+func NewRoleInteractor(deps *factories.Dependencies) *roleInteractor {
 	return &roleInteractor{
-		cfg:      config,
-		roleRepo: mongoFactory.RoleRepo,
+		cfg:      deps.Config,
+		roleRepo: deps.MongoFactory.RoleRepo,
 	}
 }

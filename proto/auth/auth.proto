@@ -31,3 +31,7 @@ message CreateOrUpdateAuthRequest {
 message CreateOrUpdateAuthResponse {
     RequestResponse response = 1;
 }
+
+message FindByIdRequest {
+    string id = 1;
+}

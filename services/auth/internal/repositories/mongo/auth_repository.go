@@ -80,3 +80,12 @@ func (x *AuthRepository) Update(ctx context.Context, payload *entities.Auth) err
 
 	return nil
 }
+
+func (x *AuthRepository) DeleteByUserID(ctx context.Context, userId string) error {
+	_, err := x.db.DeleteOne(ctx, bson.M{"user_id": userId})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

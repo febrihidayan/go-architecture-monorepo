@@ -17,6 +17,7 @@ import (
 type AuthUsecaseSuite struct {
 	suite.Suite
 	cfg               *config.AuthConfig
+	deps              *factories.Dependencies
 	mongoFactory      *factories.MongoFactory
 	grpcClientFactory *factories.GrpcClientFactory
 	authRepo          *mongo_repositories.AuthRepositoryMock
@@ -44,7 +45,14 @@ func (x *AuthUsecaseSuite) SetupTest() {
 		UserRepo: x.userRepo,
 	}
 
-	x.authUsecase = auth.NewAuthInteractor(x.cfg, x.mongoFactory, x.grpcClientFactory)
+	// Initialize dependencies
+	x.deps = &factories.Dependencies{
+		Config:            x.cfg,
+		MongoFactory:      x.mongoFactory,
+		GrpcClientFactory: x.grpcClientFactory,
+	}
+
+	x.authUsecase = auth.NewAuthInteractor(x.deps)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

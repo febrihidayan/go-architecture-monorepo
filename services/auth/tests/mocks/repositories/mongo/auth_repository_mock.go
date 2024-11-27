@@ -72,3 +72,13 @@ func (x *AuthRepositoryMock) Update(ctx context.Context, payload *entities.Auth)
 
 	return
 }
+
+func (x *AuthRepositoryMock) DeleteByUserID(ctx context.Context, userId string) (err error) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).(error); ok {
+		err = n
+	}
+
+	return
+}

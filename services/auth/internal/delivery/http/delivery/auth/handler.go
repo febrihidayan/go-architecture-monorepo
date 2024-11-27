@@ -16,17 +16,11 @@ type AuthHttpHandler struct {
 
 func NewAuthHttpHandler(
 	r *mux.Router,
-	config *config.AuthConfig,
-	mongoFactory *factories.MongoFactory,
-	grpcClientFactory *factories.GrpcClientFactory,
+	deps *factories.Dependencies,
 ) {
 	handler := &AuthHttpHandler{
-		Cfg: config,
-		AuthUsecase: auth.NewAuthInteractor(
-			config,
-			mongoFactory,
-			grpcClientFactory,
-		),
+		Cfg: deps.Config,
+		AuthUsecase: auth.NewAuthInteractor(deps),
 	}
 
 	r.HandleFunc("/v1/auth/login", handler.Login).Methods("POST")

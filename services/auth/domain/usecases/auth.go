@@ -15,4 +15,5 @@ type AuthUsecase interface {
 	SendEmailVerified(ctx context.Context, email string) *exceptions.CustomError
 	PasswordEmail(ctx context.Context, email string) *exceptions.CustomError
 	PasswordReset(ctx context.Context, payload entities.PasswordReset) *exceptions.CustomError
+	DeleteByUserID(ctx context.Context, userId string) *exceptions.CustomError
 }

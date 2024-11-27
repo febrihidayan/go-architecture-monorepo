@@ -21,6 +21,7 @@ import (
 type AclUsecaseSuite struct {
 	suite.Suite
 	cfg                *config.AuthConfig
+	deps               *factories.Dependencies
 	mongoFactory       *factories.MongoFactory
 	authRepo           *mongo_repositories.AuthRepositoryMock
 	permissionRepo     *mongo_repositories.PermissionRepositoryMock
@@ -58,7 +59,13 @@ func (x *AclUsecaseSuite) SetupTest() {
 		RoleRepo:           x.roleRepo,
 	}
 
-	x.aclUsecase = acl.NewAclInteractor(x.cfg, x.mongoFactory)
+	// Initialize dependencies
+	x.deps = &factories.Dependencies{
+		Config:       x.cfg,
+		MongoFactory: x.mongoFactory,
+	}
+
+	x.aclUsecase = acl.NewAclInteractor(x.deps)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

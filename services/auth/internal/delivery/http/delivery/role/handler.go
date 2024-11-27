@@ -16,15 +16,11 @@ type RoleHttpHandler struct {
 
 func NewRoleHttpHandler(
 	r *mux.Router,
-	config *config.AuthConfig,
-	mongoFactory *factories.MongoFactory,
+	deps *factories.Dependencies,
 ) {
 	handler := &RoleHttpHandler{
-		Cfg: config,
-		RoleUsecase: role.NewRoleInteractor(
-			config,
-			mongoFactory,
-		),
+		Cfg:         deps.Config,
+		RoleUsecase: role.NewRoleInteractor(deps),
 	}
 
 	r.HandleFunc("/v1/auth/roles", handler.GetAll).Methods("GET")

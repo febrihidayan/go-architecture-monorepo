@@ -16,6 +16,7 @@ import (
 type RoleUsecaseSuite struct {
 	suite.Suite
 	cfg          *config.AuthConfig
+	deps         *factories.Dependencies
 	mongoFactory *factories.MongoFactory
 	roleRepo     *mongo_repositories.RoleRepositoryMock
 	roleUsecase  usecases.RoleUsecase
@@ -30,7 +31,13 @@ func (x *RoleUsecaseSuite) SetupTest() {
 		RoleRepo: x.roleRepo,
 	}
 
-	x.roleUsecase = role.NewRoleInteractor(x.cfg, x.mongoFactory)
+	// Initialize dependencies
+	x.deps = &factories.Dependencies{
+		Config:       x.cfg,
+		MongoFactory: x.mongoFactory,
+	}
+
+	x.roleUsecase = role.NewRoleInteractor(x.deps)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

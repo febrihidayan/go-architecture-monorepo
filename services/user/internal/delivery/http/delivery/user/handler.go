@@ -3,6 +3,7 @@ package user_handler
 import (
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/domain/usecases"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/config"
+	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/delivery/rabbitmq_server/publisher"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/repositories/factories"
 	"github.com/febrihidayan/go-architecture-monorepo/services/user/internal/usecases/user"
 
@@ -19,13 +20,14 @@ func NewUserHttpHandler(
 	config *config.UserConfig,
 	mongoFactory *factories.MongoFactory,
 	grpcFactory *factories.GrpcClientFactory,
-) {
+	rabbitmq *publisher.PublisherRabbitMQ) {
 	handler := &UserHttpHandler{
 		Cfg: config,
 		UserUsecase: user.NewUserInteractor(
 			config,
 			mongoFactory,
 			grpcFactory,
+			rabbitmq,
 		),
 	}
 

@@ -16,15 +16,11 @@ type PermissionHttpHandler struct {
 
 func NewPermissionHttpHandler(
 	r *mux.Router,
-	config *config.AuthConfig,
-	mongoFactory *factories.MongoFactory,
+	deps *factories.Dependencies,
 ) {
 	handler := &PermissionHttpHandler{
-		Cfg: config,
-		PermissionUsecase: permission.NewPermissionInteractor(
-			config,
-			mongoFactory,
-		),
+		Cfg:               deps.Config,
+		PermissionUsecase: permission.NewPermissionInteractor(deps),
 	}
 
 	r.HandleFunc("/v1/auth/permissions", handler.GetAll).Methods("GET")

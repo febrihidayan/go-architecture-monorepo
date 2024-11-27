@@ -12,21 +12,19 @@ type authInteractor struct {
 	userRepo             repositories.UserRepository
 	roleUserRepo         repositories.RoleUserRepository
 	roleRepo             repositories.RoleRepository
+	permissionUserRepo   repositories.PermissionUserRepository
 	notificationGrpcRepo repositories.NotificationRepository
 }
 
-func NewAuthInteractor(
-	config *config.AuthConfig,
-	mongoFactory *factories.MongoFactory,
-	grpcClientFactory *factories.GrpcClientFactory,
-) *authInteractor {
+func NewAuthInteractor(deps *factories.Dependencies) *authInteractor {
 
 	return &authInteractor{
-		cfg:                  config,
-		authRepo:             mongoFactory.AuthRepo,
-		roleUserRepo:         mongoFactory.RoleUserRepo,
-		roleRepo:             mongoFactory.RoleRepo,
-		userRepo:             grpcClientFactory.UserRepo,
-		notificationGrpcRepo: grpcClientFactory.NotificationRepo,
+		cfg:                  deps.Config,
+		authRepo:             deps.MongoFactory.AuthRepo,
+		roleUserRepo:         deps.MongoFactory.RoleUserRepo,
+		roleRepo:             deps.MongoFactory.RoleRepo,
+		permissionUserRepo:   deps.MongoFactory.PermissionUserRepo,
+		userRepo:             deps.GrpcClientFactory.UserRepo,
+		notificationGrpcRepo: deps.GrpcClientFactory.NotificationRepo,
 	}
 }

@@ -93,3 +93,13 @@ func (x *AuthUsecaseMock) PasswordReset(ctx context.Context, payload entities.Pa
 
 	return
 }
+
+func (x *AuthUsecaseMock) DeleteByUserID(ctx context.Context, userId string) (err *exceptions.CustomError) {
+	args := x.Called(userId)
+
+	if n, ok := args.Get(0).(*exceptions.CustomError); ok {
+		err = n
+	}
+
+	return
+}

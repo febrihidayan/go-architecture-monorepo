@@ -12,4 +12,5 @@ type AuthRepository interface {
 	FindByEmail(ctx context.Context, email string) (*entities.Auth, error)
 	FindByUserId(ctx context.Context, userId string) (*entities.Auth, error)
 	Update(ctx context.Context, payload *entities.Auth) error
+	DeleteByUserID(ctx context.Context, userId string) error
 }

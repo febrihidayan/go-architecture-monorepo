@@ -19,5 +19,13 @@ func (x *userInteractor) Delete(ctx context.Context, id string) *exceptions.Cust
 		}
 	}
 
+	if err := x.rabbitmqRepo.AuthDelete(id); err != nil {
+		multilerr = multierror.Append(multilerr, err)
+		return &exceptions.CustomError{
+			Status: exceptions.ERRBUSSINESS,
+			Errors: multilerr,
+		}
+	}
+
 	return nil
 }

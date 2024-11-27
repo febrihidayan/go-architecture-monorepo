@@ -41,7 +41,7 @@ func (x *UserUsecaseSuite) SetupTest() {
 		StorageRepo: x.storageGrpcRepo,
 	}
 
-	x.userUsecase = user.NewUserInteractor(x.cfg, x.mongoFactory, x.grpcFactory)
+	x.userUsecase = user.NewUserInteractor(x.cfg, x.mongoFactory, x.grpcFactory, nil)
 
 	// fake time now for testing
 	monkey.Patch(time.Now, func() time.Time {

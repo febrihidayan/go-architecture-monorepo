@@ -1,8 +1,6 @@
 module github.com/febrihidayan/go-architecture-monorepo
 
-go 1.22.7
-
-toolchain go1.23.3
+go 1.23
 
 require (
 	bou.ke/monkey v1.0.2
