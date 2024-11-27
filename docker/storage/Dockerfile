@@ -1,5 +1,5 @@
 # argument for Go version
-ARG GO_VERSION=1.22.7
+ARG GO_VERSION=1.23
 
 # STAGE 1: building the executable
 FROM golang:${GO_VERSION} AS builder
