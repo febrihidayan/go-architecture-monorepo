@@ -23,6 +23,8 @@ func (x *UserUsecaseSuite) TestDelete() {
 			tests: func(arg Any) {
 				x.userRepo.Mock.On("Delete", id.String()).Return(nil)
 
+				x.rabbitmqRepo.Mock.On("AuthDelete", id.String()).Return(nil)
+
 				err := x.userUsecase.Delete(context.Background(), id.String())
 				x.Nil(err)
 			},
@@ -40,6 +42,24 @@ func (x *UserUsecaseSuite) TestDelete() {
 				}
 
 				x.Equal(err, e)
+			},
+		},
+		{
+			name: "Failed RabbitMQ Business Negatif Case",
+			tests: func(arg Any) {
+				x.userRepo.Mock.On("Delete", id.String()).Return(nil)
+
+				fakeRmqErr := errors.New("rabbitmq broker channel closed")
+				x.rabbitmqRepo.Mock.On("AuthDelete", id.String()).Return(fakeRmqErr)
+
+				err := x.userUsecase.Delete(context.Background(), id.String())
+
+				e := &exceptions.CustomError{
+					Status: exceptions.ERRBUSSINESS,
+					Errors: multierror.Append(fakeRmqErr),
+				}
+
+				x.Equal(e, err)
 			},
 		},
 	}

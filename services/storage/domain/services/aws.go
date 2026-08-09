@@ -9,7 +9,7 @@ import (
 
 type AwsService interface {
 	UploadFile(ctx context.Context, payload *entities.File) (string, error)
-	DeleteFile(url string) error
+	DeleteFile(fullPath string) error
 	ReadFile(fullPath string) (*s3.GetObjectOutput, error)
 	GetObjects(ctx context.Context) error
 }
