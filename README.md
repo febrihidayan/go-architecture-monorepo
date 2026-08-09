@@ -11,7 +11,7 @@ Started rest API with clean architecture monorepo golang
 		- [Notification Service](#notification-service)
 
 ## Required
-1. [Golang](https://go.dev/) v1.23 or above
+1. [Golang](https://go.dev/) v1.26 or above
 2. [MongoDB](https://www.mongodb.com/)
 3. [Buf](https://docs.buf.build/) to generate protobuf grpc (buf v1.47 or above)
 
