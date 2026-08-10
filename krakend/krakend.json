@@ -5,7 +5,7 @@
     "host": [
         "http://fake_api:8080"
     ],
-    "$schema": "http://www.krakend.io/schema/v3.json",
+    "$schema": "https://www.krakend.io/schema/v2.4/krakend.json",
     "extra_config": {
         "security/cors": {
             "allow_origins": ["*"],
